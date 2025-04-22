@@ -1,0 +1,48 @@
+package pl.kamil_dywan.subiektgt.generated;
+
+import jakarta.xml.bind.annotation.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(
+    name = "",
+    propOrder = {
+        "date",
+        "number",
+        "supplierName",
+        "docType",
+        "invoices",
+        "batchTrailer"
+    }
+)
+@XmlRootElement(name = "Batch")
+public class Batch {
+
+    @XmlAttribute(name = "Date", required = true)
+    private String date;
+
+    @XmlAttribute(name = "Number", required = true)
+    private String number;
+
+    @XmlAttribute(name = "SupplierName", required = true)
+    private String supplierName;
+
+    @XmlAttribute(name = "DocType", required = true)
+    private String docType;
+
+    @XmlElement(name = "Invoice", required = true)
+    protected List<Invoice> invoices;
+
+    @XmlElement(name = "BatchTrailer", required = true)
+    protected BatchTrailer batchTrailer;
+
+}
