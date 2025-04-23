@@ -11,9 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "currency"
-})
+@XmlType(
+    name = "",
+    propOrder = {"currency"}
+)
 public class CurrencyHolder {
 
     @XmlElement(name = "Currency", required = true)

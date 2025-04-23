@@ -14,10 +14,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "suppliersProductCode",
-    "description"
-})
+@XmlType(
+    name = "",
+    propOrder = {
+        "suppliersProductCode",
+        "description"
+    }
+)
 public class Product {
 
     @XmlElement(name = "SuppliersProductCode", required = true)

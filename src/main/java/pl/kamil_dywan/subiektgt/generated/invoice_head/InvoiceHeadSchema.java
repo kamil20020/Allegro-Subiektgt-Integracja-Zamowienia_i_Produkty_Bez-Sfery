@@ -14,10 +14,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {"version"})
+@XmlType(
+    name = "",
+    propOrder = {"version"}
+)
 public class InvoiceHeadSchema {
 
     @XmlElement(name = "Version")
-    protected byte version;
+    protected Integer version;
 
 }

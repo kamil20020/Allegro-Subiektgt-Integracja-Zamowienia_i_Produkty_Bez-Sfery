@@ -9,17 +9,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "unitPrice"
-})
+@XmlType(
+    name = "",
+    propOrder = {"unitPrice"}
+)
 public class UnitPriceHolder {
 
     @XmlElement(name = "UnitPrice", required = true)
-    protected String unitPrice;
+    protected BigDecimal unitPrice;
 
 }

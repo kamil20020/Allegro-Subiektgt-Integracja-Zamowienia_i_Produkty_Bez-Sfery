@@ -10,21 +10,26 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.kamil_dywan.subiektgt.generated.Type;
 
+import java.math.BigDecimal;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
+@XmlType(
+    name = "",
+    propOrder = {
         "type",
         "percentage"
-})
-public static class PercentDiscount {
+    }
+)
+public class PercentDiscount {
 
     @XmlElement(name = "Type", required = true)
     protected Type type;
 
     @XmlElement(name = "Percentage")
-    protected byte percentage;
+    protected BigDecimal percentage;
 
 }

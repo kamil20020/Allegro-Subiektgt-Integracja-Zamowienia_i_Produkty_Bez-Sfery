@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.kamil_dywan.subiektgt.own.DocType;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Builder
@@ -28,16 +30,16 @@ import java.util.List;
 public class Batch {
 
     @XmlAttribute(name = "Date", required = true)
-    private String date;
+    private LocalDate date;
 
     @XmlAttribute(name = "Number", required = true)
-    private String number;
+    private Integer number;
 
     @XmlAttribute(name = "SupplierName", required = true)
     private String supplierName;
 
     @XmlAttribute(name = "DocType", required = true)
-    private String docType;
+    private DocType docType;
 
     @XmlElement(name = "Invoice", required = true)
     protected List<Invoice> invoices;

@@ -3,12 +3,16 @@ package pl.kamil_dywan.subiektgt.generated;
 import jakarta.xml.bind.annotation.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
+@XmlType(
+    name = "",
+    propOrder = {
         "numberOfLines",
         "numberOfTaxRates",
         "lineValueTotal",
@@ -16,29 +20,31 @@ import lombok.*;
         "taxTotal",
         "netPaymentTotal",
         "grossPaymentTotal"
-})
+
+    }
+)
 @XmlRootElement(name = "InvoiceTotal")
 public class InvoiceTotal {
 
     @XmlElement(name = "NumberOfLines")
-    protected byte numberOfLines;
+    protected Integer numberOfLines;
 
     @XmlElement(name = "NumberOfTaxRates")
-    protected byte numberOfTaxRates;
+    protected Integer numberOfTaxRates;
 
     @XmlElement(name = "LineValueTotal")
-    protected String lineValueTotal;
+    protected BigDecimal lineValueTotal;
 
     @XmlElement(name = "TaxableTotal")
-    protected String taxableTotal;
+    protected BigDecimal taxableTotal;
 
     @XmlElement(name = "TaxTotal", required = true)
-    protected String taxTotal;
+    protected BigDecimal taxTotal;
 
     @XmlElement(name = "NetPaymentTotal", required = true)
-    protected String netPaymentTotal;
+    protected BigDecimal netPaymentTotal;
 
     @XmlElement(name = "GrossPaymentTotal", required = true)
-    protected String grossPaymentTotal;
+    protected BigDecimal grossPaymentTotal;
 
 }

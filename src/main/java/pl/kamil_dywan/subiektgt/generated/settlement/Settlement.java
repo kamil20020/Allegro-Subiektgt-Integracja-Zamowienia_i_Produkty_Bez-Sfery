@@ -10,9 +10,10 @@ import javax.xml.datatype.XMLGregorianCalendar;
 @NoArgsConstructor
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-        "settlementTerms"
-})
+@XmlType(
+    name = "",
+    propOrder = {"settlementTerms"}
+)
 @XmlRootElement(name = "Settlement")
 public class Settlement {
 

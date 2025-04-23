@@ -10,12 +10,15 @@ import pl.kamil_dywan.subiektgt.generated.Contact;
 @NoArgsConstructor
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
+@XmlType(
+    name = "",
+    propOrder = {
         "supplierReferences",
         "party",
         "address",
         "contact"
-})
+    }
+)
 @XmlRootElement(name = "Supplier")
 public class Supplier {
 

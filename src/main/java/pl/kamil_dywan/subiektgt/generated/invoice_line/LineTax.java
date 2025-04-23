@@ -10,21 +10,26 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.kamil_dywan.subiektgt.generated.TaxRate;
 
+import java.math.BigDecimal;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
+@XmlType(
+    name = "",
+    propOrder = {
         "taxRate",
         "taxValue"
-})
+    }
+)
 public class LineTax {
 
     @XmlElement(name = "TaxRate", required = true)
     protected TaxRate taxRate;
 
     @XmlElement(name = "TaxValue", required = true)
-    protected String taxValue;
+    protected BigDecimal taxValue;
 
 }

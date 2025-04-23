@@ -5,25 +5,29 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.kamil_dywan.subiektgt.own.UOMCode;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
+@XmlType(
+    name = "",
+    propOrder = {
         "packsize",
         "amount"
-})
+    }
+)
 public class LineItemQuantity {
 
     @XmlElement(name = "Packsize")
-    protected byte packsize;
+    protected Integer packsize;
 
     @XmlElement(name = "Amount")
-    protected byte amount;
+    protected Integer amount;
 
     @XmlAttribute(name = "UOMCode")
-    protected String uomCode;
+    protected UOMCode uomCode;
 
 }

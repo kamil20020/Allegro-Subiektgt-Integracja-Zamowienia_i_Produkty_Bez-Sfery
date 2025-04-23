@@ -14,16 +14,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "suppliersCodeForBuyer",
-    "taxNumber"
-})
+@XmlType(
+    name = "",
+    propOrder = {
+        "suppliersCodeForBuyer",
+        "taxNumber"
+    }
+)
 public class BuyerReferences {
 
     @XmlElement(name = "SuppliersCodeForBuyer", required = true)
     protected String suppliersCodeForBuyer;
 
     @XmlElement(name = "TaxNumber")
-    protected long taxNumber;
+    protected String taxNumber;
 
 }

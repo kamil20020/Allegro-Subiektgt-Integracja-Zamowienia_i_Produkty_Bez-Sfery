@@ -3,12 +3,16 @@ package pl.kamil_dywan.subiektgt.generated.invoice_line;
 import jakarta.xml.bind.annotation.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
+@XmlType(
+    name = "",
+    propOrder = {
         "lineNumber",
         "product",
         "quantity",
@@ -17,12 +21,13 @@ import lombok.*;
         "lineTax",
         "lineTotal",
         "invoiceLineInformation"
-})
+    }
+)
 @XmlRootElement(name = "InvoiceLine")
 public class InvoiceLine {
 
     @XmlElement(name = "LineNumber")
-    protected byte lineNumber;
+    protected Integer lineNumber;
 
     @XmlElement(name = "Product", required = true)
     protected Product product;
@@ -40,7 +45,7 @@ public class InvoiceLine {
     protected LineTax lineTax;
 
     @XmlElement(name = "LineTotal", required = true)
-    protected String lineTotal;
+    protected BigDecimal lineTotal;
 
     @XmlElement(name = "InvoiceLineInformation", required = true)
     protected String invoiceLineInformation;

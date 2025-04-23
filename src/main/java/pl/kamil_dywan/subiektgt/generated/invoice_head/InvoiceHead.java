@@ -13,7 +13,17 @@ import pl.kamil_dywan.subiektgt.generated.Type;
 @NoArgsConstructor
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {"schema", "parameters", "invoiceType", "function", "invoiceCurrency", "checksum"})
+@XmlType(
+    name = "",
+    propOrder = {
+        "schema",
+        "parameters",
+        "invoiceType",
+        "function",
+        "invoiceCurrency",
+        "checksum"
+    }
+)
 @XmlRootElement(name = "InvoiceHead")
 public class InvoiceHead {
 
@@ -33,6 +43,6 @@ public class InvoiceHead {
     protected Currency invoiceCurrency;
 
     @XmlElement(name = "Checksum")
-    protected int checksum;
+    protected Integer checksum;
 
 }

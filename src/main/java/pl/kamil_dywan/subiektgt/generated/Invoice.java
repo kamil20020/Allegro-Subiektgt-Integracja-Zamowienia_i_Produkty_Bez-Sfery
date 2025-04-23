@@ -12,6 +12,7 @@ import pl.kamil_dywan.subiektgt.generated.settlement.Settlement;
 import pl.kamil_dywan.subiektgt.generated.supplier.Supplier;
 
 import javax.xml.datatype.XMLGregorianCalendar;
+import java.time.LocalDate;
 import java.util.List;
 
 @Builder
@@ -19,21 +20,24 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "invoiceHead",
-    "invoiceReferences",
-    "invoiceDate",
-    "cityOfIssue",
-    "taxPointDate",
-    "supplier",
-    "buyer",
-    "invoiceLines",
-    "narrative",
-    "specialInstructions",
-    "settlement",
-    "taxSubTotals",
-    "invoiceTotal"
-})
+@XmlType(
+    name = "",
+    propOrder = {
+        "invoiceHead",
+        "invoiceReferences",
+        "invoiceDate",
+        "cityOfIssue",
+        "taxPointDate",
+        "supplier",
+        "buyer",
+        "invoiceLines",
+        "narrative",
+        "specialInstructions",
+        "settlement",
+        "taxSubTotals",
+        "invoiceTotal"
+    }
+)
 @XmlRootElement(name = "Invoice", namespace = "")
 public class Invoice {
 
@@ -45,14 +49,14 @@ public class Invoice {
 
     @XmlElement(name = "InvoiceDate", required = true)
     @XmlSchemaType(name = "date")
-    protected XMLGregorianCalendar invoiceDate;
+    protected LocalDate invoiceDate;
 
     @XmlElement(name = "CityOfIssue", required = true)
     protected String cityOfIssue;
 
     @XmlElement(name = "TaxPointDate", required = true)
     @XmlSchemaType(name = "date")
-    protected XMLGregorianCalendar taxPointDate;
+    protected LocalDate taxPointDate;
 
     @XmlElement(name = "Supplier", required = true)
     protected Supplier supplier;

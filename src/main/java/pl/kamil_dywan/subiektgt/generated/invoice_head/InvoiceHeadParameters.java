@@ -9,12 +9,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {"language", "decimalSeparator", "precision"})
+@XmlType(
+    name = "",
+    propOrder = {
+        "language",
+        "decimalSeparator",
+        "precision"
+    }
+)
 public class InvoiceHeadParameters {
 
     @XmlElement(name = "Language", required = true)
@@ -24,6 +33,6 @@ public class InvoiceHeadParameters {
     protected String decimalSeparator;
 
     @XmlElement(name = "Precision")
-    protected float precision;
+    protected BigDecimal precision;
 
 }
