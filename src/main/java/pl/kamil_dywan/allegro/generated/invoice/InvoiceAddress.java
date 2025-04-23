@@ -2,6 +2,7 @@ package pl.kamil_dywan.allegro.generated.invoice;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
+import pl.kamil_dywan.allegro.own.Country;
 
 import javax.annotation.processing.Generated;
 
@@ -28,7 +29,7 @@ public class InvoiceAddress {
     private String zipCode;
 
     @JsonProperty("countryCode")
-    private String countryCode;
+    private Country countryCode;
 
     @JsonProperty("company")
     private InvoiceCompany company;

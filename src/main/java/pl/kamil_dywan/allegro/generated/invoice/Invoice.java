@@ -20,7 +20,7 @@ import java.util.List;
 public class Invoice {
 
     @JsonProperty("required")
-    private Boolean required;
+    private boolean required;
 
     @JsonProperty("address")
     private InvoiceAddress address;
@@ -29,6 +29,6 @@ public class Invoice {
     private LocalDate dueDate;
 
     @JsonProperty("features")
-    private List<Object> features = new ArrayList<Object>();
+    private List<String> features = new ArrayList<>();
 
 }

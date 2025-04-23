@@ -1,10 +1,6 @@
 package pl.kamil_dywan;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Marshaller;
-import jakarta.xml.bind.Unmarshaller;
 import org.xml.sax.SAXException;
 import pl.kamil_dywan.allegro.generated.buyer.Buyer;
 import pl.kamil_dywan.allegro.generated.buyer.BuyerAddress;
@@ -14,6 +10,12 @@ import pl.kamil_dywan.allegro.generated.invoice.InvoiceNaturalPerson;
 import pl.kamil_dywan.allegro.generated.invoice_item.LineItem;
 import pl.kamil_dywan.allegro.generated.order.Order;
 import pl.kamil_dywan.allegro.generated.order.OrderResponse;
+import pl.kamil_dywan.file.read.FileReader;
+import pl.kamil_dywan.file.read.JSONFileReader;
+import pl.kamil_dywan.file.read.XMLFileReader;
+import pl.kamil_dywan.file.write.FileWriter;
+import pl.kamil_dywan.file.write.JSONFileWriter;
+import pl.kamil_dywan.file.write.XMLFileWriter;
 import pl.kamil_dywan.subiektgt.generated.*;
 import pl.kamil_dywan.subiektgt.generated.Invoice;
 import pl.kamil_dywan.subiektgt.generated.BatchTrailer;
@@ -28,18 +30,11 @@ import pl.kamil_dywan.subiektgt.own.*;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.util.StreamReaderDelegate;
-import java.io.*;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -55,27 +50,15 @@ public class App {
 
     public static void main(String[] args) throws IOException, SAXException, URISyntaxException, ParseException, DatatypeConfigurationException, JAXBException, XMLStreamException {
 
-        URL allegroOrderFileUrl = App.class.getClassLoader().getResource("./data/order.json");
-        URI allegroOrderFileUri = allegroOrderFileUrl.toURI();
-        Path allegroOrderFilePath = Path.of(allegroOrderFileUri);
-        String allegroOrderStr = Files.readString(allegroOrderFilePath);
+        FileWriter<Batch> subiektBatchWriter = new XMLFileWriter<>(Batch.class);
+        FileReader<Batch> subiektBatchReader = new XMLFileReader<>(Batch.class);
+        FileWriter<OrderResponse> allegroOrderWriter = new JSONFileWriter<>();
+        FileReader<OrderResponse> allegroOrderReader = new JSONFileReader<>(OrderResponse.class);
 
-        ObjectMapper objectMapper = new ObjectMapper();
+        OrderResponse allegroOrderResponse = allegroOrderReader.load("data/allegro/swagger.json");
+        allegroOrderWriter.save("order-output.json", allegroOrderResponse);
 
-        OrderResponse allegroOrderResponse = objectMapper.readValue(allegroOrderStr, OrderResponse.class);
-        String allegroOrderOutputStr = objectMapper.writeValueAsString(allegroOrderResponse.getOrders());
-
-        File file = new File("order-output.json");
-
-        if(!file.exists()){
-            file.createNewFile();
-        }
-
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-        bufferedWriter.write(allegroOrderOutputStr);
-        bufferedWriter.close();
-
-        Order allegroOrder = (Order) allegroOrderResponse.getOrders().get(0);
+        Order allegroOrder = allegroOrderResponse.getOrders().get(0);
 
         InvoiceHead invoiceHead = InvoiceHead.builder()
             .schema(new InvoiceHead.Schema((byte) 3))
@@ -346,69 +329,11 @@ public class App {
             .batchTrailer(batchTrailer)
             .build();
 
-        File subiektOutputFile = new File("./subiekt.xml");
+        subiektBatchWriter.save("./subiekt.xml", batch);
 
-        if(!subiektOutputFile.exists()){
+        Batch batch1 = subiektBatchReader.load("data/subiekt/order.xml");
 
-            subiektOutputFile.createNewFile();
-        }
-
-        JAXBContext context = JAXBContext.newInstance(Batch.class);
-        Marshaller marshaller = context.createMarshaller();
-
-        marshaller.setProperty(Marshaller.JAXB_ENCODING, "windows-1250");
-//        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-        marshaller.marshal(batch, subiektOutputFile);
-
-        class XMLReaderWithoutNamespace extends StreamReaderDelegate {
-            public XMLReaderWithoutNamespace(XMLStreamReader reader) {
-                super(reader);
-            }
-            @Override
-            public String getAttributeNamespace(int arg0) {
-                return "";
-            }
-            @Override
-            public String getNamespaceURI() {
-                return "";
-            }
-        }
-
-        JAXBContext jc = JAXBContext.newInstance(Batch.class);
-
-        Unmarshaller unmarshaller = jc.createUnmarshaller();
-
-        URL subiektTestURL = App.class.getClassLoader().getResource("./data/aa.xml");
-        URI subiektTestURI = subiektTestURL.toURI();
-        Path subiektTestPath = Path.of(subiektTestURI);
-        File subiektTestFile = subiektTestPath.toFile();
-
-        InputStream is = new FileInputStream(subiektTestFile);
-        XMLStreamReader xsr = XMLInputFactory.newFactory().createXMLStreamReader(is);
-        XMLReaderWithoutNamespace xr = new XMLReaderWithoutNamespace(xsr);
-
-        // unmarshall, note that it's better to reuse JAXBContext, as newInstance()
-        // calls are pretty expensive
-
-        Batch batch1 = (Batch) unmarshaller.unmarshal(xr);
-
-        is.close();
-
-        File subiektOutputFile1 = new File("./subiekt-output.xml");
-
-        if(!subiektOutputFile1.exists()){
-
-            subiektOutputFile1.createNewFile();
-        }
-
-        JAXBContext context1 = JAXBContext.newInstance(Batch.class);
-        Marshaller marshaller1 = context1.createMarshaller();
-
-        marshaller1.setProperty(Marshaller.JAXB_ENCODING, "windows-1250");
-//        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-        marshaller1.marshal(batch1, subiektOutputFile1);
+        subiektBatchWriter.save("./subiekt-output.xml", batch1);
     }
 
     public static XMLGregorianCalendar convert(String value) throws ParseException, DatatypeConfigurationException {

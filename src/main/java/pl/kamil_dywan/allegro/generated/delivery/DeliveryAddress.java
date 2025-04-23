@@ -2,6 +2,7 @@ package pl.kamil_dywan.allegro.generated.delivery;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
+import pl.kamil_dywan.allegro.own.Country;
 
 import javax.annotation.processing.Generated;
 import java.time.LocalDateTime;
@@ -38,7 +39,7 @@ public class DeliveryAddress {
     private String zipCode;
 
     @JsonProperty("countryCode")
-    private String countryCode;
+    private Country countryCode;
 
     @JsonProperty("companyName")
     private String companyName;
@@ -48,9 +49,5 @@ public class DeliveryAddress {
 
     @JsonProperty("modifiedAt")
     private LocalDateTime modifiedAt;
-
-    protected boolean canEqual(final Object other) {
-        return other instanceof DeliveryAddress;
-    }
 
 }

@@ -2,10 +2,9 @@ package pl.kamil_dywan.allegro.generated.delivery;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
+import pl.kamil_dywan.allegro.own.Country;
 
 import javax.annotation.processing.Generated;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -16,7 +15,7 @@ import java.util.Map;
     "countryCode"
 })
 @Generated("jsonschema2pojo")
-public class DeliveryPickupPointAdress {
+public class DeliveryPickupPointAddress {
 
     @JsonProperty("street")
     private String street;
@@ -28,6 +27,6 @@ public class DeliveryPickupPointAdress {
     private String city;
 
     @JsonProperty("countryCode")
-    private String countryCode;
+    private Country countryCode;
 
 }

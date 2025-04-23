@@ -2,6 +2,7 @@ package pl.kamil_dywan.allegro.generated.buyer;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
+import pl.kamil_dywan.allegro.own.Country;
 
 import javax.annotation.processing.Generated;
 
@@ -26,10 +27,6 @@ public class BuyerAddress {
     private String postCode;
 
     @JsonProperty("countryCode")
-    private String countryCode;
-
-    protected boolean canEqual(final Object other) {
-        return other instanceof BuyerAddress;
-    }
+    private Country countryCode;
 
 }

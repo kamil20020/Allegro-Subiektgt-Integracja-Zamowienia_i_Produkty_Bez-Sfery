@@ -44,7 +44,7 @@ public class Buyer {
     private String companyName;
 
     @JsonProperty("guest")
-    private Boolean guest;
+    private boolean guest;
 
     @JsonProperty("personalIdentity")
     private String personalIdentity;
