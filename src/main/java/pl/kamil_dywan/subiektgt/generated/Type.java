@@ -12,16 +12,14 @@ import lombok.NoArgsConstructor;
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "itemCurrency",
-    "checksum"
+    "value"
 })
-@XmlRootElement(name = "BatchTrailer")
-public class BatchTrailer {
+public class Type {
 
-    @XmlElement(name = "ItemCurrency", required = true)
-    protected CurrencyHolder itemCurrency;
+    @XmlValue
+    protected String value;
 
-    @XmlElement(name = "Checksum", required = true)
-    protected String checksum;
+    @XmlAttribute(name = "Code")
+    protected String code;
 
 }

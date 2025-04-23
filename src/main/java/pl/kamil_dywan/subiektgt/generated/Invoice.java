@@ -5,7 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.kamil_dywan.subiektgt.generated.*;
+import pl.kamil_dywan.subiektgt.generated.buyer.Buyer;
+import pl.kamil_dywan.subiektgt.generated.invoice_head.InvoiceHead;
+import pl.kamil_dywan.subiektgt.generated.invoice_line.InvoiceLine;
+import pl.kamil_dywan.subiektgt.generated.settlement.Settlement;
+import pl.kamil_dywan.subiektgt.generated.supplier.Supplier;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.List;

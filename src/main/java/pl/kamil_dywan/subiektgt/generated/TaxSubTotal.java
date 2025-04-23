@@ -9,18 +9,18 @@ import lombok.*;
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-        "taxRate",
-        "taxableValueAtRate",
-        "taxAtRate",
-        "netPaymentAtRate",
-        "grossPaymentAtRate",
-        "taxCurrency"
+    "taxRate",
+    "taxableValueAtRate",
+    "taxAtRate",
+    "netPaymentAtRate",
+    "grossPaymentAtRate",
+    "taxCurrency"
 })
 @XmlRootElement(name = "TaxSubTotal")
 public class TaxSubTotal {
 
     @XmlElement(name = "TaxRate", required = true)
-    protected TaxSubTotal.TaxRate taxRate;
+    protected TaxRate taxRate;
 
     @XmlElement(name = "TaxableValueAtRate", required = true)
     protected String taxableValueAtRate;
@@ -40,21 +40,4 @@ public class TaxSubTotal {
     @XmlAttribute(name = "Code")
     protected String code;
 
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Data
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-            "value"
-    })
-    public static class TaxRate {
-
-        @XmlValue
-        protected byte value;
-
-        @XmlAttribute(name = "Code")
-        protected String code;
-
-    }
 }

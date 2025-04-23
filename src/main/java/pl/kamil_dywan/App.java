@@ -17,6 +17,12 @@ import pl.kamil_dywan.allegro.generated.order.OrderResponse;
 import pl.kamil_dywan.subiektgt.generated.*;
 import pl.kamil_dywan.subiektgt.generated.Invoice;
 import pl.kamil_dywan.subiektgt.generated.BatchTrailer;
+import pl.kamil_dywan.subiektgt.generated.TaxRate;
+import pl.kamil_dywan.subiektgt.generated.invoice_head.InvoiceHead;
+import pl.kamil_dywan.subiektgt.generated.invoice_line.InvoiceLine;
+import pl.kamil_dywan.subiektgt.generated.invoice_line.Product;
+import pl.kamil_dywan.subiektgt.generated.settlement.Settlement;
+import pl.kamil_dywan.subiektgt.generated.supplier.Supplier;
 import pl.kamil_dywan.subiektgt.own.*;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -109,21 +115,21 @@ public class App {
         Buyer allegroBuyer = allegroOrder.getBuyer();
         BuyerAddress allegroBuyerAddress = allegroBuyer.getAddress();
 
-        pl.kamil_dywan.subiektgt.generated.Buyer subiektBuyer = pl.kamil_dywan.subiektgt.generated.Buyer.builder()
+        pl.kamil_dywan.subiektgt.generated.buyer.Buyer subiektBuyer = pl.kamil_dywan.subiektgt.generated.buyer.Buyer.builder()
 //            .buyerReferences(
-//                new pl.kamil_dywan.subiektgt.generated.Buyer.BuyerReferences(
+//                new pl.kamil_dywan.subiektgt.generated.buyer.Buyer.BuyerReferences(
 //                    allegroBuyer.getCompanyName() != null ? allegroBuyer.getCompanyName() : allegroBuyer.getFirstName() + " " + allegroBuyer.getLastName(),
 //                    allegroBuyer.
 //                )
 //            )
             .party(allegroBuyer.getCompanyName())
-            .address(pl.kamil_dywan.subiektgt.generated.Buyer.Address.builder()
+            .address(Address.Address.builder()
                 .street(allegroBuyerAddress.getStreet())
                 .city(allegroBuyerAddress.getCity())
                 .postCode(allegroBuyerAddress.getPostCode())
                 .build()
             )
-            .contact(pl.kamil_dywan.subiektgt.generated.Buyer.Contact.builder()
+            .contact(Contact.Contact.builder()
                 .name(allegroBuyer.getFirstName() + " " + allegroBuyer.getLastName())
                 .switchboard(allegroBuyer.getPhoneNumber())
                 .build()
@@ -240,7 +246,7 @@ public class App {
 
                 return InvoiceLine.builder()
                     .lineNumber((byte) invoiceNumber.incrementAndGet())
-                    .product(InvoiceLine.Product.builder()
+                    .product(Product.Product.builder()
                         .suppliersProductCode(allegroLineItem.getOffer().getExternal() != null ? allegroLineItem.getOffer().getExternal().getId() : null)
                         .description(allegroLineItem.getOffer().getName())
                         .build()
@@ -253,12 +259,12 @@ public class App {
                         .price(new InvoiceLine.Price(rawUnitPrice.toString()))
                         .percentDiscount(
                             new InvoiceLine.PercentDiscount(
-                                new InvoiceLine.PercentDiscount.Type("", Code.LID.toString()), (byte) 0
+                                new Type.Type("", Code.LID.toString()), (byte) 0
                             )
                         )
                         .lineTax(
                             new InvoiceLine.LineTax(
-                                new InvoiceLine.LineTax.TaxRate(
+                                new TaxRate.TaxRate(
                                     (byte) taxRate.getValue().intValue(),
                                     TaxRate.getByValue(taxRateValue.intValue()).getCode().toString()
                                 ),
@@ -325,7 +331,7 @@ public class App {
             .build();
 
         BatchTrailer batchTrailer = BatchTrailer.builder()
-            .itemCurrency(new ItemCurrency.ItemCurrency(new ItemCurrency.ItemCurrency.Currency("", Code.PLN.toString())))
+            .itemCurrency(new CurrencyHolder.ItemCurrency(new CurrencyHolder.ItemCurrency.Currency("", Code.PLN.toString())))
             .checksum("")
             .build();
 

@@ -1,0 +1,28 @@
+package pl.kamil_dywan.subiektgt.generated.settlement;
+
+import jakarta.xml.bind.annotation.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.xml.datatype.XMLGregorianCalendar;
+
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "", propOrder = {
+        "value"
+})
+public class SettlementTerms {
+
+    @XmlValue
+    @XmlSchemaType(name = "date")
+    protected XMLGregorianCalendar value;
+
+    @XmlAttribute(name = "Code")
+    protected String code;
+
+}
