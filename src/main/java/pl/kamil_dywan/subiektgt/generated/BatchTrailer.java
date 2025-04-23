@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.kamil_dywan.subiektgt.generated.ItemCurrency;
 
 @Builder
 @AllArgsConstructor
@@ -19,39 +20,9 @@ import lombok.NoArgsConstructor;
 public class BatchTrailer {
 
     @XmlElement(name = "ItemCurrency", required = true)
-    protected BatchTrailer.ItemCurrency itemCurrency;
+    protected ItemCurrency itemCurrency;
 
     @XmlElement(name = "Checksum", required = true)
     protected String checksum;
 
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Data
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-            "currency"
-    })
-    public static class ItemCurrency {
-
-        @XmlElement(name = "Currency", required = true)
-        protected BatchTrailer.ItemCurrency.Currency currency;
-
-        @Builder
-        @AllArgsConstructor
-        @NoArgsConstructor
-        @Data
-        @XmlAccessorType(XmlAccessType.FIELD)
-        @XmlType(name = "", propOrder = {
-                "value"
-        })
-        public static class Currency {
-
-            @XmlValue
-            protected String value;
-            @XmlAttribute(name = "Code")
-            protected String code;
-
-        }
-    }
 }

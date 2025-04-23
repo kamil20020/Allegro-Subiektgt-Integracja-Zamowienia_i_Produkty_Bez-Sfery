@@ -149,7 +149,7 @@
           <version>1.2.2</version>
           <configuration>
             <sourceDirectory>${basedir}/src/main/resources/schema</sourceDirectory>
-            <targetPackage>pl.kamil_dywan.allegro</targetPackage>
+            <targetPackage>pl.kamil_dywan.allegro1</targetPackage>
           </configuration>
           <executions>
             <execution>

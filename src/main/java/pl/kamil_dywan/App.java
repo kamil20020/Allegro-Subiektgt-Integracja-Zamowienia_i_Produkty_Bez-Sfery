@@ -6,10 +6,17 @@ import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
 import org.xml.sax.SAXException;
-import pl.kamil_dywan.allegro.*;
-import pl.kamil_dywan.allegro.Buyer;
+import pl.kamil_dywan.allegro.generated.buyer.Buyer;
+import pl.kamil_dywan.allegro.generated.buyer.BuyerAddress;
+import pl.kamil_dywan.allegro.generated.invoice.InvoiceAddress;
+import pl.kamil_dywan.allegro.generated.invoice.InvoiceCompany;
+import pl.kamil_dywan.allegro.generated.invoice.InvoiceNaturalPerson;
+import pl.kamil_dywan.allegro.generated.invoice_item.LineItem;
+import pl.kamil_dywan.allegro.generated.order.Order;
+import pl.kamil_dywan.allegro.generated.order.OrderResponse;
 import pl.kamil_dywan.subiektgt.generated.*;
 import pl.kamil_dywan.subiektgt.generated.Invoice;
+import pl.kamil_dywan.subiektgt.generated.BatchTrailer;
 import pl.kamil_dywan.subiektgt.own.*;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -19,7 +26,6 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.util.StreamReaderDelegate;
-import javax.xml.transform.stream.StreamSource;
 import java.io.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -78,10 +84,10 @@ public class App {
             .suppliersInvoiceNumber("2/2025")
             .build();
 
-        pl.kamil_dywan.allegro.Invoice allegroInvoice = allegroOrder.getInvoice();
-        Address__3 supplierCompanyAddress = allegroInvoice.getAddress();
-        Company supplierCompany = supplierCompanyAddress.getCompany();
-        NaturalPerson supplierCompanyPeron = supplierCompanyAddress.getNaturalPerson();
+        pl.kamil_dywan.allegro.generated.invoice.Invoice allegroInvoice = allegroOrder.getInvoice();
+        InvoiceAddress supplierCompanyAddress = allegroInvoice.getAddress();
+        InvoiceCompany supplierCompany = supplierCompanyAddress.getCompany();
+        InvoiceNaturalPerson supplierCompanyPeron = supplierCompanyAddress.getNaturalPerson();
 
         Supplier subiektSupplier = Supplier.builder()
 //            .supplierReferences(new Supplier.SupplierReferences(supplierCompany.getName(), supplierCompany.getTaxId()))
@@ -101,7 +107,7 @@ public class App {
             .build();
 
         Buyer allegroBuyer = allegroOrder.getBuyer();
-        Address allegroBuyerAddress = allegroBuyer.getAddress();
+        BuyerAddress allegroBuyerAddress = allegroBuyer.getAddress();
 
         pl.kamil_dywan.subiektgt.generated.Buyer subiektBuyer = pl.kamil_dywan.subiektgt.generated.Buyer.builder()
 //            .buyerReferences(
@@ -319,7 +325,7 @@ public class App {
             .build();
 
         BatchTrailer batchTrailer = BatchTrailer.builder()
-            .itemCurrency(new BatchTrailer.ItemCurrency(new BatchTrailer.ItemCurrency.Currency("", Code.PLN.toString())))
+            .itemCurrency(new ItemCurrency.ItemCurrency(new ItemCurrency.ItemCurrency.Currency("", Code.PLN.toString())))
             .checksum("")
             .build();
 
