@@ -1,6 +1,7 @@
 package pl.kamil_dywan.file.read;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import pl.kamil_dywan.file.read.FileReader;
 
 import java.io.File;
@@ -11,6 +12,10 @@ import java.nio.file.Files;
 public class JSONFileReader<T> extends FileReader<T> {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    static {
+        objectMapper.registerModule(new JavaTimeModule());
+    }
 
     private final Class<T> type;
 

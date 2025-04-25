@@ -1,54 +1,24 @@
 package pl.kamil_dywan;
 
-import jakarta.xml.bind.JAXBException;
-import org.xml.sax.SAXException;
-import pl.kamil_dywan.allegro.generated.buyer.Buyer;
-import pl.kamil_dywan.allegro.generated.buyer.BuyerAddress;
-import pl.kamil_dywan.allegro.generated.invoice.InvoiceAddress;
-import pl.kamil_dywan.allegro.generated.invoice.InvoiceCompany;
-import pl.kamil_dywan.allegro.generated.invoice.InvoiceNaturalPerson;
-import pl.kamil_dywan.allegro.generated.invoice_item.LineItem;
-import pl.kamil_dywan.allegro.generated.order.Order;
-import pl.kamil_dywan.allegro.generated.order.OrderResponse;
+import pl.kamil_dywan.external.allegro.generated.order.OrderResponse;
+import pl.kamil_dywan.external.subiektgt.generated.Batch;
 import pl.kamil_dywan.file.read.FileReader;
 import pl.kamil_dywan.file.read.JSONFileReader;
 import pl.kamil_dywan.file.read.XMLFileReader;
 import pl.kamil_dywan.file.write.FileWriter;
 import pl.kamil_dywan.file.write.JSONFileWriter;
 import pl.kamil_dywan.file.write.XMLFileWriter;
-import pl.kamil_dywan.subiektgt.generated.*;
-import pl.kamil_dywan.subiektgt.generated.Invoice;
-import pl.kamil_dywan.subiektgt.generated.BatchTrailer;
-import pl.kamil_dywan.subiektgt.generated.TaxRate;
-import pl.kamil_dywan.subiektgt.generated.invoice_head.InvoiceHead;
-import pl.kamil_dywan.subiektgt.generated.invoice_line.InvoiceLine;
-import pl.kamil_dywan.subiektgt.generated.invoice_line.Product;
-import pl.kamil_dywan.subiektgt.generated.settlement.Settlement;
-import pl.kamil_dywan.subiektgt.generated.supplier.Supplier;
-import pl.kamil_dywan.subiektgt.own.*;
+import pl.kamil_dywan.mapper.*;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.URISyntaxException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 /**
  * Hello world!
  */
 public class App {
 
-    public static void main(String[] args) throws IOException, SAXException, URISyntaxException, ParseException, DatatypeConfigurationException, JAXBException, XMLStreamException {
+    public static void main(String[] args) throws IOException, URISyntaxException {
 
         FileWriter<Batch> subiektBatchWriter = new XMLFileWriter<>(Batch.class);
         FileReader<Batch> subiektBatchReader = new XMLFileReader<>(Batch.class);
@@ -58,276 +28,7 @@ public class App {
         OrderResponse allegroOrderResponse = allegroOrderReader.load("data/allegro/swagger.json");
         allegroOrderWriter.save("order-output.json", allegroOrderResponse);
 
-        Order allegroOrder = allegroOrderResponse.getOrders().get(0);
-
-        InvoiceHead invoiceHead = InvoiceHead.builder()
-            .schema(new InvoiceHead.Schema((byte) 3))
-            .parameters(new InvoiceHead.Parameters("PL", ",", 20.3f))
-            .invoiceType(new InvoiceHead.InvoiceType(InvoiceType.VAT.toString(), Code.INVOICE.toString()))
-            .function(new InvoiceHead.Function("", Code.FII.toString()))
-            .invoiceCurrency(new InvoiceHead.InvoiceCurrency(new InvoiceHead.InvoiceCurrency.Currency("", Code.PLN.toString())))
-            .checksum(81410)
-            .build();
-
-        InvoiceReferences invoiceReferences = InvoiceReferences.builder()
-            .suppliersInvoiceNumber("2/2025")
-            .build();
-
-        pl.kamil_dywan.allegro.generated.invoice.Invoice allegroInvoice = allegroOrder.getInvoice();
-        InvoiceAddress supplierCompanyAddress = allegroInvoice.getAddress();
-        InvoiceCompany supplierCompany = supplierCompanyAddress.getCompany();
-        InvoiceNaturalPerson supplierCompanyPeron = supplierCompanyAddress.getNaturalPerson();
-
-        Supplier subiektSupplier = Supplier.builder()
-//            .supplierReferences(new Supplier.SupplierReferences(supplierCompany.getName(), supplierCompany.getTaxId()))
-            .party(supplierCompany.getName())
-            .address(Supplier.Address.builder()
-                .street(supplierCompanyAddress.getStreet())
-                .city(supplierCompanyAddress.getCity())
-                .postCode(supplierCompanyAddress.getZipCode())
-                .build()
-            )
-            .contact(Supplier.Contact.builder()
-                .name(supplierCompanyPeron != null ? supplierCompanyPeron.getFirstName() + " " + supplierCompanyPeron.getLastName() : null)
-                .switchboard("")
-                .fax("")
-                .build()
-            )
-            .build();
-
-        Buyer allegroBuyer = allegroOrder.getBuyer();
-        BuyerAddress allegroBuyerAddress = allegroBuyer.getAddress();
-
-        pl.kamil_dywan.subiektgt.generated.buyer.Buyer subiektBuyer = pl.kamil_dywan.subiektgt.generated.buyer.Buyer.builder()
-//            .buyerReferences(
-//                new pl.kamil_dywan.subiektgt.generated.buyer.Buyer.BuyerReferences(
-//                    allegroBuyer.getCompanyName() != null ? allegroBuyer.getCompanyName() : allegroBuyer.getFirstName() + " " + allegroBuyer.getLastName(),
-//                    allegroBuyer.
-//                )
-//            )
-            .party(allegroBuyer.getCompanyName())
-            .address(Address.Address.builder()
-                .street(allegroBuyerAddress.getStreet())
-                .city(allegroBuyerAddress.getCity())
-                .postCode(allegroBuyerAddress.getPostCode())
-                .build()
-            )
-            .contact(Contact.Contact.builder()
-                .name(allegroBuyer.getFirstName() + " " + allegroBuyer.getLastName())
-                .switchboard(allegroBuyer.getPhoneNumber())
-                .build()
-            )
-            .build();
-
-        List<LineItem> allegroLineItems =  allegroOrder.getLineItems();
-
-        AtomicInteger invoiceNumber = new AtomicInteger(0);
-
-        HashMap<TaxRate, TaxSubTotal> taxSubTotals = new LinkedHashMap<>();
-
-        taxSubTotals.put(TaxRate.H,
-            TaxSubTotal.builder()
-                .code(Code.PLN.toString())
-                .taxRate(
-                    new TaxSubTotal.TaxRate(
-                        (byte) TaxRate.H.getValue().intValue(),
-                        TaxRate.H.getCode().toString()
-                    )
-                )
-                .taxableValueAtRate(BigDecimal.ZERO.toString())
-                .taxAtRate(BigDecimal.ZERO.toString())
-                .netPaymentAtRate(BigDecimal.ZERO.toString())
-                .grossPaymentAtRate(BigDecimal.ZERO.toString())
-                .taxCurrency("")
-                .build()
-        );
-
-        taxSubTotals.put(TaxRate.L,
-            TaxSubTotal.builder()
-                .code(Code.PLN.toString())
-                .taxRate(
-                    new TaxSubTotal.TaxRate(
-                        (byte) TaxRate.L.getValue().intValue(),
-                        TaxRate.L.getCode().toString()
-                    )
-                )
-                .taxableValueAtRate(BigDecimal.ZERO.toString())
-                .taxAtRate(BigDecimal.ZERO.toString())
-                .netPaymentAtRate(BigDecimal.ZERO.toString())
-                .grossPaymentAtRate(BigDecimal.ZERO.toString())
-                .taxCurrency("")
-                .build()
-        );
-
-        taxSubTotals.put(TaxRate.Z,
-            TaxSubTotal.builder()
-                .code(Code.PLN.toString())
-                .taxRate(
-                    new TaxSubTotal.TaxRate(
-                        (byte) TaxRate.Z.getValue().intValue(),
-                        TaxRate.Z.getCode().toString()
-                    )
-                )
-                .taxableValueAtRate(BigDecimal.ZERO.toString())
-                .taxAtRate(BigDecimal.ZERO.toString())
-                .netPaymentAtRate(BigDecimal.ZERO.toString())
-                .grossPaymentAtRate(BigDecimal.ZERO.toString())
-                .taxCurrency("")
-                .build()
-        );
-
-        List<InvoiceLine> invoiceLines = allegroLineItems.stream()
-            .map(allegroLineItem -> {
-
-                BigDecimal quantity = new BigDecimal(allegroLineItem.getQuantity());
-                BigDecimal totalPrice = new BigDecimal(allegroLineItem.getPrice().getAmount()).multiply(quantity);
-
-                BigDecimal percentageTaxRateValue = BigDecimal.ZERO;
-
-                if(allegroLineItem.getTax() != null){
-
-                    percentageTaxRateValue = new BigDecimal(allegroLineItem.getTax().getRate());
-                }
-
-                TaxRate taxRate = TaxRate.getByValue(percentageTaxRateValue.intValue());
-
-                BigDecimal taxRateValue = percentageTaxRateValue.divide(BigDecimal.valueOf(100));
-
-                BigDecimal totalTaxValue = totalPrice.multiply(taxRateValue);
-
-                BigDecimal unitTaxValue = totalTaxValue.divide(new BigDecimal(allegroLineItem.getQuantity()));
-
-                BigDecimal rawUnitPrice = totalPrice
-                    .subtract(totalTaxValue)
-                    .divide(quantity);
-
-                BigDecimal rawTotalPrice = rawUnitPrice
-                    .multiply(quantity);
-
-                totalPrice = totalPrice.setScale(2, RoundingMode.HALF_UP);
-                unitTaxValue = unitTaxValue.setScale(2, RoundingMode.HALF_UP);
-                taxRateValue = taxRateValue.setScale(2, RoundingMode.HALF_UP);
-                totalTaxValue = totalTaxValue.setScale(2, RoundingMode.HALF_UP);
-                rawUnitPrice = rawUnitPrice.setScale(2, RoundingMode.HALF_UP);
-                rawTotalPrice = rawTotalPrice.setScale(2, RoundingMode.HALF_UP);
-
-                TaxSubTotal taxSubTotal = taxSubTotals.get(taxRate);
-
-                taxSubTotal.setTaxableValueAtRate(
-                    new BigDecimal(taxSubTotal.getTaxableValueAtRate()).add(rawTotalPrice).toString()
-                );
-
-                taxSubTotal.setTaxAtRate(
-                    new BigDecimal(taxSubTotal.getTaxAtRate()).add(totalTaxValue).toString()
-                );
-
-                taxSubTotal.setNetPaymentAtRate(
-                    new BigDecimal(taxSubTotal.getNetPaymentAtRate()).add(totalPrice).toString()
-                );
-
-                taxSubTotal.setGrossPaymentAtRate(taxSubTotal.getNetPaymentAtRate());
-
-                return InvoiceLine.builder()
-                    .lineNumber((byte) invoiceNumber.incrementAndGet())
-                    .product(Product.Product.builder()
-                        .suppliersProductCode(allegroLineItem.getOffer().getExternal() != null ? allegroLineItem.getOffer().getExternal().getId() : null)
-                        .description(allegroLineItem.getOffer().getName())
-                        .build()
-                    )
-                        .quantity(new InvoiceLine.Quantity(
-                            (byte) allegroLineItem.getOffer().getProductSet().getProducts().size(),
-                            (byte) quantity.intValue(),
-                            UOMCode.UNIT.toString()
-                        ))
-                        .price(new InvoiceLine.Price(rawUnitPrice.toString()))
-                        .percentDiscount(
-                            new InvoiceLine.PercentDiscount(
-                                new Type.Type("", Code.LID.toString()), (byte) 0
-                            )
-                        )
-                        .lineTax(
-                            new InvoiceLine.LineTax(
-                                new TaxRate.TaxRate(
-                                    (byte) taxRate.getValue().intValue(),
-                                    TaxRate.getByValue(taxRateValue.intValue()).getCode().toString()
-                                ),
-                                totalTaxValue.toString()
-                            )
-                        )
-                        .lineTotal(totalPrice.toString())
-                        .invoiceLineInformation(allegroLineItem.getOffer().getName())
-                        .build();
-            })
-            .collect(Collectors.toList());
-
-        BigDecimal totalInvoiceLines = invoiceLines.stream()
-            .map(invoiceLine -> new BigDecimal(invoiceLine.getLineTotal()))
-            .reduce(((invoiceLine1, invoiceLine2) -> invoiceLine1.add(invoiceLine2)))
-            .get();
-
-        InvoiceTotal invoiceTotal = InvoiceTotal.builder()
-            .numberOfLines((byte) invoiceLines.size())
-            .numberOfTaxRates((byte) taxSubTotals.keySet().stream()
-                .map(taxSubTotal -> taxSubTotal.getValue())
-                .distinct().count()
-            )
-            .lineValueTotal(totalInvoiceLines.toString())
-            .taxableTotal(totalInvoiceLines.toString())
-            .taxTotal(taxSubTotals.values().stream()
-                .map(taxSubTotal -> new BigDecimal(taxSubTotal.getTaxAtRate()))
-                .reduce((taxAtRate, taxAtRate1) -> taxAtRate.add(taxAtRate1))
-                .get().toString()
-            )
-            .netPaymentTotal(taxSubTotals.values().stream()
-                .map(taxSubTotal -> new BigDecimal(taxSubTotal.getNetPaymentAtRate()))
-                .reduce((totalPrice, totalPrice1) -> totalPrice.add(totalPrice1))
-                .get().toString()
-            )
-            .grossPaymentTotal(taxSubTotals.values().stream()
-                .map(taxSubTotal -> new BigDecimal(taxSubTotal.getNetPaymentAtRate()))
-                .reduce((totalPrice, totalPrice1) -> totalPrice.add(totalPrice1))
-                .get().toString()
-            )
-            .build();
-
-        Invoice subiektInvoice = Invoice.builder()
-            .invoiceHead(invoiceHead)
-//            .invoiceReferences(invoiceReferences)
-            .invoiceDate(convert(allegroOrder.getPayment().getFinishedAt()))
-            .cityOfIssue(allegroInvoice.getAddress().getCity())
-            .taxPointDate(convert(allegroInvoice.getDueDate()))
-            .supplier(subiektSupplier)
-            .buyer(subiektBuyer)
-            .invoiceLines(invoiceLines)
-            .narrative("FS - płatność gotówka karta kredyt przelew i kredyt kupiecki")
-            .specialInstructions("dokument liczony wg cen netto")
-            .settlement(
-                new Settlement(
-                    new Settlement.SettlementTerms(
-                        convert(allegroInvoice.getDueDate()),
-                        Code.Code14I.toString()
-                    )
-                )
-            )
-            .taxSubTotals(taxSubTotals.values().stream().toList())
-            .invoiceTotal(invoiceTotal)
-            .build();
-
-        BatchTrailer batchTrailer = BatchTrailer.builder()
-            .itemCurrency(new CurrencyHolder.ItemCurrency(new CurrencyHolder.ItemCurrency.Currency("", Code.PLN.toString())))
-            .checksum("")
-            .build();
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-        Batch batch = Batch.builder()
-            .date(LocalDate.now().format(formatter))
-            .number("1")
-            .supplierName(supplierCompany.getName())
-            .docType(DocType.INVOICE.toString())
-            .invoices(List.of(subiektInvoice))
-            .batchTrailer(batchTrailer)
-            .build();
+        Batch batch = BatchMapper.map("Firma przykładowa systemu InsERT GT", allegroOrderResponse.getOrders());
 
         subiektBatchWriter.save("./subiekt.xml", batch);
 
@@ -336,15 +37,4 @@ public class App {
         subiektBatchWriter.save("./subiekt-output.xml", batch1);
     }
 
-    public static XMLGregorianCalendar convert(String value) throws ParseException, DatatypeConfigurationException {
-
-        value = value.split("T")[0];
-
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-
-        Date gotDate = fmt.parse(value);
-        String gotDateStr = fmt.format(gotDate);
-
-       return DatatypeFactory.newInstance().newXMLGregorianCalendar(gotDateStr);
-    }
 }

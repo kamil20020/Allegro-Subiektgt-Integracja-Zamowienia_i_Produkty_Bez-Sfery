@@ -50,6 +50,11 @@
       <version>2.5.4</version>
     </dependency>
     <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+      <version>2.6.0</version>
+    </dependency>
+    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>2.0.17</version>
@@ -148,7 +153,7 @@
           <artifactId>jsonschema2pojo-maven-plugin</artifactId>
           <version>1.2.2</version>
           <configuration>
-            <sourceDirectory>${basedir}/src/main/resources/schema</sourceDirectory>
+            <sourceDirectory>${basedir}/src/main/resources/schema/allegro</sourceDirectory>
             <targetPackage>pl.kamil_dywan.allegro1</targetPackage>
           </configuration>
           <executions>
@@ -173,7 +178,7 @@
           </executions>
           <configuration>
             <sources>
-              <source>${basedir}/src/main/resources/xsd/schema-definition.xsd</source>
+              <source>${basedir}/src/main/resources/schema/subiekt/main.xsd</source>
             </sources>
             <outputDirectory>${basedir}/target/generated-sources/jaxb/pl/kamil_dywan/subiektgt</outputDirectory>
           </configuration>

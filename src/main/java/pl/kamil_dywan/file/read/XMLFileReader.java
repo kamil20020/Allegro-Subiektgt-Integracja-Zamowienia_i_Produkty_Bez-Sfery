@@ -54,31 +54,28 @@ public class XMLFileReader<T> extends FileReader<T> {
 
         File foundFile = loadFile(filePath);
 
-        XMLStreamReader xsr = null;
-
-        try(FileInputStream is = new FileInputStream(foundFile)){
-
-            xsr = XMLInputFactory.newFactory()
-                .createXMLStreamReader(is);
-        }
-        catch (XMLStreamException e) {
-            e.printStackTrace();
-        }
-
-        if(xsr == null){
-            return null;
-        }
-
-        XMLReaderWithoutNamespace xr = new XMLReaderWithoutNamespace(xsr);
-
         T result = null;
 
+        FileInputStream is = null;
+
         try{
+            is = new FileInputStream(foundFile);
+
+            XMLStreamReader xsr = XMLInputFactory.newFactory()
+                .createXMLStreamReader(is);
+
+            XMLReaderWithoutNamespace xr = new XMLReaderWithoutNamespace(xsr);
+
             result = (T) unmarshaller.unmarshal(xr);
-            xr.close();
         }
         catch(JAXBException | XMLStreamException e){
             e.printStackTrace();
+        }
+        finally {
+
+            if(is != null){
+                is.close();
+            }
         }
 
        return result;
