@@ -7,6 +7,7 @@ import pl.kamil_dywan.file.write.FileWriter;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
 
 public class XMLFileWriter<T> implements FileWriter<T> {
 
@@ -19,6 +20,7 @@ public class XMLFileWriter<T> implements FileWriter<T> {
             marshaller = jaxbContext.createMarshaller();
 
             marshaller.setProperty(Marshaller.JAXB_ENCODING, "windows-1250");
+            marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.FALSE);
 //            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         }
         catch (JAXBException e) {
@@ -40,6 +42,21 @@ public class XMLFileWriter<T> implements FileWriter<T> {
         }
         catch (JAXBException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public String writeToStr(T value) throws Exception {
+
+        try(StringWriter stringWriter = new StringWriter()){
+
+            marshaller.marshal(value, stringWriter);
+
+            return stringWriter.toString();
+        }
+        catch (JAXBException e){
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
     }
 }

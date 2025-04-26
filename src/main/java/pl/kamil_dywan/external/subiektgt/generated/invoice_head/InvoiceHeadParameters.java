@@ -35,7 +35,6 @@ public class InvoiceHeadParameters {
     protected String decimalSeparator;
 
     @XmlElement(name = "Precision")
-    @XmlJavaTypeAdapter(value = BigDecimalAdapter.class)
     protected BigDecimal precision;
 
 }

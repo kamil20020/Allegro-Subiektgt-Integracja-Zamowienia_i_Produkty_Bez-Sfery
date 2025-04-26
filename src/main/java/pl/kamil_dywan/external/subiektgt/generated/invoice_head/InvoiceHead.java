@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.kamil_dywan.external.subiektgt.generated.Currency;
+import pl.kamil_dywan.external.subiektgt.generated.CurrencyHolder;
 import pl.kamil_dywan.external.subiektgt.generated.Type;
 
 @Builder
@@ -40,7 +41,7 @@ public class InvoiceHead {
     protected Type function;
 
     @XmlElement(name = "InvoiceCurrency", required = true)
-    protected Currency invoiceCurrency;
+    protected CurrencyHolder invoiceCurrency;
 
     @XmlElement(name = "Checksum")
     protected Integer checksum = 81410;

@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(
     name = "",
-    propOrder = {"value"}
+    propOrder = {"code", "value"}
 )
 public class SettlementTerms {
 

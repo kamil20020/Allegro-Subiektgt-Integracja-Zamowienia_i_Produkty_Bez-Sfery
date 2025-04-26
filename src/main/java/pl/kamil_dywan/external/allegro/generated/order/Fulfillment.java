@@ -7,7 +7,7 @@ import pl.kamil_dywan.external.allegro.own.FulFillmentStatus;
 import javax.annotation.processing.Generated;
 
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonPropertyOrder({
     "status",
     "shipmentSummary"

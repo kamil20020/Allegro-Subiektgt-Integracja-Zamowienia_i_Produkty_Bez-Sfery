@@ -25,6 +25,6 @@ public class BigDecimalAdapter extends XmlAdapter<String, BigDecimal> {
             return null;
         }
 
-        return v.toString();
+        return v.toString().replace(".", ",");
     }
 }

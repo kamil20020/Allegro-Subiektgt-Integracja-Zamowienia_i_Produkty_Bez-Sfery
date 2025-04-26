@@ -1,7 +1,9 @@
 package pl.kamil_dywan.external.allegro.generated.invoice;
 
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
+import pl.kamil_dywan.external.allegro.own.LocalDateSerializer;
 
 import javax.annotation.processing.Generated;
 import java.time.LocalDate;
@@ -9,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonPropertyOrder({
     "required",
     "address",
@@ -26,6 +28,7 @@ public class Invoice {
     private InvoiceAddress address;
 
     @JsonProperty("dueDate")
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate dueDate;
 
     @JsonProperty("features")

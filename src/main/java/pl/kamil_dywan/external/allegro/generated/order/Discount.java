@@ -8,7 +8,7 @@ import lombok.Data;
 import javax.annotation.processing.Generated;
 
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonPropertyOrder({
     "type"
 })

@@ -26,11 +26,11 @@ public class BatchTrailer {
     protected CurrencyHolder itemCurrency;
 
     @XmlElement(name = "Checksum", required = true)
-    protected String checksum = "";
+    protected String checksum = null;
 
     public BatchTrailer(Code currencyCode){
 
-        this.itemCurrency = new CurrencyHolder(new Currency("", currencyCode));
+        this.itemCurrency = new CurrencyHolder(new Currency(currencyCode));
     }
 
 }

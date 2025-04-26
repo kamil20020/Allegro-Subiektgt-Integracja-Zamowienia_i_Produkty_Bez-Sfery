@@ -10,7 +10,7 @@ import lombok.*;
 import pl.kamil_dywan.external.allegro.generated.Cost;
 
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonPropertyOrder({
     "value",
     "type",

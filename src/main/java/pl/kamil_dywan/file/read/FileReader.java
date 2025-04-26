@@ -7,9 +7,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 
-public abstract class FileReader<T> {
+public interface FileReader<T> {
 
-    public static File loadFile(String filePath) throws URISyntaxException{
+    static File loadFile(String filePath) throws URISyntaxException{
 
         URL fileURL = XMLFileReader.class.getClassLoader().getResource(filePath);
         URI fileURI = fileURL.toURI();
@@ -18,5 +18,6 @@ public abstract class FileReader<T> {
         return foundFilePath.toFile();
     }
 
-    public abstract T load(String filePath) throws URISyntaxException, IOException;
+    T load(String filePath) throws URISyntaxException, IOException;
+    T loadFromStr(String value) throws Exception;
 }

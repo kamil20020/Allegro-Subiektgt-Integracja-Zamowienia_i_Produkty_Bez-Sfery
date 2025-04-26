@@ -2,6 +2,7 @@ package pl.kamil_dywan.file.read;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
 import pl.kamil_dywan.file.read.FileReader;
 
@@ -11,8 +12,9 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.util.StreamReaderDelegate;
 import java.io.*;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 
-public class XMLFileReader<T> extends FileReader<T> {
+public class XMLFileReader<T> implements FileReader<T> {
 
     private Unmarshaller unmarshaller;
 
@@ -52,17 +54,14 @@ public class XMLFileReader<T> extends FileReader<T> {
 
     public T load(String filePath) throws URISyntaxException, IOException {
 
-        File foundFile = loadFile(filePath);
+        File foundFile = FileReader.loadFile(filePath);
 
         T result = null;
 
-        FileInputStream is = null;
-
-        try{
-            is = new FileInputStream(foundFile);
+        try(FileInputStream is = new FileInputStream(foundFile)){
 
             XMLStreamReader xsr = XMLInputFactory.newFactory()
-                .createXMLStreamReader(is);
+                .createXMLStreamReader(is, "windows-1250");
 
             XMLReaderWithoutNamespace xr = new XMLReaderWithoutNamespace(xsr);
 
@@ -71,13 +70,31 @@ public class XMLFileReader<T> extends FileReader<T> {
         catch(JAXBException | XMLStreamException e){
             e.printStackTrace();
         }
-        finally {
-
-            if(is != null){
-                is.close();
-            }
-        }
 
        return result;
+    }
+
+    public T loadFromStr(String value) {
+
+        value = value.stripLeading();
+
+        if(value.startsWith("<?xml")){
+
+            int endIndex = value.indexOf("?>");
+
+            value = value.substring(endIndex + 2);
+        }
+
+        try(StringReader stringReader = new StringReader(value)) {
+
+            XMLStreamReader xsr = XMLInputFactory.newFactory().createXMLStreamReader(stringReader);
+            XMLReaderWithoutNamespace xr = new XMLReaderWithoutNamespace(xsr);
+
+            return (T) unmarshaller.unmarshal(xr);
+        }
+        catch (JAXBException | XMLStreamException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException(e.getMessage());
+        }
     }
 }

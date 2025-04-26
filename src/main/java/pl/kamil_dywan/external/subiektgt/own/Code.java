@@ -14,7 +14,8 @@ public enum Code {
     Z("Z"),
     H("H"),
     L("L"),
-    @XmlEnumValue("14I") Code14I("14I");
+    @XmlEnumValue("14I") Code14I("14I"),
+    @XmlEnumValue("00I") Code00I("00I");
 
     private String name;
 

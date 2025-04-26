@@ -14,14 +14,19 @@ import pl.kamil_dywan.external.subiektgt.own.Code;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(
     name = "",
-    propOrder = {"value"}
+    propOrder = {"code", "value"}
 )
 public class Currency {
 
-    @XmlValue
+    @XmlElement
     protected String value;
 
     @XmlAttribute(name = "Code")
     protected Code code;
+
+    public Currency(Code code){
+
+        this.code = code;
+    }
 
 }

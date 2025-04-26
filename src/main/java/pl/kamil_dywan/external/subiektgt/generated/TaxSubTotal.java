@@ -51,7 +51,7 @@ public class TaxSubTotal {
     protected BigDecimal grossPaymentAtRate = BigDecimal.ZERO;
 
     @XmlElement(name = "TaxCurrency", required = true)
-    protected String taxCurrency = "";
+    protected String taxCurrency = null;
 
     @XmlAttribute(name = "Code")
     protected Code code;

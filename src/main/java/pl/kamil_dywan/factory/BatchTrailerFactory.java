@@ -15,7 +15,7 @@ public class BatchTrailerFactory {
     public static BatchTrailer create(Code currencyCode){
 
         return BatchTrailer.builder()
-            .itemCurrency(new CurrencyHolder(new Currency("", currencyCode)))
+            .itemCurrency(new CurrencyHolder(new Currency(currencyCode)))
             .build();
     }
 }

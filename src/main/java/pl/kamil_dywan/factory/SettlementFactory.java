@@ -18,7 +18,7 @@ public class SettlementFactory {
         return new Settlement(
             SettlementTerms.builder()
                 .value(dueDate)
-                .code(Code.Code14I)
+                .code(Code.Code00I)
                 .build()
         );
     }

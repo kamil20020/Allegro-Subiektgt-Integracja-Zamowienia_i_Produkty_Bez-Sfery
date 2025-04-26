@@ -1,6 +1,7 @@
 package pl.kamil_dywan.factory;
 
 import pl.kamil_dywan.external.subiektgt.generated.Currency;
+import pl.kamil_dywan.external.subiektgt.generated.CurrencyHolder;
 import pl.kamil_dywan.external.subiektgt.generated.Type;
 import pl.kamil_dywan.external.subiektgt.generated.invoice_head.InvoiceHead;
 import pl.kamil_dywan.external.subiektgt.generated.invoice_head.InvoiceHeadParameters;
@@ -24,7 +25,7 @@ public class InvoiceHeadFactory {
             .parameters(new InvoiceHeadParameters(Code.PL.toString(), ",", new BigDecimal("20.3")))
             .invoiceType(new Type(InvoiceType.VAT.toString(), Code.INVOICE))
             .function(new Type("", Code.FII))
-            .invoiceCurrency(new Currency("", currencyCode))
+            .invoiceCurrency(new CurrencyHolder(new Currency(currencyCode)))
             .build();
     }
 }

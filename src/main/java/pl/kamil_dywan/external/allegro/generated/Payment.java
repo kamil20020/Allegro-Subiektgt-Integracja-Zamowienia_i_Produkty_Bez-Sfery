@@ -8,7 +8,7 @@ import java.time.OffsetDateTime;
 import java.util.*;
 
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonPropertyOrder({
     "id",
     "type",
