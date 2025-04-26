@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Data
+@Builder
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonPropertyOrder({
     "firstName",

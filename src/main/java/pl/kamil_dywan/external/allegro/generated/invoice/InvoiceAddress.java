@@ -7,6 +7,7 @@ import pl.kamil_dywan.external.allegro.own.Country;
 import javax.annotation.processing.Generated;
 
 @Data
+@Builder
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonPropertyOrder({
     "street",
