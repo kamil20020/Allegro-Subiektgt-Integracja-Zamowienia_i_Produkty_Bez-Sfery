@@ -2,7 +2,7 @@ package pl.kamil_dywan.external.subiektgt.own;
 
 import java.math.BigDecimal;
 
-public record LineItemMoneyStats(
+public record InvoiceLineMoneyStats(
     BigDecimal taxRatePercentage,
     BigDecimal unitPriceWithTax,
     BigDecimal unitPriceWithoutTax,

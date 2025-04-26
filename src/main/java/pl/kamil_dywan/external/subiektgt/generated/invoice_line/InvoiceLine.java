@@ -36,7 +36,7 @@ public class InvoiceLine {
     protected Product product;
 
     @XmlElement(name = "Quantity", required = true)
-    protected LineItemQuantity quantity;
+    protected InvoiceLineQuantity quantity;
 
     @XmlElement(name = "Price", required = true)
     protected UnitPriceHolder unitPrice;

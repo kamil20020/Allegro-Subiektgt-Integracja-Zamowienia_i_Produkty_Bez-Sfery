@@ -2,7 +2,6 @@ package pl.kamil_dywan.external.allegro.generated.delivery;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
-import pl.kamil_dywan.allegro.generated.*;
 import pl.kamil_dywan.external.allegro.generated.Cost;
 
 import javax.annotation.processing.Generated;

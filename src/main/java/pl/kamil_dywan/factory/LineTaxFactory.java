@@ -1,0 +1,28 @@
+package pl.kamil_dywan.factory;
+
+import pl.kamil_dywan.external.subiektgt.generated.TaxRate;
+import pl.kamil_dywan.external.subiektgt.generated.invoice_line.LineTax;
+import pl.kamil_dywan.external.subiektgt.own.TaxRateCodeMapping;
+
+import java.math.BigDecimal;
+
+public class LineTaxFactory {
+
+    private LineTaxFactory(){
+
+
+    }
+
+    public static LineTax create(BigDecimal tax, TaxRateCodeMapping taxRateCodeMapping){
+
+        TaxRate taxRate = new TaxRate(
+            BigDecimal.valueOf(taxRateCodeMapping.getValue()),
+            taxRateCodeMapping.getCode()
+        );
+
+        return LineTax.builder()
+            .taxRate(taxRate)
+            .taxValue(tax)
+            .build();
+    }
+}

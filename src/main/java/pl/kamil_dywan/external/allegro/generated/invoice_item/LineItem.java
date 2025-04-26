@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.*;
-import pl.kamil_dywan.allegro.generated.*;
 import pl.kamil_dywan.external.allegro.generated.Cost;
 
 @Data

@@ -19,7 +19,7 @@ import pl.kamil_dywan.external.subiektgt.own.UOMCode;
         "amount"
     }
 )
-public class LineItemQuantity {
+public class InvoiceLineQuantity {
 
     @XmlElement(name = "Packsize")
     protected Integer packsize;

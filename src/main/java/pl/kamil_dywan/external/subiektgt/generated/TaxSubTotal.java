@@ -78,7 +78,7 @@ public class TaxSubTotal {
         this.taxableValueAtRate = this.taxableValueAtRate.add(taxableValueAtRate);
         this.taxAtRate = this.taxAtRate.add(taxAtRate);
         this.netPaymentAtRate = this.netPaymentAtRate.add(netPaymentAtRate);
-        this.grossPaymentAtRate = BigDecimal.valueOf(netPaymentAtRate.doubleValue());
+        this.grossPaymentAtRate = BigDecimal.valueOf(this.netPaymentAtRate.doubleValue());
     }
 
     public void scale(int scale, RoundingMode roundingMode){

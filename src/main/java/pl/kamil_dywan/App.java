@@ -25,7 +25,7 @@ public class App {
         FileWriter<OrderResponse> allegroOrderWriter = new JSONFileWriter<>();
         FileReader<OrderResponse> allegroOrderReader = new JSONFileReader<>(OrderResponse.class);
 
-        OrderResponse allegroOrderResponse = allegroOrderReader.load("data/allegro/swagger.json");
+        OrderResponse allegroOrderResponse = allegroOrderReader.load("data/allegro/real-order-1.json");
         allegroOrderWriter.save("order-output.json", allegroOrderResponse);
 
         Batch batch = BatchMapper.map("Firma przykładowa systemu InsERT GT", allegroOrderResponse.getOrders());

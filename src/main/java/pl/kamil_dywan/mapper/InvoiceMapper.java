@@ -2,18 +2,16 @@ package pl.kamil_dywan.mapper;
 
 import pl.kamil_dywan.external.allegro.generated.order.Order;
 import pl.kamil_dywan.factory.InvoiceHeadFactory;
-import pl.kamil_dywan.factory.InvoiceLineFactory;
 import pl.kamil_dywan.external.subiektgt.generated.Invoice;
 import pl.kamil_dywan.external.subiektgt.generated.InvoiceTotal;
 import pl.kamil_dywan.external.subiektgt.generated.TaxSubTotal;
 import pl.kamil_dywan.external.subiektgt.generated.buyer.Buyer;
 import pl.kamil_dywan.external.subiektgt.generated.invoice_line.InvoiceLine;
-import pl.kamil_dywan.external.subiektgt.generated.settlement.Settlement;
-import pl.kamil_dywan.external.subiektgt.generated.settlement.SettlementTerms;
 import pl.kamil_dywan.external.subiektgt.generated.supplier.Supplier;
 import pl.kamil_dywan.external.subiektgt.own.Code;
-import pl.kamil_dywan.external.subiektgt.own.LineItemMoneyStats;
+import pl.kamil_dywan.external.subiektgt.own.InvoiceLineMoneyStats;
 import pl.kamil_dywan.external.subiektgt.own.TaxRateCodeMapping;
+import pl.kamil_dywan.factory.SettlementFactory;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -45,22 +43,26 @@ public class InvoiceMapper {
 
         InvoiceTotal invoiceTotal = InvoiceTotal.getEmpty();
 
+        final BigDecimal[] totalOrderPriceWithoutTax = {BigDecimal.ZERO};
+
         List<InvoiceLine> invoiceLines = allegroOrder.getLineItems().stream()
             .map(allegroLineItem -> {
 
                 Integer newLineItemNumber = lineItemNumber.incrementAndGet();
-                LineItemMoneyStats lineItemMoneyStats = InvoiceLineFactory.getLineItemMoneyStats(allegroLineItem);
-
-                BigDecimal taxRatePercentage = lineItemMoneyStats.taxRatePercentage();
-                TaxRateCodeMapping taxRateCodeMapping = TaxRateCodeMapping.getByValue(taxRatePercentage);
-                updateTaxSubTotal(taxSubtotalsMappings, taxRateCodeMapping, lineItemMoneyStats);
+                InvoiceLineMoneyStats lineItemMoneyStats = InvoiceLineMapper.getLineItemMoneyStats(allegroLineItem);
+                totalOrderPriceWithoutTax[0] = totalOrderPriceWithoutTax[0].add(lineItemMoneyStats.totalPriceWithoutTax());
 
                 InvoiceLine invoiceLine = InvoiceLineMapper.map(newLineItemNumber, allegroLineItem, lineItemMoneyStats);
                 invoiceLine.scale(2, RoundingMode.HALF_UP);
 
+                BigDecimal taxRatePercentage = lineItemMoneyStats.taxRatePercentage();
+                updateTaxSubTotal(taxSubtotalsMappings, taxRatePercentage, lineItemMoneyStats);
+
                 return invoiceLine;
             })
             .collect(Collectors.toList());
+
+        addDeliveryCost(allegroOrder, taxSubtotalsMappings, totalOrderPriceWithoutTax[0]);
 
         invoiceTotal.setNumberOfLines(invoiceLines.size());
         updateInvoiceTotal(invoiceTotal, taxSubtotalsMappings);
@@ -81,7 +83,7 @@ public class InvoiceMapper {
             .invoiceLines(invoiceLines)
             .narrative("FS - płatność gotówka karta kredyt przelew i kredyt kupiecki")
             .specialInstructions("dokument liczony wg cen netto")
-            .settlement(InvoiceMapper.create(allegroInvoice.getDueDate()))
+            .settlement(SettlementFactory.create(allegroInvoice.getDueDate()))
             .taxSubTotals(taxSubTotals)
             .invoiceTotal(invoiceTotal)
             .build();
@@ -89,9 +91,10 @@ public class InvoiceMapper {
 
     private static void updateTaxSubTotal(
         Map<TaxRateCodeMapping, TaxSubTotal> taxSubtotalsMappings,
-        TaxRateCodeMapping taxRateCodeMapping,
-        LineItemMoneyStats lineItemMoneyStats
+        BigDecimal taxRatePercentage,
+        InvoiceLineMoneyStats lineItemMoneyStats
     ){
+        TaxRateCodeMapping taxRateCodeMapping = TaxRateCodeMapping.getByValue(taxRatePercentage);
         TaxSubTotal taxSubTotalForTaxRate = taxSubtotalsMappings.get(taxRateCodeMapping);
 
         taxSubTotalForTaxRate.update(
@@ -99,6 +102,31 @@ public class InvoiceMapper {
             lineItemMoneyStats.totalTaxValue(),
             lineItemMoneyStats.totalPriceWithTax()
         );
+    }
+
+    private static void addDeliveryCost(
+        Order allegroOrder,
+        Map<TaxRateCodeMapping, TaxSubTotal> taxSubtotalsMappings,
+        BigDecimal totalOrderPriceWithoutTax
+    ){
+        BigDecimal totalDeliveryCostWithTax = allegroOrder.getDelivery().getCost().getAmount();
+
+        taxSubtotalsMappings.values()
+            .forEach(taxSubTotal -> {
+
+                BigDecimal priceWithoutTax = taxSubTotal.getTaxableValueAtRate();
+
+                BigDecimal taxRatePercentage = taxSubTotal.getTaxRate().getValue();
+                BigDecimal taxRateValue = taxRatePercentage.divide(BigDecimal.valueOf(100));
+                BigDecimal taxRateValueNegation = BigDecimal.ONE.subtract(taxRateValue);
+
+                BigDecimal taxPartInOrder = priceWithoutTax.divide(totalOrderPriceWithoutTax);
+                BigDecimal deliveryCostForTaxWithTax = totalDeliveryCostWithTax.multiply(taxPartInOrder);
+                BigDecimal deliveryCostForTaxWithoutTax = deliveryCostForTaxWithTax.multiply(taxRateValueNegation);
+                BigDecimal deliveryTax = deliveryCostForTaxWithTax.subtract(deliveryCostForTaxWithoutTax);
+
+                taxSubTotal.update(deliveryCostForTaxWithoutTax, deliveryTax, deliveryCostForTaxWithTax);
+            });
     }
 
     private static void updateInvoiceTotal(
@@ -128,15 +156,5 @@ public class InvoiceMapper {
 
                 taxSubTotal.scale(scale, roundingMode);
             });
-    }
-
-    public static Settlement create(LocalDate dueDate){
-
-        return new Settlement(
-            SettlementTerms.builder()
-                .value(dueDate)
-                .code(Code.Code14I)
-                .build()
-        );
     }
 }
