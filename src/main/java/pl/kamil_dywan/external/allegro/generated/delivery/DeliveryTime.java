@@ -8,6 +8,9 @@ import javax.annotation.processing.Generated;
 import java.time.OffsetDateTime;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonPropertyOrder({
     "from",

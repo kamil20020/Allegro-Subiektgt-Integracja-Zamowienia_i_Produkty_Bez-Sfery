@@ -7,6 +7,7 @@ import pl.kamil_dywan.external.allegro.generated.Cost;
 import pl.kamil_dywan.external.allegro.generated.Payment;
 import pl.kamil_dywan.external.allegro.generated.buyer.Buyer;
 import pl.kamil_dywan.external.allegro.generated.delivery.Delivery;
+import pl.kamil_dywan.external.allegro.generated.delivery.DeliveryTime;
 import pl.kamil_dywan.external.allegro.generated.invoice.Invoice;
 import pl.kamil_dywan.external.allegro.generated.invoice.InvoiceAddress;
 import pl.kamil_dywan.external.allegro.generated.invoice_item.LineItem;
@@ -26,15 +27,13 @@ import pl.kamil_dywan.external.subiektgt.own.InvoiceLineMoneyStats;
 import pl.kamil_dywan.external.subiektgt.own.TaxRateCodeMapping;
 import pl.kamil_dywan.factory.InvoiceHeadFactory;
 import pl.kamil_dywan.factory.SettlementFactory;
-import pl.kamil_dywan.mapper.BuyerMapper;
-import pl.kamil_dywan.mapper.InvoiceLineMapper;
-import pl.kamil_dywan.mapper.InvoiceMapper;
-import pl.kamil_dywan.mapper.SupplierMapper;
+import pl.kamil_dywan.mapper.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -65,6 +64,7 @@ class InvoiceMapperTest {
 
         Delivery allegroDelivery = Delivery.builder()
             .cost(new Cost(new BigDecimal("0.00"), Currency.PLN))
+            .time(new DeliveryTime(OffsetDateTime.now(), null, null, null))
             .build();
 
         LineItem lineItem1 = LineItem.builder()
@@ -87,7 +87,11 @@ class InvoiceMapperTest {
             .quantity(5)
             .build();
 
-        List<LineItem> allegroLineItems = List.of(lineItem1, lineItem2, lineItem3, lineItem4, lineItem5);
+        LineItem deliveryLineItem = LineItem.builder()
+            .quantity(1)
+            .build();
+
+        List<LineItem> allegroLineItems = new ArrayList<>(List.of(lineItem1, lineItem2, lineItem3, lineItem4, lineItem5));
 
         // Item x 70 -> for 1 netto 119,10 PLN, brutto 146,49 PLN, tax 23%, tax value 27,39 PLN
         InvoiceLineMoneyStats invoiceLineMoneyStats1 = new InvoiceLineMoneyStats(
@@ -139,8 +143,21 @@ class InvoiceMapperTest {
             new BigDecimal("1584.00")
         );
 
+        InvoiceLineMoneyStats deliveryInvoiceLineMoneyStats = new InvoiceLineMoneyStats(
+            new BigDecimal("8.00"),
+            new BigDecimal("20.00"),
+            new BigDecimal("18.52"),
+            new BigDecimal("20.00"),
+            new BigDecimal("18.52"),
+            new BigDecimal("1.48")
+        );
+
         List<InvoiceLineMoneyStats> invoiceLineMoneyStatsLists = List.of(
-            invoiceLineMoneyStats1, invoiceLineMoneyStats2, invoiceLineMoneyStats3, invoiceLineMoneyStats4, invoiceLineMoneyStats5
+            invoiceLineMoneyStats1,
+            invoiceLineMoneyStats2,
+            invoiceLineMoneyStats3,
+            invoiceLineMoneyStats4,
+            invoiceLineMoneyStats5
         );
 
         Order allegroOrder = Order.builder()
@@ -196,11 +213,12 @@ class InvoiceMapperTest {
 
         //when
         try(
-                MockedStatic<SupplierMapper> mockedSupplierMapper = Mockito.mockStatic(SupplierMapper.class);
-                MockedStatic<BuyerMapper> mockedBuyerMapper = Mockito.mockStatic(BuyerMapper.class);
-                MockedStatic<InvoiceLineMapper> mockedInvoiceLineMapper = Mockito.mockStatic(InvoiceLineMapper.class);
-                MockedStatic<InvoiceHeadFactory> mockedInvoiceHeadFactory = Mockito.mockStatic(InvoiceHeadFactory.class);
-                MockedStatic<SettlementFactory> mockedSettlementFactory = Mockito.mockStatic(SettlementFactory.class)
+            MockedStatic<SupplierMapper> mockedSupplierMapper = Mockito.mockStatic(SupplierMapper.class);
+            MockedStatic<BuyerMapper> mockedBuyerMapper = Mockito.mockStatic(BuyerMapper.class);
+            MockedStatic<InvoiceLineMapper> mockedInvoiceLineMapper = Mockito.mockStatic(InvoiceLineMapper.class);
+            MockedStatic<AllegroLineItemMapper> mockedAllegroLineItemMapper = Mockito.mockStatic(AllegroLineItemMapper.class);
+            MockedStatic<InvoiceHeadFactory> mockedInvoiceHeadFactory = Mockito.mockStatic(InvoiceHeadFactory.class);
+            MockedStatic<SettlementFactory> mockedSettlementFactory = Mockito.mockStatic(SettlementFactory.class)
         ){
             mockedSupplierMapper.when(() -> SupplierMapper.map(any())).thenReturn(expectedSupplier);
             mockedBuyerMapper.when(() -> BuyerMapper.map(any())).thenReturn(expectedBuyer);
@@ -213,6 +231,8 @@ class InvoiceMapperTest {
 
                 mockedInvoiceLineMapper.when(() -> InvoiceLineMapper.getInvoiceItemMoneyStats(eq(lineItem))).thenReturn(invoiceLineMoneyStats);
             }
+
+//            mockedAllegroLineItemMapper.when(() -> AllegroLineItemMapper.mapDeliveryToLineItem(any())).thenReturn(deliveryLineItem);
 
             mockedInvoiceHeadFactory.when(() -> InvoiceHeadFactory.create(any())).thenReturn(expectedInvoiceHead);
             mockedSettlementFactory.when(() -> SettlementFactory.create(any())).thenReturn(expectedSettlement);
@@ -268,6 +288,8 @@ class InvoiceMapperTest {
                 mockedInvoiceLineMapper.verify(() -> InvoiceLineMapper.map(finalI, allegroLineItem, invoiceLineMoneyStats));
                 mockedInvoiceLineMapper.verify(() -> InvoiceLineMapper.getInvoiceItemMoneyStats(allegroLineItem));
             }
+
+//            mockedAllegroLineItemMapper.verify(() -> AllegroLineItemMapper.mapDeliveryToLineItem(allegroOrder));
 
             mockedInvoiceHeadFactory.verify(() -> InvoiceHeadFactory.create(Code.PLN));
             mockedSettlementFactory.verify(() -> SettlementFactory.create(allegroInvoice.getDueDate()));

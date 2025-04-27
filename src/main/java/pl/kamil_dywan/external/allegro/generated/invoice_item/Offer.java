@@ -34,4 +34,9 @@ public class Offer {
     @JsonProperty("productSet")
     private ProductSet productSet;
 
+    public Offer(String name){
+
+        this.name = name;
+    }
+
 }

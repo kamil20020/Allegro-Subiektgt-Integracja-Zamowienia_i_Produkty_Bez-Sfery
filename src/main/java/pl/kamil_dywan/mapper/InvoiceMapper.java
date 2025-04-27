@@ -1,5 +1,6 @@
 package pl.kamil_dywan.mapper;
 
+import pl.kamil_dywan.external.allegro.generated.invoice_item.LineItem;
 import pl.kamil_dywan.external.allegro.generated.order.Order;
 import pl.kamil_dywan.factory.InvoiceHeadFactory;
 import pl.kamil_dywan.external.subiektgt.generated.Invoice;
@@ -16,6 +17,7 @@ import pl.kamil_dywan.factory.SettlementFactory;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -43,14 +45,15 @@ public class InvoiceMapper {
 
         InvoiceTotal invoiceTotal = InvoiceTotal.getEmpty();
 
-        final BigDecimal[] totalOrderPriceWithoutTax = {BigDecimal.ZERO};
+        List<LineItem> allegroLineItems = allegroOrder.getLineItems();
 
-        List<InvoiceLine> invoiceLines = allegroOrder.getLineItems().stream()
+//        allegroLineItems.add(AllegroLineItemMapper.mapDeliveryToLineItem(allegroOrder));
+
+        List<InvoiceLine> invoiceLines = allegroLineItems.stream()
             .map(allegroLineItem -> {
 
                 Integer newLineItemNumber = lineItemNumber.incrementAndGet();
                 InvoiceLineMoneyStats lineItemMoneyStats = InvoiceLineMapper.getInvoiceItemMoneyStats(allegroLineItem);
-                totalOrderPriceWithoutTax[0] = totalOrderPriceWithoutTax[0].add(lineItemMoneyStats.totalPriceWithoutTax());
 
                 InvoiceLine invoiceLine = InvoiceLineMapper.map(newLineItemNumber, allegroLineItem, lineItemMoneyStats);
                 invoiceLine.scale(2, RoundingMode.HALF_UP);
@@ -61,8 +64,6 @@ public class InvoiceMapper {
                 return invoiceLine;
             })
             .collect(Collectors.toList());
-
-        addDeliveryCost(allegroOrder, taxSubtotalsMappings, totalOrderPriceWithoutTax[0]);
 
         invoiceTotal.setNumberOfLines(invoiceLines.size());
         updateInvoiceTotal(invoiceTotal, taxSubtotalsMappings);
@@ -104,7 +105,7 @@ public class InvoiceMapper {
         );
     }
 
-    private static void addDeliveryCost(
+    private static void addProportionalDeliveryCost(
         Order allegroOrder,
         Map<TaxRateCodeMapping, TaxSubTotal> taxSubtotalsMappings,
         BigDecimal totalOrderPriceWithoutTax

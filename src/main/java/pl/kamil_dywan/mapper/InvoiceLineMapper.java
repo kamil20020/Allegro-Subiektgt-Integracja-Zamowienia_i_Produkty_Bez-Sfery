@@ -1,11 +1,14 @@
 package pl.kamil_dywan.mapper;
 
+import pl.kamil_dywan.external.allegro.generated.Cost;
+import pl.kamil_dywan.external.allegro.generated.delivery.Delivery;
 import pl.kamil_dywan.external.allegro.generated.invoice_item.LineItem;
 import pl.kamil_dywan.external.allegro.generated.invoice_item.Offer;
-import pl.kamil_dywan.external.subiektgt.generated.invoice_line.InvoiceLine;
-import pl.kamil_dywan.external.subiektgt.generated.invoice_line.InvoiceLineQuantity;
-import pl.kamil_dywan.external.subiektgt.generated.invoice_line.LineTax;
-import pl.kamil_dywan.external.subiektgt.generated.invoice_line.UnitPriceHolder;
+import pl.kamil_dywan.external.allegro.generated.invoice_item.Tax;
+import pl.kamil_dywan.external.allegro.generated.order.Order;
+import pl.kamil_dywan.external.allegro.own.Currency;
+import pl.kamil_dywan.external.subiektgt.generated.TaxSubTotal;
+import pl.kamil_dywan.external.subiektgt.generated.invoice_line.*;
 import pl.kamil_dywan.external.subiektgt.own.InvoiceLineMoneyStats;
 import pl.kamil_dywan.external.subiektgt.own.TaxRateCodeMapping;
 import pl.kamil_dywan.factory.LineTaxFactory;
@@ -13,6 +16,8 @@ import pl.kamil_dywan.factory.PercentDiscountFactory;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
+import java.util.Map;
 
 public class InvoiceLineMapper {
 

@@ -101,6 +101,17 @@ public class TaxSubTotal {
         return taxSubTotalsMappings;
     }
 
+    public static Map<TaxRateCodeMapping, Integer> getTaxesRatesOccurs(){
+
+        Map<TaxRateCodeMapping, Integer> taxRatesOccurs = new LinkedHashMap<>();
+
+        taxRatesOccurs.put(TaxRateCodeMapping.H, 0);
+        taxRatesOccurs.put(TaxRateCodeMapping.L, 0);
+        taxRatesOccurs.put(TaxRateCodeMapping.Z, 0);
+
+        return taxRatesOccurs;
+    }
+
     public static int getNumberOfPresentTaxSubTotals(Map<TaxRateCodeMapping, TaxSubTotal> taxesSubTotalsMappings){
 
         return (int) taxesSubTotalsMappings.values().stream()
