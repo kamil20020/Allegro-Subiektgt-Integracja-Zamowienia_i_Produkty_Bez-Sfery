@@ -1,4 +1,4 @@
-package pl.kamil_dywan.mapper;
+package pl.kamil_dywan.mapper.unit;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -11,6 +11,8 @@ import pl.kamil_dywan.external.subiektgt.own.Code;
 import pl.kamil_dywan.external.subiektgt.own.DocType;
 import pl.kamil_dywan.external.subiektgt.own.InvoiceType;
 import pl.kamil_dywan.factory.BatchTrailerFactory;
+import pl.kamil_dywan.mapper.BatchMapper;
+import pl.kamil_dywan.mapper.InvoiceMapper;
 
 import java.util.List;
 
@@ -40,8 +42,8 @@ class BatchMapperTest {
 
         //when
         try(
-            MockedStatic<InvoiceMapper> mockedInvoiceMapper = Mockito.mockStatic(InvoiceMapper.class);
-            MockedStatic<BatchTrailerFactory> mockedBatchTrailerFactory = Mockito.mockStatic(BatchTrailerFactory.class);
+                MockedStatic<InvoiceMapper> mockedInvoiceMapper = Mockito.mockStatic(InvoiceMapper.class);
+                MockedStatic<BatchTrailerFactory> mockedBatchTrailerFactory = Mockito.mockStatic(BatchTrailerFactory.class);
         ){
             mockedInvoiceMapper.when(() -> InvoiceMapper.map(eq(allegroOrder1))).thenReturn(expectedInvoice1);
             mockedInvoiceMapper.when(() -> InvoiceMapper.map(eq(allegroOrder2))).thenReturn(expectedInvoice2);

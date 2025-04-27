@@ -1,9 +1,10 @@
-package pl.kamil_dywan.mapper;
+package pl.kamil_dywan.mapper.unit;
 
 import org.junit.jupiter.api.Test;
 import pl.kamil_dywan.external.allegro.generated.buyer.Buyer;
 import pl.kamil_dywan.external.allegro.generated.invoice.InvoiceNaturalPerson;
 import pl.kamil_dywan.external.subiektgt.generated.Contact;
+import pl.kamil_dywan.mapper.ContactMapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,10 +1,11 @@
-package pl.kamil_dywan.mapper;
+package pl.kamil_dywan.mapper.unit;
 
 import org.junit.jupiter.api.Test;
 import pl.kamil_dywan.external.allegro.generated.buyer.BuyerAddress;
 import pl.kamil_dywan.external.allegro.generated.invoice.InvoiceAddress;
 import pl.kamil_dywan.external.allegro.own.Country;
 import pl.kamil_dywan.external.subiektgt.generated.Address;
+import pl.kamil_dywan.mapper.AddressMapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 

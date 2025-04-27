@@ -1,4 +1,4 @@
-package pl.kamil_dywan.mapper;
+package pl.kamil_dywan.mapper.unit;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -10,6 +10,9 @@ import pl.kamil_dywan.external.allegro.generated.invoice.InvoiceNaturalPerson;
 import pl.kamil_dywan.external.subiektgt.generated.Address;
 import pl.kamil_dywan.external.subiektgt.generated.Contact;
 import pl.kamil_dywan.external.subiektgt.generated.supplier.Supplier;
+import pl.kamil_dywan.mapper.AddressMapper;
+import pl.kamil_dywan.mapper.ContactMapper;
+import pl.kamil_dywan.mapper.SupplierMapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,8 +42,8 @@ class SupplierMapperTest {
 
         //when
         try(
-            MockedStatic<AddressMapper> mockedAddressMapper = Mockito.mockStatic(AddressMapper.class);
-            MockedStatic<ContactMapper> mockedContactMapper = Mockito.mockStatic(ContactMapper.class)
+                MockedStatic<AddressMapper> mockedAddressMapper = Mockito.mockStatic(AddressMapper.class);
+                MockedStatic<ContactMapper> mockedContactMapper = Mockito.mockStatic(ContactMapper.class)
         ){
             mockedAddressMapper.when(() -> AddressMapper.map(any(InvoiceAddress.class))).thenReturn(expectedAddress);
             mockedContactMapper.when(() -> ContactMapper.map(any(InvoiceNaturalPerson.class))).thenReturn(expectedContact);

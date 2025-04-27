@@ -10,6 +10,7 @@ import pl.kamil_dywan.external.subiektgt.own.TaxRateCodeMapping;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Builder
@@ -64,7 +65,7 @@ public class TaxSubTotal {
         );
 
         return TaxSubTotal.builder()
-            .code(taxRateCodeMapping.getCode())
+            .code(Code.PLN)
             .taxRate(taxRate)
             .taxableValueAtRate(BigDecimal.ZERO)
             .taxAtRate(BigDecimal.ZERO)
@@ -91,7 +92,7 @@ public class TaxSubTotal {
 
     public static Map<TaxRateCodeMapping, TaxSubTotal> getEmptyMappingsForAllTaxesRates(){
 
-        Map<TaxRateCodeMapping, TaxSubTotal> taxSubTotalsMappings = new HashMap<>();
+        Map<TaxRateCodeMapping, TaxSubTotal> taxSubTotalsMappings = new LinkedHashMap<>();
 
         taxSubTotalsMappings.put(TaxRateCodeMapping.H, getEmpty(TaxRateCodeMapping.H));
         taxSubTotalsMappings.put(TaxRateCodeMapping.L, getEmpty(TaxRateCodeMapping.L));
@@ -103,8 +104,8 @@ public class TaxSubTotal {
     public static int getNumberOfPresentTaxSubTotals(Map<TaxRateCodeMapping, TaxSubTotal> taxesSubTotalsMappings){
 
         return (int) taxesSubTotalsMappings.values().stream()
-            .map(taxSubTotal -> taxSubTotal.getTaxAtRate())
-            .filter(tax -> tax.doubleValue() > 0d)
+            .map(taxSubTotal -> taxSubTotal.getTaxableValueAtRate())
+            .filter(taxableValueAtRate -> taxableValueAtRate.doubleValue() > 0d)
             .count();
 
     }

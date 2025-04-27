@@ -118,11 +118,11 @@ public class InvoiceMapper {
 
                 BigDecimal taxRatePercentage = taxSubTotal.getTaxRate().getValue();
                 BigDecimal taxRateValue = taxRatePercentage.divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP);
-                BigDecimal taxRateValueNegation = BigDecimal.ONE.subtract(taxRateValue);
+                BigDecimal taxRateValuePlusOne = BigDecimal.ONE.add(taxRateValue);
 
                 BigDecimal taxPartInOrder = priceWithoutTax.divide(totalOrderPriceWithoutTax, RoundingMode.HALF_UP);
                 BigDecimal deliveryCostForTaxWithTax = totalDeliveryCostWithTax.multiply(taxPartInOrder);
-                BigDecimal deliveryCostForTaxWithoutTax = deliveryCostForTaxWithTax.multiply(taxRateValueNegation);
+                BigDecimal deliveryCostForTaxWithoutTax = deliveryCostForTaxWithTax.divide(taxRateValuePlusOne, RoundingMode.HALF_UP);
                 BigDecimal deliveryTax = deliveryCostForTaxWithTax.subtract(deliveryCostForTaxWithoutTax);
 
                 taxSubTotal.update(deliveryCostForTaxWithoutTax, deliveryTax, deliveryCostForTaxWithTax);

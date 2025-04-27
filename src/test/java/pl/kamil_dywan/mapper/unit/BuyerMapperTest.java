@@ -1,4 +1,4 @@
-package pl.kamil_dywan.mapper;
+package pl.kamil_dywan.mapper.unit;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,6 +9,9 @@ import pl.kamil_dywan.external.allegro.generated.buyer.Buyer;
 import pl.kamil_dywan.external.allegro.generated.buyer.BuyerAddress;
 import pl.kamil_dywan.external.subiektgt.generated.Address;
 import pl.kamil_dywan.external.subiektgt.generated.Contact;
+import pl.kamil_dywan.mapper.AddressMapper;
+import pl.kamil_dywan.mapper.BuyerMapper;
+import pl.kamil_dywan.mapper.ContactMapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,8 +35,8 @@ class BuyerMapperTest {
 
         //when
         try(
-            var mockedAddressMapper = Mockito.mockStatic(AddressMapper.class);
-            var mockedContactMapper = Mockito.mockStatic(ContactMapper.class)
+                var mockedAddressMapper = Mockito.mockStatic(AddressMapper.class);
+                var mockedContactMapper = Mockito.mockStatic(ContactMapper.class)
         ){
 
             mockedAddressMapper.when(() -> AddressMapper.map(any(BuyerAddress.class))).thenReturn(new Address());

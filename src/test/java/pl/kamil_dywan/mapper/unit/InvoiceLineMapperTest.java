@@ -1,4 +1,4 @@
-package pl.kamil_dywan.mapper;
+package pl.kamil_dywan.mapper.unit;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,6 +23,9 @@ import pl.kamil_dywan.external.subiektgt.own.InvoiceLineMoneyStats;
 import pl.kamil_dywan.external.subiektgt.own.TaxRateCodeMapping;
 import pl.kamil_dywan.factory.LineTaxFactory;
 import pl.kamil_dywan.factory.PercentDiscountFactory;
+import pl.kamil_dywan.mapper.InvoiceLineMapper;
+import pl.kamil_dywan.mapper.InvoiceLineQuantityMapper;
+import pl.kamil_dywan.mapper.ProductMapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -66,10 +69,10 @@ class InvoiceLineMapperTest {
 
         //when
         try(
-            MockedStatic<InvoiceLineQuantityMapper> mockedInvoiceLineQuantityMapper = Mockito.mockStatic(InvoiceLineQuantityMapper.class);
-            MockedStatic<LineTaxFactory> mockedLineTaxFactory = Mockito.mockStatic(LineTaxFactory.class);
-            MockedStatic<ProductMapper> mockedProductMapper = Mockito.mockStatic(ProductMapper.class);
-            MockedStatic<PercentDiscountFactory> mockedPercentDiscountFactory = Mockito.mockStatic(PercentDiscountFactory.class);
+                MockedStatic<InvoiceLineQuantityMapper> mockedInvoiceLineQuantityMapper = Mockito.mockStatic(InvoiceLineQuantityMapper.class);
+                MockedStatic<LineTaxFactory> mockedLineTaxFactory = Mockito.mockStatic(LineTaxFactory.class);
+                MockedStatic<ProductMapper> mockedProductMapper = Mockito.mockStatic(ProductMapper.class);
+                MockedStatic<PercentDiscountFactory> mockedPercentDiscountFactory = Mockito.mockStatic(PercentDiscountFactory.class);
         ){
             mockedInvoiceLineQuantityMapper.when(() -> InvoiceLineQuantityMapper.map(any())).thenReturn(expectedInvoiceLineQuantity);
             mockedLineTaxFactory.when(() -> LineTaxFactory.create(any(), any())).thenReturn(expectedLineTax);

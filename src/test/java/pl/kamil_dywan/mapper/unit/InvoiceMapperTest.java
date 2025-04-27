@@ -1,4 +1,4 @@
-package pl.kamil_dywan.mapper;
+package pl.kamil_dywan.mapper.unit;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -12,15 +12,24 @@ import pl.kamil_dywan.external.allegro.generated.invoice.InvoiceAddress;
 import pl.kamil_dywan.external.allegro.generated.invoice_item.LineItem;
 import pl.kamil_dywan.external.allegro.generated.order.Order;
 import pl.kamil_dywan.external.allegro.own.Currency;
+import pl.kamil_dywan.external.subiektgt.generated.InvoiceTotal;
+import pl.kamil_dywan.external.subiektgt.generated.TaxRate;
 import pl.kamil_dywan.external.subiektgt.generated.TaxSubTotal;
 import pl.kamil_dywan.external.subiektgt.generated.invoice_head.InvoiceHead;
 import pl.kamil_dywan.external.subiektgt.generated.invoice_line.InvoiceLine;
+import pl.kamil_dywan.external.subiektgt.generated.invoice_line.LineTax;
+import pl.kamil_dywan.external.subiektgt.generated.invoice_line.UnitPriceHolder;
 import pl.kamil_dywan.external.subiektgt.generated.settlement.Settlement;
 import pl.kamil_dywan.external.subiektgt.generated.supplier.Supplier;
 import pl.kamil_dywan.external.subiektgt.own.Code;
 import pl.kamil_dywan.external.subiektgt.own.InvoiceLineMoneyStats;
+import pl.kamil_dywan.external.subiektgt.own.TaxRateCodeMapping;
 import pl.kamil_dywan.factory.InvoiceHeadFactory;
 import pl.kamil_dywan.factory.SettlementFactory;
+import pl.kamil_dywan.mapper.BuyerMapper;
+import pl.kamil_dywan.mapper.InvoiceLineMapper;
+import pl.kamil_dywan.mapper.InvoiceMapper;
+import pl.kamil_dywan.mapper.SupplierMapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -55,14 +64,28 @@ class InvoiceMapperTest {
             .build();
 
         Delivery allegroDelivery = Delivery.builder()
-            .cost(new Cost(new BigDecimal("43.23"), Currency.PLN))
+            .cost(new Cost(new BigDecimal("0.00"), Currency.PLN))
             .build();
 
-        LineItem lineItem1 = new LineItem();
-        LineItem lineItem2 = new LineItem();
-        LineItem lineItem3 = new LineItem();
-        LineItem lineItem4 = new LineItem();
-        LineItem lineItem5 = new LineItem();
+        LineItem lineItem1 = LineItem.builder()
+            .quantity(1)
+            .build();
+
+        LineItem lineItem2 = LineItem.builder()
+            .quantity(2)
+            .build();
+
+        LineItem lineItem3 = LineItem.builder()
+            .quantity(3)
+            .build();
+
+        LineItem lineItem4 = LineItem.builder()
+            .quantity(4)
+            .build();
+
+        LineItem lineItem5 = LineItem.builder()
+            .quantity(5)
+            .build();
 
         List<LineItem> allegroLineItems = List.of(lineItem1, lineItem2, lineItem3, lineItem4, lineItem5);
 
@@ -71,8 +94,8 @@ class InvoiceMapperTest {
             new BigDecimal("23.00"),
             new BigDecimal("146.49"),
             new BigDecimal("119.10"),
-            new BigDecimal("8337.00"),
             new BigDecimal("10254.51"),
+            new BigDecimal("8337.00"),
             new BigDecimal("1917.51")
         );
 
@@ -83,7 +106,7 @@ class InvoiceMapperTest {
             new BigDecimal("35.98"),
             new BigDecimal("2518.60"),
             new BigDecimal("2518.60"),
-            new BigDecimal("0.80")
+            new BigDecimal("0.00")
         );
 
         // Item x 50 -> for 1 netto 324,10 PLN, brutto 349,92 PLN, tax 23%, tax value 25.82 PLN
@@ -91,8 +114,8 @@ class InvoiceMapperTest {
             new BigDecimal("8.00"),
             new BigDecimal("349.92"),
             new BigDecimal("324.00"),
-            new BigDecimal("16200.00"),
             new BigDecimal("17496.00"),
+            new BigDecimal("16200.00"),
             new BigDecimal("1296.00")
         );
 
@@ -111,8 +134,8 @@ class InvoiceMapperTest {
             new BigDecimal("8.00"),
             new BigDecimal("396.00"),
             new BigDecimal("427.68"),
-            new BigDecimal("19800.00"),
             new BigDecimal("21384.00"),
+            new BigDecimal("19800.00"),
             new BigDecimal("1584.00")
         );
 
@@ -130,17 +153,54 @@ class InvoiceMapperTest {
 
         Supplier expectedSupplier = new Supplier();
         pl.kamil_dywan.external.subiektgt.generated.buyer.Buyer expectedBuyer = new pl.kamil_dywan.external.subiektgt.generated.buyer.Buyer();
-        InvoiceLine expectedInvoiceLine = new InvoiceLine();
+
+        InvoiceLine expectedInvoiceLine = InvoiceLine.builder()
+            .unitPrice(new UnitPriceHolder(BigDecimal.ONE))
+            .lineTax(new LineTax(null, BigDecimal.ONE))
+            .lineTotal(BigDecimal.ONE)
+            .build();
+
         InvoiceHead expectedInvoiceHead = new InvoiceHead();
         Settlement expectedSettlement = new Settlement();
 
+        TaxSubTotal expectedTaxSubTotal23 = TaxSubTotal.builder()
+            .code(Code.PLN)
+            .taxRate(new TaxRate(BigDecimal.valueOf(23), TaxRateCodeMapping.H.getCode()))
+            .taxableValueAtRate(new BigDecimal("8337.00"))
+            .taxAtRate(new BigDecimal("1917.51"))
+            .netPaymentAtRate(new BigDecimal("10254.51"))
+            .grossPaymentAtRate(new BigDecimal("10254.51"))
+            .build();
+
+        TaxSubTotal expectedTaxSubTotal8 = TaxSubTotal.builder()
+            .code(Code.PLN)
+            .taxRate(new TaxRate(BigDecimal.valueOf(8), TaxRateCodeMapping.L.getCode()))
+            .taxableValueAtRate(new BigDecimal("36000.00"))
+            .taxAtRate(new BigDecimal("2880.00"))
+            .netPaymentAtRate(new BigDecimal("38880.00"))
+            .grossPaymentAtRate(new BigDecimal("38880.00"))
+            .build();
+
+        TaxSubTotal expectedTaxSubTotal0 = TaxSubTotal.builder()
+            .code(Code.PLN)
+            .taxRate(new TaxRate(BigDecimal.valueOf(0), TaxRateCodeMapping.Z.getCode()))
+            .taxableValueAtRate(new BigDecimal("11068.60"))
+            .taxAtRate(new BigDecimal("0.00"))
+            .netPaymentAtRate(new BigDecimal("11068.60"))
+            .grossPaymentAtRate(new BigDecimal("11068.60"))
+            .build();
+
+        List<TaxSubTotal> expectedTaxSubTotals = List.of(
+            expectedTaxSubTotal23, expectedTaxSubTotal8, expectedTaxSubTotal0
+        );
+
         //when
         try(
-            MockedStatic<SupplierMapper> mockedSupplierMapper = Mockito.mockStatic(SupplierMapper.class);
-            MockedStatic<BuyerMapper> mockedBuyerMapper = Mockito.mockStatic(BuyerMapper.class);
-            MockedStatic<InvoiceLineMapper> mockedInvoiceLineMapper = Mockito.mockStatic(InvoiceLineMapper.class);
-            MockedStatic<InvoiceHeadFactory> mockedInvoiceHeadFactory = Mockito.mockStatic(InvoiceHeadFactory.class);
-            MockedStatic<SettlementFactory> mockedSettlementFactory = Mockito.mockStatic(SettlementFactory.class)
+                MockedStatic<SupplierMapper> mockedSupplierMapper = Mockito.mockStatic(SupplierMapper.class);
+                MockedStatic<BuyerMapper> mockedBuyerMapper = Mockito.mockStatic(BuyerMapper.class);
+                MockedStatic<InvoiceLineMapper> mockedInvoiceLineMapper = Mockito.mockStatic(InvoiceLineMapper.class);
+                MockedStatic<InvoiceHeadFactory> mockedInvoiceHeadFactory = Mockito.mockStatic(InvoiceHeadFactory.class);
+                MockedStatic<SettlementFactory> mockedSettlementFactory = Mockito.mockStatic(SettlementFactory.class)
         ){
             mockedSupplierMapper.when(() -> SupplierMapper.map(any())).thenReturn(expectedSupplier);
             mockedBuyerMapper.when(() -> BuyerMapper.map(any())).thenReturn(expectedBuyer);
@@ -175,9 +235,25 @@ class InvoiceMapperTest {
             assertEquals("dokument liczony wg cen netto", gotInvoice.getSpecialInstructions());
             assertEquals(expectedSettlement, gotInvoice.getSettlement());
 
-            List<TaxSubTotal> gotTaxSubTotal = gotInvoice.getTaxSubTotals();
+            List<TaxSubTotal> gotTaxSubTotals = gotInvoice.getTaxSubTotals();
 
-            assertEquals();
+            for(int i = 0; i < expectedTaxSubTotals.size(); i++){
+
+                TaxSubTotal expectedTaxSubTotal = expectedTaxSubTotals.get(i);
+                TaxSubTotal gotTaxSubTotal = gotTaxSubTotals.get(i);
+
+                assertEquals(expectedTaxSubTotal, gotTaxSubTotal);
+            }
+
+            InvoiceTotal gotInvoiceTotal = gotInvoice.getInvoiceTotal();
+
+            assertEquals(5, gotInvoiceTotal.getNumberOfLines());
+            assertEquals(3, gotInvoiceTotal.getNumberOfTaxRates());
+            assertEquals(new BigDecimal("55405.60"), gotInvoiceTotal.getLineValueTotal());
+            assertEquals(new BigDecimal("55405.60"), gotInvoiceTotal.getTaxableTotal());
+            assertEquals(new BigDecimal("4797.51"), gotInvoiceTotal.getTaxTotal());
+            assertEquals(new BigDecimal("60203.11"), gotInvoiceTotal.getNetPaymentTotal());
+            assertEquals(new BigDecimal("60203.11"), gotInvoiceTotal.getGrossPaymentTotal());
 
             mockedSupplierMapper.verify(() -> SupplierMapper.map(allegroInvoice));
             mockedBuyerMapper.verify(() -> BuyerMapper.map(allegroBuyer));
@@ -190,7 +266,7 @@ class InvoiceMapperTest {
                 int finalI = i + 1;
 
                 mockedInvoiceLineMapper.verify(() -> InvoiceLineMapper.map(finalI, allegroLineItem, invoiceLineMoneyStats));
-                mockedInvoiceLineMapper.verify(() -> InvoiceLineMapper.getInvoiceItemMoneyStats(allegroLineItem), times(allegroLineItems.size()));
+                mockedInvoiceLineMapper.verify(() -> InvoiceLineMapper.getInvoiceItemMoneyStats(allegroLineItem));
             }
 
             mockedInvoiceHeadFactory.verify(() -> InvoiceHeadFactory.create(Code.PLN));
