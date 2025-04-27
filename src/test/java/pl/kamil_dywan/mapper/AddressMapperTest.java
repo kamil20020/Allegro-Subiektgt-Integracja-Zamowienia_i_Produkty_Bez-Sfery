@@ -24,6 +24,7 @@ class AddressMapperTest {
         Address gotAddress = AddressMapper.map(buyerAddress);
 
         //then
+        assertNotNull(gotAddress);
         assertEquals(buyerAddress.getStreet(), gotAddress.getStreet());
         assertEquals(buyerAddress.getCity(), gotAddress.getCity());
         assertEquals(buyerAddress.getPostCode(), gotAddress.getPostCode());
@@ -42,6 +43,7 @@ class AddressMapperTest {
         Address gotAddress = AddressMapper.map(invoiceAddress);
 
         //then
+        assertNotNull(gotAddress);
         assertEquals(invoiceAddress.getStreet(), gotAddress.getStreet());
         assertEquals(invoiceAddress.getCity(), gotAddress.getCity());
         assertEquals(invoiceAddress.getZipCode(), gotAddress.getPostCode());

@@ -40,6 +40,7 @@ class ContactMapperTest {
         Contact gotContact = ContactMapper.map(invoiceNaturalPerson);
 
         //then
+        assertNotNull(gotContact);
         assertEquals(invoiceNaturalPerson.getFirstName() + " " + invoiceNaturalPerson.getLastName(), gotContact.getName());
         assertEquals("", gotContact.getSwitchboard());
     }

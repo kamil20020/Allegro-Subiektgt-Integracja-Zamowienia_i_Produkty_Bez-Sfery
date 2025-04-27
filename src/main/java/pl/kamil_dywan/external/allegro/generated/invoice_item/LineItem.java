@@ -12,6 +12,9 @@ import lombok.*;
 import pl.kamil_dywan.external.allegro.generated.Cost;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonPropertyOrder({
     "id",

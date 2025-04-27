@@ -7,6 +7,8 @@ import javax.annotation.processing.Generated;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonPropertyOrder({
     "id",

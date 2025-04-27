@@ -67,21 +67,25 @@ class BuyerMapperTest {
             .address(allegroBuyerAddress)
             .build();
 
+        Address expectedAddress = new Address();
+        Contact expectedContact = new Contact();
+
         //when
         try(
             MockedStatic<AddressMapper> mockedAddressMapper = Mockito.mockStatic(AddressMapper.class);
             MockedStatic<ContactMapper> mockedContactMapper = Mockito.mockStatic(ContactMapper.class);
         ){
 
-            mockedAddressMapper.when(() -> AddressMapper.map(any(BuyerAddress.class))).thenReturn(new Address());
-            mockedContactMapper.when(() -> ContactMapper.map(any(Buyer.class))).thenReturn(new Contact());
+            mockedAddressMapper.when(() -> AddressMapper.map(any(BuyerAddress.class))).thenReturn(expectedAddress);
+            mockedContactMapper.when(() -> ContactMapper.map(any(Buyer.class))).thenReturn(expectedContact);
 
             pl.kamil_dywan.external.subiektgt.generated.buyer.Buyer gotBuyer = BuyerMapper.map(allegroBuyer);
 
             //then
+            assertNotNull(gotBuyer);
             assertEquals(allegroBuyer.getFirstName() + " " + allegroBuyer.getLastName(), gotBuyer.getParty());
-            assertNotNull(gotBuyer.getAddress());
-            assertNotNull(gotBuyer.getContact());
+            assertEquals(expectedAddress, gotBuyer.getAddress());
+            assertEquals(expectedContact, gotBuyer.getContact());
 
             mockedAddressMapper.verify(() -> AddressMapper.map(allegroBuyerAddress));
             mockedContactMapper.verify(() -> ContactMapper.map(allegroBuyer));

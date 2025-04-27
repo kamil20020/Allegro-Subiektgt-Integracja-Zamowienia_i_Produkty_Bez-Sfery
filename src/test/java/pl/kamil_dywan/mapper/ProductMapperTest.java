@@ -22,6 +22,7 @@ class ProductMapperTest {
         Product product = ProductMapper.map(allegroOffer);
 
         //then
+        assertNotNull(product);
         assertEquals(allegroOffer.getExternal().getId(), product.getSuppliersProductCode());
         assertEquals(allegroOffer.getName(), product.getDescription());
     }
@@ -38,6 +39,7 @@ class ProductMapperTest {
         Product product = ProductMapper.map(allegroOffer);
 
         //then
+        assertNotNull(product);
         assertEquals(allegroOffer.getName(), product.getDescription());
     }
 }
