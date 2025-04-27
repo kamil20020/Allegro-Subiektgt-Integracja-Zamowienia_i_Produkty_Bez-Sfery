@@ -12,6 +12,7 @@ import pl.kamil_dywan.factory.LineTaxFactory;
 import pl.kamil_dywan.factory.PercentDiscountFactory;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class InvoiceLineMapper {
 
@@ -20,39 +21,43 @@ public class InvoiceLineMapper {
 
     }
 
-    public static InvoiceLine map(Integer invoiceLineNumber, LineItem allegroLineItem, InvoiceLineMoneyStats lineItemMoneyStats){
+    public static InvoiceLine map(Integer invoiceLineNumber, LineItem allegroLineItem, InvoiceLineMoneyStats invoiceLineMoneyStats){
 
         Offer allegroOffer = allegroLineItem.getOffer();
 
-        Integer taxRateValue = lineItemMoneyStats.taxRatePercentage().intValue();
+        Integer taxRateValue = invoiceLineMoneyStats.taxRatePercentage().intValue();
 
         TaxRateCodeMapping taxRateCodeMapping = TaxRateCodeMapping.getByValue(taxRateValue);
 
         InvoiceLineQuantity quantity = InvoiceLineQuantityMapper.map(allegroLineItem);
-        LineTax lineTax = LineTaxFactory.create(lineItemMoneyStats.totalTaxValue(), taxRateCodeMapping);
+        LineTax lineTax = LineTaxFactory.create(invoiceLineMoneyStats.totalTaxValue(), taxRateCodeMapping);
 
         return InvoiceLine.builder()
             .lineNumber(invoiceLineNumber)
             .product(ProductMapper.map(allegroOffer))
             .quantity(quantity)
-            .unitPrice(new UnitPriceHolder(lineItemMoneyStats.unitPriceWithoutTax()))
+            .unitPrice(new UnitPriceHolder(invoiceLineMoneyStats.unitPriceWithoutTax()))
             .percentDiscount(PercentDiscountFactory.create())
             .lineTax(lineTax)
-            .lineTotal(lineItemMoneyStats.totalPriceWithTax())
+            .lineTotal(invoiceLineMoneyStats.totalPriceWithTax())
             .invoiceLineInformation(allegroOffer.getName())
             .build();
     }
 
-    public static InvoiceLineMoneyStats getLineItemMoneyStats(LineItem allegroLineItem){
+    public static InvoiceLineMoneyStats getInvoiceItemMoneyStats(LineItem allegroLineItem){
 
         BigDecimal quantityValue = BigDecimal.valueOf(allegroLineItem.getQuantity());
 
         BigDecimal taxRatePercentage = getTaxRatePercentage(allegroLineItem);
-        BigDecimal taxRateValue = taxRatePercentage.divide(BigDecimal.valueOf(100));
+        BigDecimal taxRateValue = taxRatePercentage.divide(
+            BigDecimal.valueOf(100),
+            RoundingMode.HALF_UP
+        );
 
         BigDecimal unitPriceWithTax = allegroLineItem.getPrice().getAmount();
-        BigDecimal unitPriceWithoutTax = unitPriceWithTax.multiply(
-            BigDecimal.ONE.subtract(taxRateValue)
+        BigDecimal unitPriceWithoutTax = unitPriceWithTax.divide(
+            BigDecimal.ONE.add(taxRateValue),
+            RoundingMode.HALF_UP
         );
 
         BigDecimal totalPriceWithTax = unitPriceWithTax.multiply(quantityValue);
@@ -73,7 +78,7 @@ public class InvoiceLineMapper {
 
         if(allegroLineItem.getTax() == null){
 
-            return BigDecimal.ZERO;
+            return BigDecimal.valueOf(23);
         }
 
         return allegroLineItem.getTax().getRate();

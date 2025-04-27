@@ -10,6 +10,8 @@ import javax.annotation.processing.Generated;
 import java.math.BigDecimal;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonPropertyOrder({
     "amount",

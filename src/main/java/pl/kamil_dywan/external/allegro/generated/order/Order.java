@@ -14,6 +14,9 @@ import java.time.OffsetDateTime;
 import java.util.*;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonPropertyOrder({
     "id",

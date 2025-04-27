@@ -49,7 +49,7 @@ public class InvoiceMapper {
             .map(allegroLineItem -> {
 
                 Integer newLineItemNumber = lineItemNumber.incrementAndGet();
-                InvoiceLineMoneyStats lineItemMoneyStats = InvoiceLineMapper.getLineItemMoneyStats(allegroLineItem);
+                InvoiceLineMoneyStats lineItemMoneyStats = InvoiceLineMapper.getInvoiceItemMoneyStats(allegroLineItem);
                 totalOrderPriceWithoutTax[0] = totalOrderPriceWithoutTax[0].add(lineItemMoneyStats.totalPriceWithoutTax());
 
                 InvoiceLine invoiceLine = InvoiceLineMapper.map(newLineItemNumber, allegroLineItem, lineItemMoneyStats);
@@ -117,10 +117,10 @@ public class InvoiceMapper {
                 BigDecimal priceWithoutTax = taxSubTotal.getTaxableValueAtRate();
 
                 BigDecimal taxRatePercentage = taxSubTotal.getTaxRate().getValue();
-                BigDecimal taxRateValue = taxRatePercentage.divide(BigDecimal.valueOf(100));
+                BigDecimal taxRateValue = taxRatePercentage.divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP);
                 BigDecimal taxRateValueNegation = BigDecimal.ONE.subtract(taxRateValue);
 
-                BigDecimal taxPartInOrder = priceWithoutTax.divide(totalOrderPriceWithoutTax);
+                BigDecimal taxPartInOrder = priceWithoutTax.divide(totalOrderPriceWithoutTax, RoundingMode.HALF_UP);
                 BigDecimal deliveryCostForTaxWithTax = totalDeliveryCostWithTax.multiply(taxPartInOrder);
                 BigDecimal deliveryCostForTaxWithoutTax = deliveryCostForTaxWithTax.multiply(taxRateValueNegation);
                 BigDecimal deliveryTax = deliveryCostForTaxWithTax.subtract(deliveryCostForTaxWithoutTax);

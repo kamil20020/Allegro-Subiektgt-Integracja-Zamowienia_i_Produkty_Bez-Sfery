@@ -12,6 +12,8 @@ import lombok.*;
 import pl.kamil_dywan.external.allegro.own.BigDecimalStringSerializer;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonPropertyOrder({
     "rate",
