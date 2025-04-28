@@ -1,6 +1,7 @@
-package pl.kamil_dywan.external.subiektgt.own;
+package pl.kamil_dywan.external.subiektgt.own.product;
 
 import jakarta.xml.bind.annotation.XmlEnum;
+import pl.kamil_dywan.external.subiektgt.own.Code;
 
 import java.math.BigDecimal;
 

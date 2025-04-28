@@ -11,14 +11,13 @@ import pl.kamil_dywan.external.subiektgt.generated.buyer.Buyer;
 import pl.kamil_dywan.external.subiektgt.generated.invoice_line.InvoiceLine;
 import pl.kamil_dywan.external.subiektgt.generated.supplier.Supplier;
 import pl.kamil_dywan.external.subiektgt.own.Code;
-import pl.kamil_dywan.external.subiektgt.own.InvoiceLineMoneyStats;
-import pl.kamil_dywan.external.subiektgt.own.TaxRateCodeMapping;
+import pl.kamil_dywan.external.subiektgt.own.invoice.InvoiceLineMoneyStats;
+import pl.kamil_dywan.external.subiektgt.own.product.TaxRateCodeMapping;
 import pl.kamil_dywan.factory.SettlementFactory;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;

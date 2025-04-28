@@ -23,8 +23,8 @@ import pl.kamil_dywan.external.subiektgt.generated.invoice_line.UnitPriceHolder;
 import pl.kamil_dywan.external.subiektgt.generated.settlement.Settlement;
 import pl.kamil_dywan.external.subiektgt.generated.supplier.Supplier;
 import pl.kamil_dywan.external.subiektgt.own.Code;
-import pl.kamil_dywan.external.subiektgt.own.InvoiceLineMoneyStats;
-import pl.kamil_dywan.external.subiektgt.own.TaxRateCodeMapping;
+import pl.kamil_dywan.external.subiektgt.own.invoice.InvoiceLineMoneyStats;
+import pl.kamil_dywan.external.subiektgt.own.product.TaxRateCodeMapping;
 import pl.kamil_dywan.factory.InvoiceHeadFactory;
 import pl.kamil_dywan.factory.SettlementFactory;
 import pl.kamil_dywan.mapper.*;
@@ -33,13 +33,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 class InvoiceMapperTest {
 

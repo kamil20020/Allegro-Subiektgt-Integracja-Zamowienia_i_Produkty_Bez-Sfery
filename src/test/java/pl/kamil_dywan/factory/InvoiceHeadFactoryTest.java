@@ -3,7 +3,7 @@ package pl.kamil_dywan.factory;
 import org.junit.jupiter.api.Test;
 import pl.kamil_dywan.external.subiektgt.generated.invoice_head.InvoiceHead;
 import pl.kamil_dywan.external.subiektgt.own.Code;
-import pl.kamil_dywan.external.subiektgt.own.InvoiceType;
+import pl.kamil_dywan.external.subiektgt.own.invoice.InvoiceType;
 
 import java.math.BigDecimal;
 

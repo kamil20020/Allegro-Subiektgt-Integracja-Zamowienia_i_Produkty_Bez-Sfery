@@ -6,7 +6,7 @@ import pl.kamil_dywan.external.subiektgt.generated.Batch;
 import pl.kamil_dywan.external.subiektgt.generated.BatchTrailer;
 import pl.kamil_dywan.external.subiektgt.generated.Invoice;
 import pl.kamil_dywan.external.subiektgt.own.Code;
-import pl.kamil_dywan.external.subiektgt.own.DocType;
+import pl.kamil_dywan.external.subiektgt.own.invoice.DocType;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -3,7 +3,7 @@ package pl.kamil_dywan.factory;
 import org.junit.jupiter.api.Test;
 import pl.kamil_dywan.external.subiektgt.generated.TaxRate;
 import pl.kamil_dywan.external.subiektgt.generated.invoice_line.LineTax;
-import pl.kamil_dywan.external.subiektgt.own.TaxRateCodeMapping;
+import pl.kamil_dywan.external.subiektgt.own.product.TaxRateCodeMapping;
 
 import java.math.BigDecimal;
 

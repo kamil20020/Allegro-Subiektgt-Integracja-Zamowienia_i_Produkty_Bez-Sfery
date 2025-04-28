@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.kamil_dywan.external.subiektgt.own.UOMCode;
+import pl.kamil_dywan.external.subiektgt.own.product.UOMCode;
 
 @Builder
 @AllArgsConstructor

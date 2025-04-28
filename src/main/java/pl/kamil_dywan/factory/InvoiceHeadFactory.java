@@ -7,7 +7,7 @@ import pl.kamil_dywan.external.subiektgt.generated.invoice_head.InvoiceHead;
 import pl.kamil_dywan.external.subiektgt.generated.invoice_head.InvoiceHeadParameters;
 import pl.kamil_dywan.external.subiektgt.generated.invoice_head.InvoiceHeadSchema;
 import pl.kamil_dywan.external.subiektgt.own.Code;
-import pl.kamil_dywan.external.subiektgt.own.InvoiceType;
+import pl.kamil_dywan.external.subiektgt.own.invoice.InvoiceType;
 
 import java.math.BigDecimal;
 

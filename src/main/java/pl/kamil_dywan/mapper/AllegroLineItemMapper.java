@@ -5,14 +5,9 @@ import pl.kamil_dywan.external.allegro.generated.delivery.Delivery;
 import pl.kamil_dywan.external.allegro.generated.invoice_item.LineItem;
 import pl.kamil_dywan.external.allegro.generated.invoice_item.Offer;
 import pl.kamil_dywan.external.allegro.generated.invoice_item.Tax;
-import pl.kamil_dywan.external.allegro.generated.order.Order;
 import pl.kamil_dywan.external.allegro.own.Currency;
-import pl.kamil_dywan.external.subiektgt.generated.TaxSubTotal;
-import pl.kamil_dywan.external.subiektgt.own.TaxRateCodeMapping;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
 
 public class AllegroLineItemMapper {
 

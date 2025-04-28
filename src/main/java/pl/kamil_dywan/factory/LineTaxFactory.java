@@ -2,7 +2,7 @@ package pl.kamil_dywan.factory;
 
 import pl.kamil_dywan.external.subiektgt.generated.TaxRate;
 import pl.kamil_dywan.external.subiektgt.generated.invoice_line.LineTax;
-import pl.kamil_dywan.external.subiektgt.own.TaxRateCodeMapping;
+import pl.kamil_dywan.external.subiektgt.own.product.TaxRateCodeMapping;
 
 import java.math.BigDecimal;
 

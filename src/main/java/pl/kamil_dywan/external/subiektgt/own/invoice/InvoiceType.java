@@ -1,4 +1,4 @@
-package pl.kamil_dywan.external.subiektgt.own;
+package pl.kamil_dywan.external.subiektgt.own.invoice;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 

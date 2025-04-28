@@ -4,7 +4,7 @@ import pl.kamil_dywan.external.allegro.generated.invoice_item.LineItem;
 import pl.kamil_dywan.external.allegro.generated.invoice_item.Offer;
 import pl.kamil_dywan.external.allegro.generated.invoice_item.ProductSet;
 import pl.kamil_dywan.external.subiektgt.generated.invoice_line.InvoiceLineQuantity;
-import pl.kamil_dywan.external.subiektgt.own.UOMCode;
+import pl.kamil_dywan.external.subiektgt.own.product.UOMCode;
 
 import java.math.BigDecimal;
 

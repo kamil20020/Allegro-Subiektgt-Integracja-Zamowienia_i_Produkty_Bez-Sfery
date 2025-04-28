@@ -5,11 +5,10 @@ import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import lombok.*;
 import pl.kamil_dywan.external.subiektgt.own.BigDecimalAdapter;
 import pl.kamil_dywan.external.subiektgt.own.Code;
-import pl.kamil_dywan.external.subiektgt.own.TaxRateCodeMapping;
+import pl.kamil_dywan.external.subiektgt.own.product.TaxRateCodeMapping;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
