@@ -47,7 +47,7 @@ public class InvoiceMapper {
 
         List<LineItem> allegroLineItems = allegroOrder.getLineItems();
 
-//        allegroLineItems.add(AllegroLineItemMapper.mapDeliveryToLineItem(allegroOrder));
+        allegroLineItems.add(AllegroLineItemMapper.mapDeliveryToLineItem(allegroOrder));
 
         List<InvoiceLine> invoiceLines = allegroLineItems.stream()
             .map(allegroLineItem -> {

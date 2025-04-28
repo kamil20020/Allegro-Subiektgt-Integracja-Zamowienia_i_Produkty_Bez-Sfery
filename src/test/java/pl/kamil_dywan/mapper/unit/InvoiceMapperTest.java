@@ -88,10 +88,10 @@ class InvoiceMapperTest {
             .build();
 
         LineItem deliveryLineItem = LineItem.builder()
-            .quantity(1)
+            .quantity(6)
             .build();
 
-        List<LineItem> allegroLineItems = new ArrayList<>(List.of(lineItem1, lineItem2, lineItem3, lineItem4, lineItem5));
+        List<LineItem> allegroLineItems = new ArrayList<>(List.of(lineItem1, lineItem2, lineItem3, lineItem4, lineItem5, deliveryLineItem));
 
         // Item x 70 -> for 1 netto 119,10 PLN, brutto 146,49 PLN, tax 23%, tax value 27,39 PLN
         InvoiceLineMoneyStats invoiceLineMoneyStats1 = new InvoiceLineMoneyStats(
@@ -157,7 +157,8 @@ class InvoiceMapperTest {
             invoiceLineMoneyStats2,
             invoiceLineMoneyStats3,
             invoiceLineMoneyStats4,
-            invoiceLineMoneyStats5
+            invoiceLineMoneyStats5,
+            deliveryInvoiceLineMoneyStats
         );
 
         Order allegroOrder = Order.builder()
@@ -232,7 +233,7 @@ class InvoiceMapperTest {
                 mockedInvoiceLineMapper.when(() -> InvoiceLineMapper.getInvoiceItemMoneyStats(eq(lineItem))).thenReturn(invoiceLineMoneyStats);
             }
 
-//            mockedAllegroLineItemMapper.when(() -> AllegroLineItemMapper.mapDeliveryToLineItem(any())).thenReturn(deliveryLineItem);
+            mockedAllegroLineItemMapper.when(() -> AllegroLineItemMapper.mapDeliveryToLineItem(any())).thenReturn(deliveryLineItem);
 
             mockedInvoiceHeadFactory.when(() -> InvoiceHeadFactory.create(any())).thenReturn(expectedInvoiceHead);
             mockedSettlementFactory.when(() -> SettlementFactory.create(any())).thenReturn(expectedSettlement);
@@ -278,7 +279,7 @@ class InvoiceMapperTest {
             mockedSupplierMapper.verify(() -> SupplierMapper.map(allegroInvoice));
             mockedBuyerMapper.verify(() -> BuyerMapper.map(allegroBuyer));
 
-            for(int i=0; i < allegroLineItems.size(); i++){
+            for(int i=0; i < allegroLineItems.size() - 1; i++){
 
                 LineItem allegroLineItem = allegroLineItems.get(i);
                 InvoiceLineMoneyStats invoiceLineMoneyStats = invoiceLineMoneyStatsLists.get(i);
@@ -289,7 +290,8 @@ class InvoiceMapperTest {
                 mockedInvoiceLineMapper.verify(() -> InvoiceLineMapper.getInvoiceItemMoneyStats(allegroLineItem));
             }
 
-//            mockedAllegroLineItemMapper.verify(() -> AllegroLineItemMapper.mapDeliveryToLineItem(allegroOrder));
+            mockedInvoiceLineMapper.verify(() -> InvoiceLineMapper.getInvoiceItemMoneyStats(deliveryLineItem));
+            mockedAllegroLineItemMapper.verify(() -> AllegroLineItemMapper.mapDeliveryToLineItem(allegroOrder));
 
             mockedInvoiceHeadFactory.verify(() -> InvoiceHeadFactory.create(Code.PLN));
             mockedSettlementFactory.verify(() -> SettlementFactory.create(allegroInvoice.getDueDate()));

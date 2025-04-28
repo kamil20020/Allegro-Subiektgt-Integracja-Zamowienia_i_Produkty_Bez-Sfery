@@ -41,7 +41,7 @@ public class AllegroLineItemMapper {
         BigDecimal gotTheMostCommonTaxRateValue = BigDecimal.valueOf(
             taxRatesOccurs.entrySet().stream()
             .max((entry1, entry2) -> entry1.getValue() - entry2.getValue())
-            .get().getValue()
+            .get().getKey().getValue()
         );
 
         return LineItem.builder()
