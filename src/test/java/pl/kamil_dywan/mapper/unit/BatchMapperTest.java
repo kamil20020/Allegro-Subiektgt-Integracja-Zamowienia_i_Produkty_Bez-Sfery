@@ -42,8 +42,8 @@ class BatchMapperTest {
 
         //when
         try(
-                MockedStatic<InvoiceMapper> mockedInvoiceMapper = Mockito.mockStatic(InvoiceMapper.class);
-                MockedStatic<BatchTrailerFactory> mockedBatchTrailerFactory = Mockito.mockStatic(BatchTrailerFactory.class);
+            MockedStatic<InvoiceMapper> mockedInvoiceMapper = Mockito.mockStatic(InvoiceMapper.class);
+            MockedStatic<BatchTrailerFactory> mockedBatchTrailerFactory = Mockito.mockStatic(BatchTrailerFactory.class);
         ){
             mockedInvoiceMapper.when(() -> InvoiceMapper.map(eq(allegroOrder1))).thenReturn(expectedInvoice1);
             mockedInvoiceMapper.when(() -> InvoiceMapper.map(eq(allegroOrder2))).thenReturn(expectedInvoice2);

@@ -35,8 +35,8 @@ class BuyerMapperTest {
 
         //when
         try(
-                var mockedAddressMapper = Mockito.mockStatic(AddressMapper.class);
-                var mockedContactMapper = Mockito.mockStatic(ContactMapper.class)
+            var mockedAddressMapper = Mockito.mockStatic(AddressMapper.class);
+            var mockedContactMapper = Mockito.mockStatic(ContactMapper.class);
         ){
 
             mockedAddressMapper.when(() -> AddressMapper.map(any(BuyerAddress.class))).thenReturn(new Address());

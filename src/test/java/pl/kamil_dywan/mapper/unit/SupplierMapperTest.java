@@ -42,8 +42,8 @@ class SupplierMapperTest {
 
         //when
         try(
-                MockedStatic<AddressMapper> mockedAddressMapper = Mockito.mockStatic(AddressMapper.class);
-                MockedStatic<ContactMapper> mockedContactMapper = Mockito.mockStatic(ContactMapper.class)
+            MockedStatic<AddressMapper> mockedAddressMapper = Mockito.mockStatic(AddressMapper.class);
+            MockedStatic<ContactMapper> mockedContactMapper = Mockito.mockStatic(ContactMapper.class)
         ){
             mockedAddressMapper.when(() -> AddressMapper.map(any(InvoiceAddress.class))).thenReturn(expectedAddress);
             mockedContactMapper.when(() -> ContactMapper.map(any(InvoiceNaturalPerson.class))).thenReturn(expectedContact);

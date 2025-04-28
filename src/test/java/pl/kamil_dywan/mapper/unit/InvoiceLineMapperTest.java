@@ -69,10 +69,10 @@ class InvoiceLineMapperTest {
 
         //when
         try(
-                MockedStatic<InvoiceLineQuantityMapper> mockedInvoiceLineQuantityMapper = Mockito.mockStatic(InvoiceLineQuantityMapper.class);
-                MockedStatic<LineTaxFactory> mockedLineTaxFactory = Mockito.mockStatic(LineTaxFactory.class);
-                MockedStatic<ProductMapper> mockedProductMapper = Mockito.mockStatic(ProductMapper.class);
-                MockedStatic<PercentDiscountFactory> mockedPercentDiscountFactory = Mockito.mockStatic(PercentDiscountFactory.class);
+            MockedStatic<InvoiceLineQuantityMapper> mockedInvoiceLineQuantityMapper = Mockito.mockStatic(InvoiceLineQuantityMapper.class);
+            MockedStatic<LineTaxFactory> mockedLineTaxFactory = Mockito.mockStatic(LineTaxFactory.class);
+            MockedStatic<ProductMapper> mockedProductMapper = Mockito.mockStatic(ProductMapper.class);
+            MockedStatic<PercentDiscountFactory> mockedPercentDiscountFactory = Mockito.mockStatic(PercentDiscountFactory.class);
         ){
             mockedInvoiceLineQuantityMapper.when(() -> InvoiceLineQuantityMapper.map(any())).thenReturn(expectedInvoiceLineQuantity);
             mockedLineTaxFactory.when(() -> LineTaxFactory.create(any(), any())).thenReturn(expectedLineTax);

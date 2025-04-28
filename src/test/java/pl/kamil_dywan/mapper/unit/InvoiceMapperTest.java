@@ -91,7 +91,7 @@ class InvoiceMapperTest {
             .quantity(6)
             .build();
 
-        List<LineItem> allegroLineItems = new ArrayList<>(List.of(lineItem1, lineItem2, lineItem3, lineItem4, lineItem5, deliveryLineItem));
+        List<LineItem> allegroLineItems = new ArrayList<>(List.of(lineItem1, lineItem2, lineItem3, lineItem4, lineItem5));
 
         // Item x 70 -> for 1 netto 119,10 PLN, brutto 146,49 PLN, tax 23%, tax value 27,39 PLN
         InvoiceLineMoneyStats invoiceLineMoneyStats1 = new InvoiceLineMoneyStats(
@@ -144,7 +144,7 @@ class InvoiceMapperTest {
         );
 
         InvoiceLineMoneyStats deliveryInvoiceLineMoneyStats = new InvoiceLineMoneyStats(
-            new BigDecimal("8.00"),
+            new BigDecimal("23.00"),
             new BigDecimal("20.00"),
             new BigDecimal("18.52"),
             new BigDecimal("20.00"),
@@ -157,8 +157,7 @@ class InvoiceMapperTest {
             invoiceLineMoneyStats2,
             invoiceLineMoneyStats3,
             invoiceLineMoneyStats4,
-            invoiceLineMoneyStats5,
-            deliveryInvoiceLineMoneyStats
+            invoiceLineMoneyStats5
         );
 
         Order allegroOrder = Order.builder()
@@ -184,10 +183,10 @@ class InvoiceMapperTest {
         TaxSubTotal expectedTaxSubTotal23 = TaxSubTotal.builder()
             .code(Code.PLN)
             .taxRate(new TaxRate(BigDecimal.valueOf(23), TaxRateCodeMapping.H.getCode()))
-            .taxableValueAtRate(new BigDecimal("8337.00"))
-            .taxAtRate(new BigDecimal("1917.51"))
-            .netPaymentAtRate(new BigDecimal("10254.51"))
-            .grossPaymentAtRate(new BigDecimal("10254.51"))
+            .taxableValueAtRate(new BigDecimal("8355.52"))
+            .taxAtRate(new BigDecimal("1918.99"))
+            .netPaymentAtRate(new BigDecimal("10274.51"))
+            .grossPaymentAtRate(new BigDecimal("10274.51"))
             .build();
 
         TaxSubTotal expectedTaxSubTotal8 = TaxSubTotal.builder()
@@ -233,6 +232,7 @@ class InvoiceMapperTest {
                 mockedInvoiceLineMapper.when(() -> InvoiceLineMapper.getInvoiceItemMoneyStats(eq(lineItem))).thenReturn(invoiceLineMoneyStats);
             }
 
+            mockedInvoiceLineMapper.when(() -> InvoiceLineMapper.getInvoiceItemMoneyStats(eq(deliveryLineItem))).thenReturn(deliveryInvoiceLineMoneyStats);
             mockedAllegroLineItemMapper.when(() -> AllegroLineItemMapper.mapDeliveryToLineItem(any())).thenReturn(deliveryLineItem);
 
             mockedInvoiceHeadFactory.when(() -> InvoiceHeadFactory.create(any())).thenReturn(expectedInvoiceHead);
@@ -268,13 +268,13 @@ class InvoiceMapperTest {
 
             InvoiceTotal gotInvoiceTotal = gotInvoice.getInvoiceTotal();
 
-            assertEquals(5, gotInvoiceTotal.getNumberOfLines());
+            assertEquals(6, gotInvoiceTotal.getNumberOfLines());
             assertEquals(3, gotInvoiceTotal.getNumberOfTaxRates());
-            assertEquals(new BigDecimal("55405.60"), gotInvoiceTotal.getLineValueTotal());
-            assertEquals(new BigDecimal("55405.60"), gotInvoiceTotal.getTaxableTotal());
-            assertEquals(new BigDecimal("4797.51"), gotInvoiceTotal.getTaxTotal());
-            assertEquals(new BigDecimal("60203.11"), gotInvoiceTotal.getNetPaymentTotal());
-            assertEquals(new BigDecimal("60203.11"), gotInvoiceTotal.getGrossPaymentTotal());
+            assertEquals(new BigDecimal("55424.12"), gotInvoiceTotal.getLineValueTotal());
+            assertEquals(new BigDecimal("55424.12"), gotInvoiceTotal.getTaxableTotal());
+            assertEquals(new BigDecimal("4798.99"), gotInvoiceTotal.getTaxTotal());
+            assertEquals(new BigDecimal("60223.11"), gotInvoiceTotal.getNetPaymentTotal());
+            assertEquals(new BigDecimal("60223.11"), gotInvoiceTotal.getGrossPaymentTotal());
 
             mockedSupplierMapper.verify(() -> SupplierMapper.map(allegroInvoice));
             mockedBuyerMapper.verify(() -> BuyerMapper.map(allegroBuyer));
@@ -291,7 +291,7 @@ class InvoiceMapperTest {
             }
 
             mockedInvoiceLineMapper.verify(() -> InvoiceLineMapper.getInvoiceItemMoneyStats(deliveryLineItem));
-            mockedAllegroLineItemMapper.verify(() -> AllegroLineItemMapper.mapDeliveryToLineItem(allegroOrder));
+            mockedAllegroLineItemMapper.verify(() -> AllegroLineItemMapper.mapDeliveryToLineItem(allegroDelivery));
 
             mockedInvoiceHeadFactory.verify(() -> InvoiceHeadFactory.create(Code.PLN));
             mockedSettlementFactory.verify(() -> SettlementFactory.create(allegroInvoice.getDueDate()));

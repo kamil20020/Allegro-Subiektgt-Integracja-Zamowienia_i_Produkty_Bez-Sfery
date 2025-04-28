@@ -1,5 +1,6 @@
 package pl.kamil_dywan.mapper;
 
+import pl.kamil_dywan.external.allegro.generated.delivery.Delivery;
 import pl.kamil_dywan.external.allegro.generated.invoice_item.LineItem;
 import pl.kamil_dywan.external.allegro.generated.order.Order;
 import pl.kamil_dywan.factory.InvoiceHeadFactory;
@@ -33,6 +34,7 @@ public class InvoiceMapper {
     public static Invoice map(Order allegroOrder){
 
         pl.kamil_dywan.external.allegro.generated.invoice.Invoice allegroInvoice = allegroOrder.getInvoice();
+        Delivery allegroDelivery = allegroOrder.getDelivery();
 
         LocalDate invoiceDate = allegroOrder.getPayment().getFinishedAt().toLocalDate();
         String invoiceCity = allegroInvoice.getAddress().getCity();
@@ -47,7 +49,7 @@ public class InvoiceMapper {
 
         List<LineItem> allegroLineItems = allegroOrder.getLineItems();
 
-        allegroLineItems.add(AllegroLineItemMapper.mapDeliveryToLineItem(allegroOrder));
+        allegroLineItems.add(AllegroLineItemMapper.mapDeliveryToLineItem(allegroDelivery));
 
         List<InvoiceLine> invoiceLines = allegroLineItems.stream()
             .map(allegroLineItem -> {
@@ -103,31 +105,6 @@ public class InvoiceMapper {
             lineItemMoneyStats.totalTaxValue(),
             lineItemMoneyStats.totalPriceWithTax()
         );
-    }
-
-    private static void addProportionalDeliveryCost(
-        Order allegroOrder,
-        Map<TaxRateCodeMapping, TaxSubTotal> taxSubtotalsMappings,
-        BigDecimal totalOrderPriceWithoutTax
-    ){
-        BigDecimal totalDeliveryCostWithTax = allegroOrder.getDelivery().getCost().getAmount();
-
-        taxSubtotalsMappings.values()
-            .forEach(taxSubTotal -> {
-
-                BigDecimal priceWithoutTax = taxSubTotal.getTaxableValueAtRate();
-
-                BigDecimal taxRatePercentage = taxSubTotal.getTaxRate().getValue();
-                BigDecimal taxRateValue = taxRatePercentage.divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP);
-                BigDecimal taxRateValuePlusOne = BigDecimal.ONE.add(taxRateValue);
-
-                BigDecimal taxPartInOrder = priceWithoutTax.divide(totalOrderPriceWithoutTax, RoundingMode.HALF_UP);
-                BigDecimal deliveryCostForTaxWithTax = totalDeliveryCostWithTax.multiply(taxPartInOrder);
-                BigDecimal deliveryCostForTaxWithoutTax = deliveryCostForTaxWithTax.divide(taxRateValuePlusOne, RoundingMode.HALF_UP);
-                BigDecimal deliveryTax = deliveryCostForTaxWithTax.subtract(deliveryCostForTaxWithoutTax);
-
-                taxSubTotal.update(deliveryCostForTaxWithoutTax, deliveryTax, deliveryCostForTaxWithTax);
-            });
     }
 
     private static void updateInvoiceTotal(
