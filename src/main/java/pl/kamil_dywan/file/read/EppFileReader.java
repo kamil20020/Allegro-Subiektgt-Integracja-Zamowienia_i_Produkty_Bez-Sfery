@@ -92,21 +92,6 @@ public class EppFileReader<T> implements FileReader<T>{
         return createResultObject(resultArguments);
     }
 
-    private T createResultObject(Object[] resultArguments) throws IllegalStateException{
-
-        Constructor<T> resultObjConstructor = (Constructor<T>) type.getDeclaredConstructors()[0];
-
-        try {
-            return resultObjConstructor.newInstance(resultArguments);
-        }
-        catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-
-            e.printStackTrace();
-
-            throw new IllegalStateException(e.getMessage());
-        }
-    }
-
     private List<EppSerializable> createContentList(int i, String[] lines, String headerName) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
         List<EppSerializable> contentData = new ArrayList<>();
@@ -161,5 +146,20 @@ public class EppFileReader<T> implements FileReader<T>{
         Constructor<?> constructor = gotType.getConstructors()[0];
 
         return (EppSerializable) constructor.newInstance((Object) objArguments);
+    }
+
+    private T createResultObject(Object[] resultArguments) throws IllegalStateException{
+
+        Constructor<T> resultObjConstructor = (Constructor<T>) type.getDeclaredConstructors()[0];
+
+        try {
+            return resultObjConstructor.newInstance(resultArguments);
+        }
+        catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+
+            e.printStackTrace();
+
+            throw new IllegalStateException(e.getMessage());
+        }
     }
 }

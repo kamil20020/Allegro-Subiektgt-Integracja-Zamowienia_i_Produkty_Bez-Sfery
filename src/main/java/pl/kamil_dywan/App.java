@@ -19,6 +19,7 @@ import pl.kamil_dywan.mapper.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,9 +59,13 @@ public class App {
         ProductRelatedData productRelatedData = eppFileReader.load("data/subiekt/product.epp");
         System.out.println(productRelatedData);
 
-        List<String> headersNames = List.of("TOWARY, CENNIK");
+        List<String> headersNames = List.of("TOWARY", "CENNIK", "GRUPYTOWAROW", "CECHYTOWAROW", "DODATKOWETOWAROW", "TOWARYKODYCN", "TOWARYGRUPYJPKVAT");
+        List<Integer> toWriteHeadersIndexes = List.of(0, 1);
+        List<Integer> rowsLengths = List.of(43, 7);
+        LinkedHashMap<String, Integer[]> writeIndexes = new LinkedHashMap<>();
+        writeIndexes.put("TOWARY", new Integer[]{0, 1, 4, 11, 14});
 
-        FileWriter<ProductRelatedData> eppFileWriter = new EppFileWriter<>(headersNames, new LinkedHashMap<>());
+        FileWriter<ProductRelatedData> eppFileWriter = new EppFileWriter<>(headersNames, toWriteHeadersIndexes, rowsLengths, writeIndexes);
         eppFileWriter.save("./product-output.epp", productRelatedData);
     }
 

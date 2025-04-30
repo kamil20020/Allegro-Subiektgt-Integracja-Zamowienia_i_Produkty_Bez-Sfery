@@ -1,5 +1,6 @@
 package pl.kamil_dywan.file.write;
 
+import javax.xml.validation.Validator;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -10,13 +11,19 @@ import java.util.*;
 public class EppFileWriter<T> implements FileWriter<T>{
 
     private List<String> headersNames;
-    private Map<String, Integer[]> writeIndexes;
+    private List<Integer> toWriteHeadersIndexes;
+    private List<Integer> rowsLengths;
+    private LinkedHashMap<String, Integer[]> writeIndexes;
 
-    private static final String BEFORE_HEADER_CONTENT = "[NAGLOWEK]";
+    private static final String BEFORE_HEADER_HEADER = "[NAGLOWEK]";
+    private static final String BEFORE_INFO_HEADER = "[INFO]";
+    private static final String BEFORE_CONTENT_HEADER = "[ZAWARTOSC]";
 
-    public EppFileWriter(List<String> headersNames, Map<String, Integer[]> writeIndexes){
+    public EppFileWriter(List<String> headersNames, List<Integer> toWriteHeadersIndexes, List<Integer> rowsLengths, LinkedHashMap<String, Integer[]> writeIndexes){
 
         this.headersNames = headersNames;
+        this.toWriteHeadersIndexes = toWriteHeadersIndexes;
+        this.rowsLengths = rowsLengths;
         this.writeIndexes = writeIndexes;
     }
 
@@ -34,31 +41,85 @@ public class EppFileWriter<T> implements FileWriter<T>{
 
         try(BufferedWriter bufferedWriter = new BufferedWriter(new java.io.FileWriter(newFile))){
 
-            for(int i = 0; i < rootFields.length; i++){
+            bufferedWriter.write(BEFORE_INFO_HEADER);
+            bufferedWriter.newLine();
+            bufferedWriter.newLine();
 
-                Field rootField = rootFields[i];
+            if(toWriteHeadersIndexes == null){
 
-                String headerName = headersNames.get(i);
+                drawAllRows(rootFields, bufferedWriter, toSave);
+            }
+            else{
 
-                bufferedWriter.write(BEFORE_HEADER_CONTENT);
-                bufferedWriter.newLine();
-                bufferedWriter.write(headerName);
-                bufferedWriter.newLine();
-
-                try {
-                    handleRootField(rootField, headerName, toSave);
-                }
-                catch (IllegalAccessException e) {
-
-                    e.printStackTrace();
-
-                    throw new IllegalStateException(e.getMessage());
-                }
+                drawSelectedRows(rootFields, bufferedWriter, toSave);
             }
         }
     }
 
-    private void handleRootField(Field rootField, String headerName, Object obj) throws IllegalAccessException{
+    private void drawAllRows(Field[] rootFields, BufferedWriter bufferedWriter, Object toSave) throws IOException {
+
+        for(int i = 0; i < headersNames.size(); i++){
+
+            drawHeader(i, bufferedWriter);
+
+            Field rootField = rootFields[i];
+            handleRootFieldException(rootField, i, bufferedWriter, toSave);
+
+            bufferedWriter.newLine();
+        }
+    }
+
+    private void drawSelectedRows(Field[] rootFields, BufferedWriter bufferedWriter, Object toSave) throws IOException {
+
+        for(int i = 0, j = 0; i < headersNames.size(); i++){
+
+            drawHeader(i, bufferedWriter);
+
+            if(j < toWriteHeadersIndexes.size()){
+
+                int toWriteHeaderIndex = toWriteHeadersIndexes.get(j);
+
+                if(i == toWriteHeaderIndex){
+
+                    Field rootField = rootFields[toWriteHeaderIndex];
+                    handleRootFieldException(rootField, i, bufferedWriter, toSave);
+                    j++;
+                }
+            }
+
+            bufferedWriter.newLine();
+        }
+    }
+
+    private void drawHeader(int headerIndex, BufferedWriter bufferedWriter) throws IOException {
+
+        String headerName = headersNames.get(headerIndex);
+
+        bufferedWriter.write(BEFORE_HEADER_HEADER);
+        bufferedWriter.newLine();
+        bufferedWriter.write('"' + headerName + '"');
+        bufferedWriter.newLine();
+        bufferedWriter.newLine();
+        bufferedWriter.write(BEFORE_CONTENT_HEADER);
+        bufferedWriter.newLine();
+    }
+
+    private void handleRootFieldException(Field rootField, int headerIndex, BufferedWriter bufferedWriter, Object obj){
+
+        try {
+            handleRootField(rootField, headerIndex, bufferedWriter,  obj);
+        }
+        catch (IllegalAccessException | IOException e) {
+
+            e.printStackTrace();
+
+            throw new IllegalStateException(e.getMessage());
+        }
+    }
+
+    private void handleRootField(Field rootField, int headerIndex, BufferedWriter bufferedWriter, Object obj) throws IllegalAccessException, IOException {
+
+        String headerName = headersNames.get(headerIndex);
 
         rootField.setAccessible(true);
 
@@ -67,16 +128,73 @@ public class EppFileWriter<T> implements FileWriter<T>{
 
         Collection<?> objCollection = (Collection<?>) rootField.get(obj);
 
-
-
         for(Object childObj : objCollection){
 
-            for(Field listField : actualFieldParameter.getDeclaredFields()){
+            Field[] childFields = actualFieldParameter.getDeclaredFields();
 
-                listField.setAccessible(true);
+            if(writeIndexes.containsKey(headerName)){
 
-                System.out.println(listField.get(childObj));
+                drawSelectedChildFields(headerName, headerIndex, childFields, bufferedWriter, childObj);
             }
+            else{
+
+                drawAllChildFields(childFields, bufferedWriter, childObj);
+            }
+
+            bufferedWriter.newLine();
+        }
+    }
+
+    private void drawSelectedChildFields(String headerName, int headerIndex, Field[] childFields, BufferedWriter bufferedWriter, Object childObj) throws IOException, IllegalAccessException {
+
+        Integer[] writeIndexesForContent = writeIndexes.get(headerName);
+
+        int rowLength = rowsLengths.get(headerIndex);
+
+        for(int i = 0, j = 0; i < rowLength; i++){
+
+            if(j < writeIndexesForContent.length){
+
+                int minimumWriteIndex = writeIndexesForContent[j];
+
+                if(i == minimumWriteIndex){
+
+                    Field childField = childFields[j];
+
+                    handleDrawChildField(childField, bufferedWriter, childObj);
+                    j++;
+                }
+            }
+
+            if(i < rowsLengths.get(headerIndex) - 1){
+                bufferedWriter.write(',');
+            }
+        }
+    }
+
+    private void drawAllChildFields(Field[] childFields, BufferedWriter bufferedWriter, Object childObj) throws IOException, IllegalAccessException {
+
+        for(int i = 0; i < childFields.length; i++){
+
+            Field childField = childFields[i];
+
+            handleDrawChildField(childField, bufferedWriter, childObj);
+
+            if(i < childFields.length - 1){
+                bufferedWriter.write(',');
+            }
+        }
+    }
+
+    private void handleDrawChildField(Field childField, BufferedWriter bufferedWriter, Object childObj) throws IllegalAccessException, IOException {
+
+        childField.setAccessible(true);
+
+        Object value = childField.get(childObj);
+
+        if(value != null){
+
+            bufferedWriter.write(value.toString());
         }
     }
 
