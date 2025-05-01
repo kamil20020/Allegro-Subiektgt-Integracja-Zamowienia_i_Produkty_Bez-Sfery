@@ -15,7 +15,7 @@ public class OrderApi extends BearerAuthApi {
         super("api", "/order/checkout-forms");
     }
 
-    public HttpResponse<String> getOrders(int offset, int limit) throws IOException, InterruptedException {
+    public HttpResponse<String> getOrders(int offset, int limit) throws IllegalStateException {
 
         String offsetStr = String.valueOf(offset);
         String limitStr = String.valueOf(limit);

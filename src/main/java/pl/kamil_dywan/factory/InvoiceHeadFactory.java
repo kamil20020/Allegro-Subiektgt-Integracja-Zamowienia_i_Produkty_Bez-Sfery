@@ -11,14 +11,9 @@ import pl.kamil_dywan.external.subiektgt.own.invoice.InvoiceType;
 
 import java.math.BigDecimal;
 
-public class InvoiceHeadFactory {
+public interface InvoiceHeadFactory {
 
-    private InvoiceHeadFactory(){
-
-
-    }
-
-    public static InvoiceHead create(Code currencyCode){
+    static InvoiceHead create(Code currencyCode){
 
         return InvoiceHead.builder()
             .schema(new InvoiceHeadSchema(3))

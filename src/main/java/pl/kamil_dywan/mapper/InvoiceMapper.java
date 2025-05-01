@@ -23,14 +23,9 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-public class InvoiceMapper {
+public interface InvoiceMapper {
 
-    private InvoiceMapper(){
-
-
-    }
-
-    public static Invoice map(Order allegroOrder){
+    static Invoice map(Order allegroOrder){
 
         pl.kamil_dywan.external.allegro.generated.invoice.Invoice allegroInvoice = allegroOrder.getInvoice();
         Delivery allegroDelivery = allegroOrder.getDelivery();

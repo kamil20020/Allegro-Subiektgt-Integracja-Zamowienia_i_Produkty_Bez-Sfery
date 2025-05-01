@@ -4,14 +4,9 @@ import pl.kamil_dywan.external.allegro.generated.buyer.Buyer;
 import pl.kamil_dywan.external.allegro.generated.invoice.InvoiceNaturalPerson;
 import pl.kamil_dywan.external.subiektgt.generated.Contact;
 
-public class ContactMapper {
+public interface ContactMapper {
 
-    private ContactMapper(){
-
-
-    }
-
-    public static Contact map(Buyer allegroBuyer){
+    static Contact map(Buyer allegroBuyer){
 
         return Contact.builder()
             .name(allegroBuyer.getFirstName() + " " + allegroBuyer.getLastName())
@@ -19,7 +14,7 @@ public class ContactMapper {
             .build();
     }
 
-    public static Contact map(InvoiceNaturalPerson invoiceNaturalPerson){
+    static Contact map(InvoiceNaturalPerson invoiceNaturalPerson){
 
         if(invoiceNaturalPerson == null){
             return null;

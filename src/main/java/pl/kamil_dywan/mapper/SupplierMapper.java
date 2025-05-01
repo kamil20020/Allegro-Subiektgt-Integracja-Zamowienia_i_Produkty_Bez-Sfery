@@ -6,14 +6,9 @@ import pl.kamil_dywan.external.subiektgt.generated.Address;
 import pl.kamil_dywan.external.subiektgt.generated.Contact;
 import pl.kamil_dywan.external.subiektgt.generated.supplier.Supplier;
 
-public class SupplierMapper {
+public interface SupplierMapper {
 
-    private SupplierMapper(){
-
-
-    }
-
-    public static Supplier map(Invoice allegroInvoice){
+    static Supplier map(Invoice allegroInvoice){
 
         InvoiceAddress allegroInvoiceAddress = allegroInvoice.getAddress();
 

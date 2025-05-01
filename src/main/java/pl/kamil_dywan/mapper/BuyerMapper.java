@@ -4,14 +4,9 @@ import pl.kamil_dywan.external.subiektgt.generated.Address;
 import pl.kamil_dywan.external.subiektgt.generated.Contact;
 import pl.kamil_dywan.external.subiektgt.generated.buyer.Buyer;
 
-public class BuyerMapper {
+public interface BuyerMapper {
 
-    private BuyerMapper(){
-
-
-    }
-
-    public static Buyer map(pl.kamil_dywan.external.allegro.generated.buyer.Buyer allegroBuyer){
+    static Buyer map(pl.kamil_dywan.external.allegro.generated.buyer.Buyer allegroBuyer){
 
         String party = null;
 

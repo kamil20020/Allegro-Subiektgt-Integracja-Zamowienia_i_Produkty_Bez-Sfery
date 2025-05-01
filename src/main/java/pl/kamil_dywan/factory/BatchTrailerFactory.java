@@ -5,14 +5,9 @@ import pl.kamil_dywan.external.subiektgt.generated.Currency;
 import pl.kamil_dywan.external.subiektgt.generated.CurrencyHolder;
 import pl.kamil_dywan.external.subiektgt.own.Code;
 
-public class BatchTrailerFactory {
+public interface BatchTrailerFactory {
 
-    private BatchTrailerFactory(){
-
-
-    }
-
-    public static BatchTrailer create(Code currencyCode){
+    static BatchTrailer create(Code currencyCode){
 
         return BatchTrailer.builder()
             .itemCurrency(new CurrencyHolder(new Currency(currencyCode)))

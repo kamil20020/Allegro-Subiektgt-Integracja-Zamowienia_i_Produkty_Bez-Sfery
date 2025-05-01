@@ -6,14 +6,9 @@ import pl.kamil_dywan.external.subiektgt.own.Code;
 
 import java.math.BigDecimal;
 
-public class PercentDiscountFactory {
+public interface PercentDiscountFactory {
 
-    private PercentDiscountFactory(){
-
-
-    }
-
-    public static PercentDiscount create(){
+    static PercentDiscount create(){
 
         return new PercentDiscount(
             new Type("", Code.LID),

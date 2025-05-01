@@ -11,14 +11,9 @@ import pl.kamil_dywan.factory.PercentDiscountFactory;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-public class InvoiceLineMapper {
+public interface InvoiceLineMapper {
 
-    private InvoiceLineMapper(){
-
-
-    }
-
-    public static InvoiceLine map(Integer invoiceLineNumber, LineItem allegroLineItem, InvoiceLineMoneyStats invoiceLineMoneyStats){
+    static InvoiceLine map(Integer invoiceLineNumber, LineItem allegroLineItem, InvoiceLineMoneyStats invoiceLineMoneyStats){
 
         Offer allegroOffer = allegroLineItem.getOffer();
 
@@ -41,7 +36,7 @@ public class InvoiceLineMapper {
             .build();
     }
 
-    public static InvoiceLineMoneyStats getInvoiceItemMoneyStats(LineItem allegroLineItem){
+    static InvoiceLineMoneyStats getInvoiceItemMoneyStats(LineItem allegroLineItem){
 
         BigDecimal quantityValue = BigDecimal.valueOf(allegroLineItem.getQuantity());
 

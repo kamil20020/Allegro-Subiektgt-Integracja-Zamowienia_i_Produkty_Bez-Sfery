@@ -8,14 +8,9 @@ import pl.kamil_dywan.external.subiektgt.own.product.UOMCode;
 
 import java.math.BigDecimal;
 
-public class InvoiceLineQuantityMapper {
+public interface InvoiceLineQuantityMapper {
 
-    private InvoiceLineQuantityMapper(){
-
-
-    }
-
-    public static InvoiceLineQuantity map(LineItem allegroLineItem){
+    static InvoiceLineQuantity map(LineItem allegroLineItem){
 
         BigDecimal quantityValue = BigDecimal.valueOf(allegroLineItem.getQuantity());
 

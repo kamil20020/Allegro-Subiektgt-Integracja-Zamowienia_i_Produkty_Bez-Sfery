@@ -6,14 +6,9 @@ import pl.kamil_dywan.external.subiektgt.own.product.TaxRateCodeMapping;
 
 import java.math.BigDecimal;
 
-public class LineTaxFactory {
+public interface LineTaxFactory {
 
-    private LineTaxFactory(){
-
-
-    }
-
-    public static LineTax create(BigDecimal tax, TaxRateCodeMapping taxRateCodeMapping){
+    static LineTax create(BigDecimal tax, TaxRateCodeMapping taxRateCodeMapping){
 
         TaxRate taxRate = new TaxRate(
             BigDecimal.valueOf(taxRateCodeMapping.getValue()),

@@ -12,14 +12,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BatchMapper {
+public interface BatchMapper {
 
-    private BatchMapper(){
-
-
-    }
-
-    public static Batch map(String supplierName, List<Order> allegroOrders){
+    static Batch map(String supplierName, List<Order> allegroOrders){
 
         List<Invoice> invoices = allegroOrders.stream()
             .map(InvoiceMapper::map)

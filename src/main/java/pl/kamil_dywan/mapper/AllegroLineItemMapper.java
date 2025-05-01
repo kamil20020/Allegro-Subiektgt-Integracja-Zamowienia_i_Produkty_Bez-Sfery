@@ -9,14 +9,9 @@ import pl.kamil_dywan.external.allegro.own.Currency;
 
 import java.math.BigDecimal;
 
-public class AllegroLineItemMapper {
+public interface AllegroLineItemMapper {
 
-    private AllegroLineItemMapper(){
-
-
-    }
-
-    public static LineItem mapDeliveryToLineItem(Delivery allegroDelivery){
+    static LineItem mapDeliveryToLineItem(Delivery allegroDelivery){
 
         BigDecimal taxRatePercentage = new BigDecimal("23.00");
 

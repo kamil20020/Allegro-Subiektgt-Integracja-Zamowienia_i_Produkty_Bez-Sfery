@@ -17,7 +17,14 @@ public class SecureStorage {
 
     public static void load(){
 
-        CREDENTIALS_KEY_PREFIX = AppProperties.getProperty("secure-store.credentials-key");
+        CREDENTIALS_KEY_PREFIX = AppProperties.getProperty("secure-store.credentials-key") + "-";
+    }
+
+    public static boolean doesExist(String credentialsKeyPostfix){
+
+        String credentialsKey = getCredentialsKey(credentialsKeyPostfix);
+
+        return store.get(credentialsKey) != null;
     }
 
     public static void saveCredentials(String credentialsKeyPostfix, String password){
@@ -48,9 +55,20 @@ public class SecureStorage {
         return store.get(credentialsKey);
     }
 
+    public static boolean delete(String credentialsKeyPostfix){
+
+        if(doesExist(credentialsKeyPostfix)){
+
+            return false;
+        }
+
+        String credentialsKey = getCredentialsKey(credentialsKeyPostfix);
+
+        return store.delete(credentialsKey);
+    }
+
     private static String getCredentialsKey(String credentialsKeyPostfix){
 
         return CREDENTIALS_KEY_PREFIX + credentialsKeyPostfix;
     }
-
 }

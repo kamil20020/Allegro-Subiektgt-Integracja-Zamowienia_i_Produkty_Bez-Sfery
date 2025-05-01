@@ -6,14 +6,9 @@ import pl.kamil_dywan.external.subiektgt.own.Code;
 
 import java.time.LocalDate;
 
-public class SettlementFactory {
+public interface SettlementFactory {
 
-    private SettlementFactory(){
-
-
-    }
-
-    public static Settlement create(LocalDate dueDate){
+    static Settlement create(LocalDate dueDate){
 
         return new Settlement(
             SettlementTerms.builder()

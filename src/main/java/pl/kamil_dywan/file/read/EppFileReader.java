@@ -1,5 +1,8 @@
 package pl.kamil_dywan.file.read;
 
+import pl.kamil_dywan.external.subiektgt.own.product.Product;
+import pl.kamil_dywan.external.subiektgt.own.product.ProductPriceMapping;
+import pl.kamil_dywan.external.subiektgt.own.product.ProductRelatedData;
 import pl.kamil_dywan.file.EppSerializable;
 
 import java.io.File;
@@ -161,5 +164,20 @@ public class EppFileReader<T> implements FileReader<T>{
 
             throw new IllegalStateException(e.getMessage());
         }
+    }
+
+    public static void main(String[] args) throws URISyntaxException, IOException {
+
+        LinkedHashMap<String, Class<? extends EppSerializable>> schema = new LinkedHashMap<>();
+        schema.put("TOWARY", Product.class);
+        schema.put("CENNIK", ProductPriceMapping.class);
+
+        LinkedHashMap<String, Integer[]> readIndexes = new LinkedHashMap<>();
+        readIndexes.put("TOWARY", new Integer[]{0, 1, 4, 11, 14});
+
+        FileReader<ProductRelatedData> eppFileReader = new EppFileReader<>(schema, readIndexes, ProductRelatedData.class);
+
+        ProductRelatedData productRelatedData = eppFileReader.load("data/subiekt/product.epp");
+        System.out.println(productRelatedData);
     }
 }
