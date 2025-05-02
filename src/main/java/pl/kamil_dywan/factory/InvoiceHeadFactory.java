@@ -21,6 +21,7 @@ public interface InvoiceHeadFactory {
             .invoiceType(new Type(InvoiceType.VAT.toString(), Code.INVOICE))
             .function(new Type("", Code.FII))
             .invoiceCurrency(new CurrencyHolder(new Currency(currencyCode)))
+            .checksum(81410)
             .build();
     }
 }

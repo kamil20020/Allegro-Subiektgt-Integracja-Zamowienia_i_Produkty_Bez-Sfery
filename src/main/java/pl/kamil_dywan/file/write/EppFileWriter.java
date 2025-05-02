@@ -1,13 +1,12 @@
 package pl.kamil_dywan.file.write;
 
 import pl.kamil_dywan.external.subiektgt.own.product.Product;
-import pl.kamil_dywan.external.subiektgt.own.product.ProductPriceMapping;
+import pl.kamil_dywan.external.subiektgt.own.product.ProductDetailedPrice;
 import pl.kamil_dywan.external.subiektgt.own.product.ProductRelatedData;
 import pl.kamil_dywan.file.EppSerializable;
 import pl.kamil_dywan.file.read.EppFileReader;
 import pl.kamil_dywan.file.read.FileReader;
 
-import javax.xml.validation.Validator;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -217,7 +216,7 @@ public class EppFileWriter<T> implements FileWriter<T>{
 
         LinkedHashMap<String, Class<? extends EppSerializable>> schema = new LinkedHashMap<>();
         schema.put("TOWARY", Product.class);
-        schema.put("CENNIK", ProductPriceMapping.class);
+        schema.put("CENNIK", ProductDetailedPrice.class);
 
         LinkedHashMap<String, Integer[]> readIndexes = new LinkedHashMap<>();
         readIndexes.put("TOWARY", new Integer[]{0, 1, 4, 11, 14});

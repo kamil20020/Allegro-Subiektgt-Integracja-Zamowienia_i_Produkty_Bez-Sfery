@@ -41,9 +41,8 @@ public interface InvoiceLineMapper {
         BigDecimal quantityValue = BigDecimal.valueOf(allegroLineItem.getQuantity());
 
         BigDecimal taxRatePercentage = getTaxRatePercentage(allegroLineItem);
-        BigDecimal taxRateValue = taxRatePercentage.divide(
-            BigDecimal.valueOf(100),
-            RoundingMode.HALF_UP
+        BigDecimal taxRateValue = taxRatePercentage.multiply(
+            BigDecimal.valueOf(0.01)
         );
 
         BigDecimal unitPriceWithTax = allegroLineItem.getPrice().getAmount();

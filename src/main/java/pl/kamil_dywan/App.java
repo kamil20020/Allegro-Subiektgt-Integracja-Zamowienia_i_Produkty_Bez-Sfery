@@ -1,34 +1,20 @@
 package pl.kamil_dywan;
 
-import pl.kamil_dywan.api.Api;
 import pl.kamil_dywan.api.BearerAuthApi;
 import pl.kamil_dywan.api.allegro.LoginApi;
 import pl.kamil_dywan.api.allegro.OrderApi;
 import pl.kamil_dywan.api.allegro.ProductApi;
 import pl.kamil_dywan.external.allegro.generated.auth.GenerateDeviceCodeResponse;
 import pl.kamil_dywan.external.allegro.generated.offer_product.OfferProductResponse;
+import pl.kamil_dywan.external.allegro.generated.offer_product.ProductOffer;
 import pl.kamil_dywan.external.allegro.generated.order.OrderResponse;
-import pl.kamil_dywan.external.subiektgt.generated.Batch;
 import pl.kamil_dywan.external.subiektgt.own.product.Product;
-import pl.kamil_dywan.external.subiektgt.own.product.ProductPriceMapping;
-import pl.kamil_dywan.external.subiektgt.own.product.ProductRelatedData;
-import pl.kamil_dywan.file.EppSerializable;
-import pl.kamil_dywan.file.read.EppFileReader;
-import pl.kamil_dywan.file.read.FileReader;
-import pl.kamil_dywan.file.read.JSONFileReader;
-import pl.kamil_dywan.file.read.XMLFileReader;
-import pl.kamil_dywan.file.write.EppFileWriter;
-import pl.kamil_dywan.file.write.FileWriter;
-import pl.kamil_dywan.file.write.JSONFileWriter;
-import pl.kamil_dywan.file.write.XMLFileWriter;
-import pl.kamil_dywan.mapper.*;
+import pl.kamil_dywan.external.subiektgt.own.product.ProductType;
 import pl.kamil_dywan.service.*;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 /**
  * Hello world!
@@ -73,8 +59,24 @@ public class App {
             authService.login(deviceCode);
         }
 
-        System.out.println(productService.getPage(0, 10));
+        OfferProductResponse offerProductResponse = productService.getGeneralProductsPage(0, 10);
+
+        List<Long> offersProductsIds = offerProductResponse.getOffersProducts().stream()
+            .map(offerProduct -> offerProduct.getId())
+            .collect(Collectors.toList());
+
+        List<ProductOffer> gotProductsOffers = productService.getDetailedProductsByIds(offersProductsIds);
+        productService.writeProductsToFile(gotProductsOffers, "./products.epp", ProductType.GOODS);
+
+        OrderResponse orderResponse = orderService.getPage(0, 10);
+
+        orderService.writeOrdersToFile(orderResponse.getOrders(), "./orders.epp");
+
+        System.out.println(productService.getDetailedProductsByIds(offersProductsIds));
         System.out.println(orderService.getPage(0, 10));
+
+        ProductOffer deliveryService = productService.getDeliveryService();
+        productService.writeProductsToFile(List.of(deliveryService), "./delivery.epp", ProductType.SERVICES);
     }
 
 }

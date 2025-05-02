@@ -5,5 +5,5 @@ import java.util.List;
 public record ProductRelatedData(
 
     List<Product> products,
-    List<ProductPriceMapping> productPriceMappings
+    List<ProductDetailedPrice> productPriceMappings
 ){}

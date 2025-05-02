@@ -13,6 +13,7 @@ import pl.kamil_dywan.external.subiektgt.generated.supplier.Supplier;
 import pl.kamil_dywan.external.subiektgt.own.Code;
 import pl.kamil_dywan.external.subiektgt.own.invoice.InvoiceLineMoneyStats;
 import pl.kamil_dywan.external.subiektgt.own.product.TaxRateCodeMapping;
+import pl.kamil_dywan.factory.InvoiceReferencesFactory;
 import pl.kamil_dywan.factory.SettlementFactory;
 
 import java.math.BigDecimal;
@@ -73,14 +74,15 @@ public interface InvoiceMapper {
         return Invoice.builder()
             .invoiceHead(InvoiceHeadFactory.create(Code.PLN))
             .invoiceDate(invoiceDate)
+            .invoiceReferences(InvoiceReferencesFactory.create())
             .cityOfIssue(invoiceCity)
             .taxPointDate(allegroInvoice.getDueDate())
             .supplier(supplier)
             .buyer(buyer)
             .invoiceLines(invoiceLines)
-            .narrative("FS - płatność gotówka karta kredyt przelew i kredyt kupiecki")
+            .narrative("")
             .specialInstructions("dokument liczony wg cen netto")
-            .settlement(SettlementFactory.create(allegroInvoice.getDueDate()))
+            .settlement(null)
             .taxSubTotals(taxSubTotals)
             .invoiceTotal(invoiceTotal)
             .build();

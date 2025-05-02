@@ -11,6 +11,7 @@ public interface ContactMapper {
         return Contact.builder()
             .name(allegroBuyer.getFirstName() + " " + allegroBuyer.getLastName())
             .switchboard(allegroBuyer.getPhoneNumber())
+            .fax("")
             .build();
     }
 
@@ -23,6 +24,7 @@ public interface ContactMapper {
         return Contact.builder()
             .name(invoiceNaturalPerson.getFirstName() + " " + invoiceNaturalPerson.getLastName())
             .switchboard("")
+            .fax("")
             .build();
     }
 }

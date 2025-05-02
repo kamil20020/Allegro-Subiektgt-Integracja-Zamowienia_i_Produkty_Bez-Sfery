@@ -15,11 +15,16 @@ public interface AllegroLineItemMapper {
 
         BigDecimal taxRatePercentage = new BigDecimal("23.00");
 
+        Offer deliveryOffer = Offer.builder()
+            .id("DOSTAWA")
+            .name("Dostawa do klienta")
+            .build();
+
         return LineItem.builder()
             .quantity(1)
             .originalPrice(new Cost(allegroDelivery.getCost().getAmount(), Currency.PLN))
             .price(new Cost(allegroDelivery.getCost().getAmount(), Currency.PLN))
-            .offer(new Offer("Dostawa do klienta"))
+            .offer(deliveryOffer)
             .boughtAt(allegroDelivery.getTime().getFrom())
             .tax(new Tax(taxRatePercentage, "", ""))
             .build();

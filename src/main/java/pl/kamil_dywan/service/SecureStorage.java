@@ -57,7 +57,7 @@ public class SecureStorage {
 
     public static boolean delete(String credentialsKeyPostfix){
 
-        if(doesExist(credentialsKeyPostfix)){
+        if(!doesExist(credentialsKeyPostfix)){
 
             return false;
         }

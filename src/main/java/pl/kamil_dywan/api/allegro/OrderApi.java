@@ -2,6 +2,7 @@ package pl.kamil_dywan.api.allegro;
 
 import pl.kamil_dywan.api.Api;
 import pl.kamil_dywan.api.BearerAuthApi;
+import pl.kamil_dywan.exception.UnloggedException;
 
 import java.io.IOException;
 import java.net.URI;
@@ -15,7 +16,7 @@ public class OrderApi extends BearerAuthApi {
         super("api", "/order/checkout-forms");
     }
 
-    public HttpResponse<String> getOrders(int offset, int limit) throws IllegalStateException {
+    public HttpResponse<String> getOrders(int offset, int limit) throws IllegalStateException, UnloggedException {
 
         String offsetStr = String.valueOf(offset);
         String limitStr = String.valueOf(limit);

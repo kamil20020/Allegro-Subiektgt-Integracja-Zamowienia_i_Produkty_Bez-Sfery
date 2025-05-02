@@ -1,31 +1,30 @@
 package pl.kamil_dywan.external.allegro.generated.offer_product;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import pl.kamil_dywan.external.allegro.own.Country;
 
 import javax.annotation.processing.Generated;
-import java.util.List;
+import java.math.BigDecimal;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.ALWAYS)
-@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({
-    "offers",
-    "count",
-    "totalCount"
+    "rate",
+    "countryCode"
 })
 @Generated("jsonschema2pojo")
-public class OfferProductResponse {
+public class TaxForCountry {
 
-    @JsonProperty("offers")
-    private List<OfferProduct> offersProducts;
+    @JsonProperty("rate")
+    private BigDecimal taxRate;
 
-    @JsonProperty("count")
-    private Integer count;
-
-    @JsonProperty("totalCount")
-    private Integer totalCount;
+    @JsonProperty("countryCode")
+    private Country country;
 }

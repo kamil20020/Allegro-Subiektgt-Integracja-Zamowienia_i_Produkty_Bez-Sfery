@@ -1,31 +1,34 @@
 package pl.kamil_dywan.external.allegro.generated.offer_product;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.annotation.processing.Generated;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.ALWAYS)
-@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({
-    "offers",
-    "count",
-    "totalCount"
+    "rates",
+    "subject",
+    "exemption",
 })
 @Generated("jsonschema2pojo")
-public class OfferProductResponse {
+public class TaxSettings {
 
-    @JsonProperty("offers")
-    private List<OfferProduct> offersProducts;
+    @JsonProperty("rates")
+    private List<TaxForCountry> taxesFoCountries;
 
-    @JsonProperty("count")
-    private Integer count;
+    @JsonProperty("subject")
+    private String subject;
 
-    @JsonProperty("totalCount")
-    private Integer totalCount;
+    @JsonProperty("exemption")
+    private String exemption;
+
 }

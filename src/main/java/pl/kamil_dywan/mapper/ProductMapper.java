@@ -7,14 +7,8 @@ public interface ProductMapper {
 
     static Product map(Offer allegroOffer){
 
-        String suppliersProductCode = null;
-
-        if(allegroOffer.getExternal() != null){
-            suppliersProductCode = allegroOffer.getExternal().getId();
-        }
-
         return Product.builder()
-            .suppliersProductCode(suppliersProductCode)
+            .suppliersProductCode(allegroOffer.getId())
             .description(allegroOffer.getName())
             .build();
     }

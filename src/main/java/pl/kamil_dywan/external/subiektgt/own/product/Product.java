@@ -1,15 +1,17 @@
 package pl.kamil_dywan.external.subiektgt.own.product;
 
-import lombok.ToString;
+import lombok.*;
 import pl.kamil_dywan.file.EppSerializable;
 
 import java.math.BigDecimal;
 
+@Getter
+@Builder
 @ToString
 public class Product extends EppSerializable {
 
-    private Integer type;
-    private String id;
+    private ProductType type;
+    private Long id;
     private String name;
     private BigDecimal taxRatePercentage;
     private BigDecimal unitPriceWithoutTax;
@@ -18,10 +20,26 @@ public class Product extends EppSerializable {
 
         super(args);
 
-        type = Integer.valueOf(args[0]);
-        id = args[1];
+        type = ProductType.valueOf(Integer.valueOf(args[0]));
+        id = Long.valueOf(args[1]);
         name = args[2];
         taxRatePercentage = new BigDecimal(args[3]);
         unitPriceWithoutTax = new BigDecimal(args[4]);
+    }
+
+    public Product(){
+
+        super(null);
+    }
+
+    public Product(ProductType type, Long id, String name, BigDecimal taxRatePercentage, BigDecimal unitPriceWithoutTax) {
+
+        super(null);
+
+        this.type = type;
+        this.id = id;
+        this.name = name;
+        this.taxRatePercentage = taxRatePercentage;
+        this.unitPriceWithoutTax = unitPriceWithoutTax;
     }
 }
