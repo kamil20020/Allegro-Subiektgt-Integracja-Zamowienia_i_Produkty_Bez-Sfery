@@ -15,6 +15,7 @@ class ProductMapperTest {
 
         //given
         Offer allegroOffer = Offer.builder()
+            .id("123")
             .external(new ExternalId("Id"))
             .name("Offer name")
             .build();
@@ -24,7 +25,7 @@ class ProductMapperTest {
 
         //then
         assertNotNull(product);
-        assertEquals(allegroOffer.getExternal().getId(), product.getSuppliersProductCode());
+        assertEquals(allegroOffer.getId(), product.getSuppliersProductCode());
         assertEquals(allegroOffer.getName(), product.getDescription());
     }
 

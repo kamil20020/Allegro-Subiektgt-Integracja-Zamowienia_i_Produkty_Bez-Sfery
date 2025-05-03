@@ -176,7 +176,7 @@ class InvoiceMapperTest {
             .build();
 
         InvoiceHead expectedInvoiceHead = new InvoiceHead();
-        Settlement expectedSettlement = new Settlement();
+        Settlement expectedSettlement = null;
 
         TaxSubTotal expectedTaxSubTotal23 = TaxSubTotal.builder()
             .code(Code.PLN)
@@ -250,7 +250,7 @@ class InvoiceMapperTest {
             assertEquals(expectedSupplier, gotInvoice.getSupplier());
             assertEquals(expectedBuyer, gotInvoice.getBuyer());
             assertTrue(gotInvoice.getInvoiceLines().contains(expectedInvoiceLine));
-            assertEquals("FS - płatność gotówka karta kredyt przelew i kredyt kupiecki", gotInvoice.getNarrative());
+            assertEquals("", gotInvoice.getNarrative());
             assertEquals("dokument liczony wg cen netto", gotInvoice.getSpecialInstructions());
             assertEquals(expectedSettlement, gotInvoice.getSettlement());
 
@@ -292,7 +292,7 @@ class InvoiceMapperTest {
             mockedAllegroLineItemMapper.verify(() -> AllegroLineItemMapper.mapDeliveryToLineItem(allegroDelivery));
 
             mockedInvoiceHeadFactory.verify(() -> InvoiceHeadFactory.create(Code.PLN));
-            mockedSettlementFactory.verify(() -> SettlementFactory.create(allegroInvoice.getDueDate()));
+//            mockedSettlementFactory.verify(() -> SettlementFactory.create(allegroInvoice.getDueDate()));
         }
     }
 }

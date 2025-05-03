@@ -43,7 +43,8 @@ class OfferProductMapperTest {
             .build();
 
         BigDecimal expectedTaxRate = taxSettings.getTaxesFoCountries().get(0).getTaxRate();
-        BigDecimal expectedUnitPrice = sellingMode.getPrice().getAmount();
+        BigDecimal expectedUnitPriceWithTax = sellingMode.getPrice().getAmount();
+        BigDecimal expectedUnitPriceWithoutTax = new BigDecimal("28.03");
 
         //when
         Product subiektProduct = ProductOfferMapper.map(allegroProductOffer, ProductType.GOODS);
@@ -53,8 +54,7 @@ class OfferProductMapperTest {
         assertEquals(ProductType.GOODS, subiektProduct.getType());
         assertEquals(12L, subiektProduct.getId());
         assertEquals(allegroProductOffer.getName(), subiektProduct.getName());
-        assertEquals(1, subiektProduct.getType());
         assertEquals(expectedTaxRate, subiektProduct.getTaxRatePercentage());
-        assertEquals(expectedUnitPrice, subiektProduct.getUnitPriceWithoutTax());
+        assertEquals(expectedUnitPriceWithoutTax, subiektProduct.getUnitPriceWithoutTax());
     }
 }

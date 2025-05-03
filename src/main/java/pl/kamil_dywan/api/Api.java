@@ -1,5 +1,7 @@
 package pl.kamil_dywan.api;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.kamil_dywan.file.read.JSONFileReader;
 import pl.kamil_dywan.service.AppProperties;
 
@@ -13,6 +15,8 @@ public abstract class Api {
     protected String API_PREFIX;
 
     private static final HttpClient httpClient = HttpClient.newHttpClient();
+
+    private static final Logger log = LoggerFactory.getLogger(Api.class);
 
     public Api(String subDomain, String laterPrefix){
 
@@ -58,8 +62,15 @@ public abstract class Api {
 
         HttpRequest httpRequest = httpRequestBuilder.build();
 
+        log.info(httpRequest.toString());
+
         try {
-            return httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> gotResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+
+            log.info(String.valueOf(gotResponse.statusCode()));
+            log.info(gotResponse.body());
+
+            return gotResponse;
         }
         catch (IOException | InterruptedException e) {
 
@@ -73,6 +84,10 @@ public abstract class Api {
 
         JSONFileReader<T> jsonFileReader = new JSONFileReader<T>(type);
 
-        return jsonFileReader.loadFromStr(httpResponse.body());
+        T gotConvertedBody = jsonFileReader.loadFromStr(httpResponse.body());
+
+        log.info(gotConvertedBody.toString());
+
+        return gotConvertedBody;
     }
 }

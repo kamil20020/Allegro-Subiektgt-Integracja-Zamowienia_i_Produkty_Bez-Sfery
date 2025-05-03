@@ -11,7 +11,7 @@ public interface ProductDetailedPriceFactory {
 
         return ProductDetailedPrice.builder()
             .productId(productId)
-            .groupName(ProductPriceGroup.RETAIL)
+            .group(ProductPriceGroup.RETAIL)
             .unitPriceWithoutTax(unitPriceWithoutTax)
             .unitPriceWithTax(unitPriceWithTax)
             .markup(BigDecimal.ZERO)

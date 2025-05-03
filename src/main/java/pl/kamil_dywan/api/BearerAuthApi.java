@@ -77,7 +77,7 @@ public class BearerAuthApi extends Api{
 
         HttpResponse<String> gotResponse = refreshAccessToken.apply(refreshToken);
 
-        if(gotResponse.statusCode() == 401){
+        if(gotResponse.statusCode() == 401 || gotResponse.statusCode() == 400){
 
             logout();
 

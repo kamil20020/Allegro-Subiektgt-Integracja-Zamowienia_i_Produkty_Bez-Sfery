@@ -16,7 +16,7 @@ import java.util.Map;
 public class ProductDetailedPrice extends EppSerializable{
 
     private Long productId;
-    private ProductPriceGroup groupName;
+    private ProductPriceGroup group;
     private BigDecimal unitPriceWithoutTax;
     private BigDecimal unitPriceWithTax;
     private BigDecimal markup;
@@ -28,7 +28,7 @@ public class ProductDetailedPrice extends EppSerializable{
         super(args);
 
         productId = Long.valueOf(args[0]);
-        groupName = ProductPriceGroup.valueOf(args[1]);
+        group = ProductPriceGroup.valueOf(args[1]);
         unitPriceWithoutTax = new BigDecimal(args[2]);
         unitPriceWithTax = new BigDecimal(args[3]);
         markup = new BigDecimal(args[4]);
@@ -38,7 +38,7 @@ public class ProductDetailedPrice extends EppSerializable{
 
     public ProductDetailedPrice(
         Long productId,
-        ProductPriceGroup groupName,
+        ProductPriceGroup group,
         BigDecimal unitPriceWithoutTax,
         BigDecimal unitPriceWithTax,
         BigDecimal markup,
@@ -48,7 +48,7 @@ public class ProductDetailedPrice extends EppSerializable{
         super(null);
 
         this.productId = productId;
-        this.groupName = groupName;
+        this.group = group;
         this.unitPriceWithoutTax = unitPriceWithoutTax;
         this.unitPriceWithTax = unitPriceWithTax;
         this.markup = markup;
