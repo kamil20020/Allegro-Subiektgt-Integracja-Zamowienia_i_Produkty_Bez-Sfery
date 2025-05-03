@@ -152,7 +152,7 @@ class JSONFileReaderTest {
                            "id": "AH-129834"
                          },
                          "productSet": {
-                           "products": [
+                           "productsGui": [
                              {
                                "id": "9d689aa5-f2ad-4bdc-bb97-6b196854e6c7",
                                "quantity": 1
