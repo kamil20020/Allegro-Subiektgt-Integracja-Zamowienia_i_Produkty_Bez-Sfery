@@ -10,6 +10,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.annotation.processing.Generated;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Data
 @Builder
@@ -37,4 +39,32 @@ public class ProductOffer {
 
     @JsonProperty("taxSettings")
     private TaxSettings taxSettings;
+
+    public BigDecimal getTaxRate(){
+
+        if(getTaxSettings() != null){
+
+            return getTaxSettings().getTaxesFoCountries().get(0).getTaxRate();
+        }
+
+        return BigDecimal.valueOf(23);
+    }
+
+    public BigDecimal getPriceWithTax(){
+
+        return sellingMode.getPrice().getAmount();
+    }
+
+    public BigDecimal getPriceWithoutTax(){
+
+        BigDecimal taxRate = getTaxRate();
+        BigDecimal unitPriceWithTax = getPriceWithTax();
+
+        BigDecimal taxRateValue = taxRate.multiply(new BigDecimal("0.01"));
+
+        return unitPriceWithTax.divide(
+            BigDecimal.ONE.add(taxRateValue),
+            RoundingMode.HALF_UP
+        );
+    }
 }

@@ -81,44 +81,7 @@
             <border type="none">
               <size top="0" left="0" bottom="0" right="0"/>
             </border>
-            <children>
-              <component id="6ab70" class="javax.swing.JButton" binding="a1Button" default-binding="true">
-                <constraints/>
-                <properties>
-                  <text value="1"/>
-                </properties>
-              </component>
-              <component id="405f0" class="javax.swing.JToolBar$Separator">
-                <constraints/>
-                <properties/>
-              </component>
-              <component id="55963" class="javax.swing.JButton" binding="a2Button" default-binding="true">
-                <constraints/>
-                <properties>
-                  <text value="2"/>
-                </properties>
-              </component>
-              <component id="33376" class="javax.swing.JToolBar$Separator">
-                <constraints/>
-                <properties/>
-              </component>
-              <component id="fd8d1" class="javax.swing.JButton" binding="a3Button" default-binding="true">
-                <constraints/>
-                <properties>
-                  <text value="3"/>
-                </properties>
-              </component>
-              <component id="3a729" class="javax.swing.JToolBar$Separator">
-                <constraints/>
-                <properties/>
-              </component>
-              <component id="1b3ee" class="javax.swing.JButton" binding="a4Button" default-binding="true">
-                <constraints/>
-                <properties>
-                  <text value="4"/>
-                </properties>
-              </component>
-            </children>
+            <children/>
           </toolbar>
           <component id="f03e5" class="javax.swing.JToolBar$Separator">
             <constraints/>
