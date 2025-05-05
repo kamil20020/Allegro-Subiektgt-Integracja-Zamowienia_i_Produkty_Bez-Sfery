@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import javax.annotation.processing.Generated;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.OffsetDateTime;
 
 @Data
 @Builder
@@ -23,7 +24,8 @@ import java.math.RoundingMode;
     "id",
     "name",
     "sellingMode",
-    "taxSettings"
+    "taxSettings",
+    "createdAt"
 })
 @Generated("jsonschema2pojo")
 public class ProductOffer {
@@ -39,6 +41,9 @@ public class ProductOffer {
 
     @JsonProperty("taxSettings")
     private TaxSettings taxSettings;
+
+    @JsonProperty("createdAt")
+    private OffsetDateTime createdAt;
 
     public BigDecimal getTaxRate(){
 

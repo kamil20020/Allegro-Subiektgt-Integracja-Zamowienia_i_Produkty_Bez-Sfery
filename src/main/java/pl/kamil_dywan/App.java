@@ -37,13 +37,7 @@ public class App {
         OrderService orderService = new OrderService(orderApi);
         ProductService productService = new ProductService(productApi);
 
-        new MainGui(authService, productService);
-
-//        OrderResponse orderResponse = orderService.getPage(0, 10);
-//
-//        orderService.writeOrdersToFile(orderResponse.getOrders(), "./orders.epp");
-//
-//        System.out.println(orderService.getPage(0, 10));
+        new MainGui(authService, productService, orderService);
     }
 
 }

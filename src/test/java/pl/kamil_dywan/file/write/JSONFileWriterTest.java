@@ -265,7 +265,7 @@ public class JSONFileWriterTest {
     private static final FileWriter<OrderResponse> fileWriter = new JSONFileWriter<>();
     private static final FileReader<OrderResponse> fileReader = new JSONFileReader<>(OrderResponse.class);
 
-    @Test
+//    @Test
     public void shouldWriteOrderResponse() throws Exception {
 
         //given

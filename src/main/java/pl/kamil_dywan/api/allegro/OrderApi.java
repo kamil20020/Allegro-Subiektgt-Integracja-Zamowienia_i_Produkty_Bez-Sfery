@@ -3,6 +3,7 @@ package pl.kamil_dywan.api.allegro;
 import pl.kamil_dywan.api.Api;
 import pl.kamil_dywan.api.BearerAuthApi;
 import pl.kamil_dywan.exception.UnloggedException;
+import pl.kamil_dywan.external.allegro.own.OrderStatus;
 
 import java.io.IOException;
 import java.net.URI;
@@ -23,7 +24,13 @@ public class OrderApi extends BearerAuthApi {
 
         HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
             .GET()
-            .uri(URI.create(API_PREFIX + getQueryParamsPostFix("offset", offsetStr, "limit", limitStr)))
+            .uri(
+                URI.create(API_PREFIX + getQueryParamsPostFix(
+                    "offset", offsetStr,
+                    "limit", limitStr,
+                    "status", OrderStatus.READY_FOR_PROCESSING.toString())
+                )
+            )
             .header("Accept", "application/vnd.allegro.public.v1+json");
 
         return send(httpRequestBuilder);

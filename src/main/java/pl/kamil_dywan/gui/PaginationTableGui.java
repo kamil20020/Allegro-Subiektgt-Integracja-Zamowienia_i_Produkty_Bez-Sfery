@@ -204,6 +204,8 @@ public class PaginationTableGui extends JPanel {
 
     public void handleLoadTableExceptions() {
 
+        mainPanel.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
         try {
             loadTable();
         } catch (IllegalAccessException e) {
@@ -215,8 +217,6 @@ public class PaginationTableGui extends JPanel {
     }
 
     private void loadTable() throws IllegalAccessException {
-
-        mainPanel.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
         new Thread(() -> {
 

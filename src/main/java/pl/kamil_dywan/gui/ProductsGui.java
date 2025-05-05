@@ -86,7 +86,8 @@ public class ProductsGui implements ChangeableGui {
                 productOffer.getName(),
                 productOffer.getPriceWithoutTax().toString() + " zł",
                 productOffer.getPriceWithTax() + " zł",
-                productOffer.getTaxRate().toString() + '%'
+                productOffer.getTaxRate().toString() + '%',
+                productOffer.getCreatedAt().toLocalDate().toString()
         };
     }
 
@@ -113,7 +114,7 @@ public class ProductsGui implements ChangeableGui {
 
             JOptionPane.showMessageDialog(
                     mainPanel,
-                    "Nie udało się zapisać produktów do pliku",
+                    "Nie udało się zapisać dostawy do pliku",
                     "Powiadomienie o błędzie",
                     JOptionPane.INFORMATION_MESSAGE
             );
@@ -142,19 +143,33 @@ public class ProductsGui implements ChangeableGui {
 
         String savedFileName = fileDialog.getFile();
 
-        if (savedFileName != null) {
+        if (savedFileName == null) {
+            return;
+        }
 
-            String savedFilePath = fileDialog.getDirectory() + savedFileName;
+        String savedFilePath = fileDialog.getDirectory() + savedFileName;
+
+        try {
 
             productService.writeProductsToFile(products, savedFilePath, ProductType.GOODS);
+        } catch (IllegalStateException e) {
 
             JOptionPane.showMessageDialog(
                     mainPanel,
-                    "Zapisano produkty do pliku " + savedFilePath,
-                    "Powiadomienie",
-                    JOptionPane.INFORMATION_MESSAGE
+                    "Nie udało się zapisać produktów do pliku",
+                    "Powiadomienie o błędzie",
+                    JOptionPane.ERROR_MESSAGE
             );
+
+            return;
         }
+
+        JOptionPane.showMessageDialog(
+                mainPanel,
+                "Zapisano produkty do pliku " + savedFilePath,
+                "Powiadomienie",
+                JOptionPane.INFORMATION_MESSAGE
+        );
     }
 
     private FileDialog runEppFileSaveDialog(String fileName, String message) {
@@ -186,8 +201,8 @@ public class ProductsGui implements ChangeableGui {
     private void createUIComponents() {
         // TODO: place custom component creation code here
 
-        String[] columnsHeaders = {"Identyfikator", "Nazwa", "Cena netto", "Cena brutto", "Podatek"};
-        Integer[] columnsWidths = {50, 100, 50, 80, 80, 50};
+        String[] columnsHeaders = {"Identyfikator", "Nazwa", "Cena netto", "Cena brutto", "Podatek", "Data dodania"};
+        Integer[] columnsWidths = {50, 100, 50, 80, 80, 50, 40};
 
         paginationTableGui = new PaginationTableGui(columnsHeaders, columnsWidths, this::loadProductsPage, this::convertProductToRow);
 
@@ -207,6 +222,7 @@ public class ProductsGui implements ChangeableGui {
         mainPanel.setLayout(new GridBagLayout());
         mainPanel.setAlignmentX(0.0f);
         mainPanel.setAlignmentY(0.0f);
+        mainPanel.setOpaque(true);
         mainPanel.setPreferredSize(new Dimension(1920, 980));
         mainPanel.setRequestFocusEnabled(true);
         mainPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(10, 50, 40, 50), "            ", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
@@ -239,6 +255,7 @@ public class ProductsGui implements ChangeableGui {
         final JToolBar toolBar1 = new JToolBar();
         toolBar1.setFloatable(false);
         toolBar1.setOpaque(false);
+        toolBar1.setVisible(true);
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -246,8 +263,10 @@ public class ProductsGui implements ChangeableGui {
         exportButton = new JButton();
         exportButton.setMaximumSize(new Dimension(180, 30));
         exportButton.setMinimumSize(new Dimension(180, 30));
+        exportButton.setOpaque(true);
         exportButton.setPreferredSize(new Dimension(180, 30));
         exportButton.setText("Zapisz produkty do pliku");
+        exportButton.setVisible(true);
         toolBar1.add(exportButton);
         final JToolBar.Separator toolBar$Separator1 = new JToolBar.Separator();
         toolBar1.add(toolBar$Separator1);

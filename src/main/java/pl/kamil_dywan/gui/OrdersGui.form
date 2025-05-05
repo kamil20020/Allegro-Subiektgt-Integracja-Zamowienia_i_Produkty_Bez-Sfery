@@ -2,40 +2,56 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="pl.kamil_dywan.gui.OrdersGui">
   <grid id="27dc6" binding="mainPanel" layout-manager="GridBagLayout">
     <constraints>
-      <xy x="20" y="20" width="686" height="414"/>
+      <xy x="20" y="20" width="809" height="431"/>
     </constraints>
     <properties>
+      <alignmentX value="0.0"/>
+      <alignmentY value="0.0"/>
+      <autoscrolls value="false"/>
+      <minimumSize width="478" height="138"/>
       <opaque value="true"/>
       <preferredSize width="1920" height="980"/>
+      <requestFocusEnabled value="true"/>
     </properties>
-    <border type="empty"/>
+    <border type="empty">
+      <size top="16" left="50" bottom="40" right="50"/>
+    </border>
     <children>
-      <scrollpane id="83c6f" binding="ordersTableScroll">
-        <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-          <gridbag top="25" left="50" bottom="50" right="50" weightx="10.0" weighty="5.0"/>
-        </constraints>
-        <properties>
-          <opaque value="true"/>
-        </properties>
-        <border type="empty"/>
-        <children>
-          <component id="fb493" class="javax.swing.JTable" binding="ordersTable">
-            <constraints/>
-            <properties/>
-          </component>
-        </children>
-      </scrollpane>
       <component id="5201a" class="javax.swing.JLabel">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-          <gridbag top="20" left="0" bottom="0" right="0" weightx="1.0" weighty="1.0"/>
+          <gridbag weightx="1.0" weighty="1.0"/>
         </constraints>
         <properties>
+          <alignmentX value="0.0"/>
           <font size="26"/>
           <horizontalAlignment value="0"/>
           <horizontalTextPosition value="0"/>
           <text value="Zamówienia"/>
+        </properties>
+      </component>
+      <grid id="a7475" binding="ordersPanelPlaceholder" custom-create="true" layout-manager="CardLayout" hgap="0" vgap="0">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <gridbag top="10" left="0" bottom="0" right="0" weightx="1.0" weighty="10.0"/>
+        </constraints>
+        <properties>
+          <opaque value="true"/>
+        </properties>
+        <border type="empty">
+          <size top="0" left="0" bottom="0" right="0"/>
+        </border>
+        <children/>
+      </grid>
+      <component id="953f5" class="javax.swing.JButton" binding="saveOrdersButton">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag top="0" left="0" bottom="20" right="0" weightx="1.0" weighty="1.0"/>
+        </constraints>
+        <properties>
+          <alignmentX value="0.5"/>
+          <opaque value="true"/>
+          <text value="Zapisz zamówienia do pliku"/>
         </properties>
       </component>
     </children>

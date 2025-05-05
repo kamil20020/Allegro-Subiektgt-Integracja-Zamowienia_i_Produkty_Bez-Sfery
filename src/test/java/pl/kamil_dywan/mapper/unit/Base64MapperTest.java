@@ -1,6 +1,7 @@
-package pl.kamil_dywan.mapper;
+package pl.kamil_dywan.mapper.unit;
 
 import org.junit.jupiter.api.Test;
+import pl.kamil_dywan.mapper.Base64Mapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,6 +1,7 @@
 package pl.kamil_dywan.gui;
 
 import pl.kamil_dywan.service.AuthService;
+import pl.kamil_dywan.service.OrderService;
 import pl.kamil_dywan.service.ProductService;
 
 import javax.swing.*;
@@ -20,13 +21,13 @@ public class MainGui {
 
     private final AuthService authService;
 
-    public MainGui(AuthService authService, ProductService productService) {
+    public MainGui(AuthService authService, ProductService productService, OrderService orderService) {
 
         this.authService = authService;
 
         loginGui = new LoginGui(authService, this::handleSuccessAuth);
         productsGui = new ProductsGui(productService, this::handleLogout);
-        ordersGui = new OrdersGui();
+        ordersGui = new OrdersGui(orderService, this::handleLogout);
 
         tabbedPane.addTab("Zamówienia", ordersGui.getMainPanel());
         tabbedPane.addTab("Produkty", productsGui.getMainPanel());
