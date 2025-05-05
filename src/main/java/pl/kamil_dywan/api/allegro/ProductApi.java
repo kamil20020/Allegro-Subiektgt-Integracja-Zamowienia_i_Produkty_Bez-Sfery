@@ -29,7 +29,7 @@ public class ProductApi extends BearerAuthApi {
         return send(httpRequestBuilder);
     }
 
-    public HttpResponse<String> getProductOfferById(Long id){
+    public HttpResponse<String> getProductOfferById(Long id) throws IllegalStateException, UnloggedException{
 
         HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
             .GET()

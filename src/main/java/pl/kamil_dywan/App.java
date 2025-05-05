@@ -37,29 +37,13 @@ public class App {
         OrderService orderService = new OrderService(orderApi);
         ProductService productService = new ProductService(productApi);
 
-        Scanner scanner = new Scanner(System.in);
+        new MainGui(authService, productService);
 
-        if(!authService.isUserLogged()){
-
-            GenerateDeviceCodeResponse deviceCodeResponse = authService.generateDeviceCodeAndVerification();
-
-            String verificationUrlComplete = deviceCodeResponse.getVerificationUriComplete();
-            String deviceCode = deviceCodeResponse.getDeviceCode();
-
-            System.out.println(verificationUrlComplete);
-
-            scanner.nextLine();
-
-            authService.login(deviceCode);
-        }
-
-        new MainGui(productService);
-
-        OrderResponse orderResponse = orderService.getPage(0, 10);
-
-        orderService.writeOrdersToFile(orderResponse.getOrders(), "./orders.epp");
-
-        System.out.println(orderService.getPage(0, 10));
+//        OrderResponse orderResponse = orderService.getPage(0, 10);
+//
+//        orderService.writeOrdersToFile(orderResponse.getOrders(), "./orders.epp");
+//
+//        System.out.println(orderService.getPage(0, 10));
     }
 
 }

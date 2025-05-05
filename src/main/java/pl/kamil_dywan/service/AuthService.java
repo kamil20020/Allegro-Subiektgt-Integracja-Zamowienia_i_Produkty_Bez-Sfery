@@ -22,16 +22,25 @@ public class AuthService {
         return BearerAuthApi.isUserLogged();
     }
 
-    public GenerateDeviceCodeResponse generateDeviceCodeAndVerification() {
+    public GenerateDeviceCodeResponse generateDeviceCodeAndVerification() throws IllegalStateException{
 
         HttpResponse<String> deviceCodeResponse = loginApi.generateDeviceCodeAndVerification();
+
+        if(deviceCodeResponse.statusCode() != 200){
+            throw new IllegalStateException("Could not generate device code");
+        }
 
         return Api.extractBody(deviceCodeResponse, GenerateDeviceCodeResponse.class);
     }
 
-    public void login(String deviceCode){
+    public void login(String deviceCode) throws IllegalStateException{
 
         HttpResponse<String> accessTokenResponse = loginApi.generateAccessToken(deviceCode);
+
+        if(accessTokenResponse.statusCode() != 200){
+            throw new IllegalStateException("User did not authorized the device code");
+        }
+
         AccessTokenResponse accessTokenContent = Api.extractBody(accessTokenResponse, AccessTokenResponse.class);
 
         String accessToken = accessTokenContent.getAccessToken();

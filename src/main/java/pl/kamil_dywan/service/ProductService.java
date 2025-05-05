@@ -2,6 +2,7 @@ package pl.kamil_dywan.service;
 
 import pl.kamil_dywan.api.Api;
 import pl.kamil_dywan.api.allegro.ProductApi;
+import pl.kamil_dywan.exception.UnloggedException;
 import pl.kamil_dywan.external.allegro.generated.offer_product.OfferProductResponse;
 import pl.kamil_dywan.external.allegro.generated.offer_product.ProductOffer;
 import pl.kamil_dywan.external.allegro.generated.offer_product.SellingMode;
@@ -43,21 +44,21 @@ public class ProductService {
         this.productApi = productApi;
     }
 
-    public OfferProductResponse getGeneralProductsPage(int offset, int limit){
+    public OfferProductResponse getGeneralProductsPage(int offset, int limit) throws UnloggedException {
 
         HttpResponse<String> gotResponse = productApi.getOffersProducts(offset, limit);
 
         return Api.extractBody(gotResponse, OfferProductResponse.class);
     }
 
-    public List<ProductOffer> getDetailedProductsByIds(List<Long> productsIds){
+    public List<ProductOffer> getDetailedProductsByIds(List<Long> productsIds) throws UnloggedException{
 
         return productsIds.stream()
             .map(productId -> getDetailedProductById(productId))
             .collect(Collectors.toList());
     }
 
-    public ProductOffer getDetailedProductById(Long id){
+    public ProductOffer getDetailedProductById(Long id) throws UnloggedException{
 
         HttpResponse<String> gotResponse = productApi.getProductOfferById(id);
 
