@@ -1,5 +1,6 @@
 package pl.kamil_dywan.gui;
 
+import pl.kamil_dywan.exception.UnloggedException;
 import pl.kamil_dywan.external.allegro.generated.auth.GenerateDeviceCodeResponse;
 import pl.kamil_dywan.service.AuthService;
 
@@ -29,7 +30,10 @@ public class LoginGui {
 
         loginButton.addActionListener(e -> {
 
-            if (deviceCode == null) {
+            if (!authService.doesUserPassedFirstLoginToApp()) {
+
+                handleFirstLogin();
+            } else if (deviceCode == null) {
 
                 handleGenerateDeviceCodeAndVerificationUri();
             } else {
@@ -39,12 +43,62 @@ public class LoginGui {
         });
     }
 
+    private void handleFirstLogin() {
+
+        String gotUserPassword = JOptionPane.showInputDialog(
+                mainPanel,
+                "Proszę podać hasło do aplikacji",
+                "Formularz logowania",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+
+        if (gotUserPassword == null) {
+            return;
+        }
+
+        try {
+
+            authService.initAllegroSecret(gotUserPassword);
+        } catch (UnloggedException e) {
+
+            JOptionPane.showMessageDialog(
+                    mainPanel,
+                    "Wprowadzono niepoprawne hasło",
+                    "Powiadomienie o błędzie",
+                    JOptionPane.ERROR_MESSAGE
+            );
+
+            return;
+        } catch (IllegalStateException e) {
+
+            e.printStackTrace();
+
+            JOptionPane.showMessageDialog(
+                mainPanel,
+                "Wystąpił błąd podczas logowania do aplikacji",
+                "Powiadomienie o błędzie",
+                JOptionPane.ERROR_MESSAGE
+            );
+
+            return;
+        }
+
+        JOptionPane.showMessageDialog(
+            mainPanel,
+            "Zalogowano do aplikacji",
+            "Powiadomienie",
+            JOptionPane.INFORMATION_MESSAGE
+        );
+
+        loginButton.setText("Połącz");
+    }
+
     private void handleGenerateDeviceCodeAndVerificationUri() {
 
         GenerateDeviceCodeResponse generateDeviceCodeResponse;
 
         try {
-            generateDeviceCodeResponse = authService.generateDeviceCodeAndVerification();
+            generateDeviceCodeResponse = authService.generateDeviceCodeAndVerificationToAllegro();
         } catch (IllegalStateException e) {
 
             JOptionPane.showMessageDialog(
@@ -91,7 +145,7 @@ public class LoginGui {
     private void handleLogin() {
 
         try {
-            authService.login(deviceCode);
+            authService.loginToAllegro(deviceCode);
         } catch (IllegalStateException e) {
 
             e.printStackTrace();
@@ -110,7 +164,7 @@ public class LoginGui {
 
         JOptionPane.showMessageDialog(
                 mainPanel,
-                "Pomyślnie zalogowano",
+                "Pomyślnie połączono aplikację z Allegro",
                 "Powiadomienie",
                 JOptionPane.INFORMATION_MESSAGE
         );
@@ -140,7 +194,7 @@ public class LoginGui {
         mainPanel.setLayout(new GridBagLayout());
         mainPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         loginButton = new JButton();
-        loginButton.setText("Połącz");
+        loginButton.setText("Logowanie do aplikacji");
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;

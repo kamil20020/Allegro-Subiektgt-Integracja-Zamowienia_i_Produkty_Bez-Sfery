@@ -17,8 +17,8 @@ public class BearerAuthApi extends Api{
     private static Integer refreshTokenExpiresIn;
     private static Function<String, HttpResponse<String>> refreshAccessToken;
 
-    private static final String ACCESS_TOKEN_CREDENTIALS_KEY_PREFIX = "access_token";
-    private static final String REFRESH_TOKEN_CREDENTIALS_KEY_PREFIX = "refresh_token";
+    private static final String ACCESS_TOKEN_CREDENTIALS_KEY_POSTFIX = "access_token";
+    private static final String REFRESH_TOKEN_CREDENTIALS_KEY_POSTFIX = "refresh_token";
 
     public BearerAuthApi(String subDomain, String laterPrefix){
 
@@ -32,10 +32,10 @@ public class BearerAuthApi extends Api{
 
     public static void init(Function<String, HttpResponse<String>> refreshAccessToken1){
 
-        if(SecureStorage.doesExist(ACCESS_TOKEN_CREDENTIALS_KEY_PREFIX)){
+        if(SecureStorage.doesExist(ACCESS_TOKEN_CREDENTIALS_KEY_POSTFIX)){
 
-            accessToken = SecureStorage.getCredentialsPassword(ACCESS_TOKEN_CREDENTIALS_KEY_PREFIX);
-            refreshToken = SecureStorage.getCredentialsPassword(REFRESH_TOKEN_CREDENTIALS_KEY_PREFIX);
+            accessToken = SecureStorage.getCredentialsPassword(ACCESS_TOKEN_CREDENTIALS_KEY_POSTFIX);
+            refreshToken = SecureStorage.getCredentialsPassword(REFRESH_TOKEN_CREDENTIALS_KEY_POSTFIX);
             bearerAuthContent = getBearerAuthContent(accessToken);
         }
 
@@ -48,8 +48,8 @@ public class BearerAuthApi extends Api{
         refreshToken = newRefreshToken;
         bearerAuthContent = getBearerAuthContent(newAccessToken);
 
-        SecureStorage.saveCredentials(ACCESS_TOKEN_CREDENTIALS_KEY_PREFIX, accessToken);
-        SecureStorage.saveCredentials(REFRESH_TOKEN_CREDENTIALS_KEY_PREFIX, refreshToken);
+        SecureStorage.saveCredentials(ACCESS_TOKEN_CREDENTIALS_KEY_POSTFIX, accessToken);
+        SecureStorage.saveCredentials(REFRESH_TOKEN_CREDENTIALS_KEY_POSTFIX, refreshToken);
     }
 
     @Override
@@ -99,8 +99,8 @@ public class BearerAuthApi extends Api{
         refreshToken = null;
         bearerAuthContent = "";
 
-        SecureStorage.delete(ACCESS_TOKEN_CREDENTIALS_KEY_PREFIX);
-        SecureStorage.delete(REFRESH_TOKEN_CREDENTIALS_KEY_PREFIX);
+        SecureStorage.delete(ACCESS_TOKEN_CREDENTIALS_KEY_POSTFIX);
+        SecureStorage.delete(REFRESH_TOKEN_CREDENTIALS_KEY_POSTFIX);
     }
 
     private static String getBearerAuthContent(String token){

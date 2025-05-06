@@ -10,15 +10,9 @@ import java.net.http.HttpResponse;
 
 public class LoginApi extends BasicAuthApi {
 
-    private String clientId;
-
     public LoginApi() {
 
-        super(
-            AppProperties.getProperty("allegro.api.client.id"),
-            AppProperties.getProperty("allegro.api.client.secret"),
-            "/auth/oauth"
-        );
+        super("/auth/oauth");
 
         clientId = AppProperties.getProperty("allegro.api.client.id");
     }

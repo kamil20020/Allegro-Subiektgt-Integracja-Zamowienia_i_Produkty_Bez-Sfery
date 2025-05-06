@@ -52,16 +52,30 @@ public class XMLFileReader<T> implements FileReader<T> {
         }
     }
 
+    @Override
     public T load(String filePath) throws URISyntaxException, IOException {
 
         File foundFile = FileReader.loadFile(filePath);
 
+       return load(foundFile);
+    }
+
+    @Override
+    public T loadFromOutside(String filePath) throws URISyntaxException, IOException {
+
+        File file = FileReader.loadFileFromOutside(filePath);
+
+        return load(file);
+    }
+
+    public T load(File file) throws URISyntaxException, IOException {
+
         T result = null;
 
-        try(FileInputStream is = new FileInputStream(foundFile)){
+        try(FileInputStream is = new FileInputStream(file)){
 
             XMLStreamReader xsr = XMLInputFactory.newFactory()
-                .createXMLStreamReader(is, "windows-1250");
+                    .createXMLStreamReader(is, "windows-1250");
 
             XMLReaderWithoutNamespace xr = new XMLReaderWithoutNamespace(xsr);
 
@@ -71,7 +85,7 @@ public class XMLFileReader<T> implements FileReader<T> {
             e.printStackTrace();
         }
 
-       return result;
+        return result;
     }
 
     public T loadFromStr(String value) {

@@ -35,7 +35,21 @@ public class EppFileReader<T> implements FileReader<T>{
     public T load(String filePath) throws URISyntaxException, IOException, IllegalStateException {
 
         File loadedFile = FileReader.loadFile(filePath);
-        Path loadedFilePath = loadedFile.toPath();
+
+        return load(loadedFile);
+    }
+
+    @Override
+    public T loadFromOutside(String filePath) throws URISyntaxException, IOException {
+
+        File loadedFile = FileReader.loadFileFromOutside(filePath);
+
+        return load(loadedFile);
+    }
+
+    public T load(File file) throws URISyntaxException, IOException, IllegalStateException {
+
+        Path loadedFilePath = file.toPath();
 
         String[] gotLines = Files.lines(loadedFilePath)
             .toArray(String[]::new);

@@ -19,6 +19,7 @@ import pl.kamil_dywan.factory.SettlementFactory;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -42,7 +43,7 @@ public interface InvoiceMapper {
 
         InvoiceTotal invoiceTotal = InvoiceTotal.getEmpty();
 
-        List<LineItem> allegroLineItems = allegroOrder.getLineItems();
+        List<LineItem> allegroLineItems = new ArrayList<>(allegroOrder.getLineItems());
 
         allegroLineItems.add(AllegroLineItemMapper.mapDeliveryToLineItem(allegroDelivery));
 

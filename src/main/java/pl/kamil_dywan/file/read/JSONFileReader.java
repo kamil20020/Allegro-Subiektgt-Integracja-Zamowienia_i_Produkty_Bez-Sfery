@@ -29,6 +29,15 @@ public class JSONFileReader<T> implements FileReader<T> {
         return objectMapper.readValue(allegroOrderStr, type);
     }
 
+    @Override
+    public T loadFromOutside(String filePath) throws URISyntaxException, IOException {
+
+        File foundFile = FileReader.loadFileFromOutside(filePath);
+        String allegroOrderStr = Files.readString(foundFile.toPath());
+
+        return objectMapper.readValue(allegroOrderStr, type);
+    }
+
     public T loadFromStr(String value) {
 
         try {

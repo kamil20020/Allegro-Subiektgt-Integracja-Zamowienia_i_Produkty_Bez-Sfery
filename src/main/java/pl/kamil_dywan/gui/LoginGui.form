@@ -13,7 +13,7 @@
           <gridbag top="40" left="0" bottom="0" right="0" weightx="1.0" weighty="5.0"/>
         </constraints>
         <properties>
-          <text value="Połącz"/>
+          <text value="Logowanie do aplikacji"/>
         </properties>
       </component>
       <component id="539d3" class="javax.swing.JLabel">

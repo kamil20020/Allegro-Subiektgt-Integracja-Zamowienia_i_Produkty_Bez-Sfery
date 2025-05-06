@@ -6,8 +6,16 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public interface FileReader<T> {
+
+    static File loadFileFromOutside(String filePath) {
+
+        Path foundFilePath = Paths.get(filePath);
+
+        return foundFilePath.toFile();
+    }
 
     static File loadFile(String filePath) throws URISyntaxException{
 
@@ -19,5 +27,6 @@ public interface FileReader<T> {
     }
 
     T load(String filePath) throws URISyntaxException, IOException;
+    T loadFromOutside(String filePath) throws URISyntaxException, IOException;
     T loadFromStr(String value) throws Exception;
 }
