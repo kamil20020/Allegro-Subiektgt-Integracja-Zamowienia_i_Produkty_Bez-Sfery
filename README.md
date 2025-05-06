@@ -29,7 +29,7 @@ Aplikacja powinna być pierwszy raz uruchomiona razem z plikiem `auth-data`. Po 
 
 Po uruchomieniu aplikacji powinno się pojawić takie okno:
 <p align="center">
-    <img src="screenshots/logowanie-1.png">
+    <img src="screenshoty/logowanie-1.png">
 <p>
 
 
@@ -37,14 +37,14 @@ Po uruchomieniu aplikacji powinno się pojawić takie okno:
 
 Pierwszym krokiem jest logowanie do aplikacji:
 <p align="center">
-    <img src="screenshots/logowanie-2.png">
+    <img src="screenshoty/logowanie-2.png">
 <p>
 
 Dla Allegro Sandbox hasłem jest `integracja12234`.
 
 Po zalogowaniu:
 <p align="center">
-    <img src="screenshots/logowanie-3.png">
+    <img src="screenshoty/logowanie-3.png">
 <p>
 
 
@@ -52,29 +52,29 @@ Po zalogowaniu:
 
 Następnym krokiem jest połączenie aplikacji z Allegro:
 <p align="center">
-    <img src="screenshots/logowanie-4.png">
+    <img src="screenshoty/logowanie-4.png">
 <p>
 
 Po naciśnięciu przycisku `ok` aplikacja przekieruje do strony Allegro. Konieczne jest posiadanie zalogowanego konta Allegro. 
 
 Pierwszym krokiem jest potwierdzenie kodu z aplikacji. Jednak z powodu, że aplikacja automatycznie uzupełniła kod, wystarczy przejście dalej.
 <p align="center">
-    <img src="screenshots/logowanie-5.png">
+    <img src="screenshoty/logowanie-5.png">
 <p>
 
 Następnie użytkownik może zapoznać się z uprawnieniami żądanymi przez aplikację integrator i zdecydować, czy warto zaufać tej aplikacji.
 <p align="center">
-    <img src="screenshots/logowanie-6.png">
+    <img src="screenshoty/logowanie-6.png">
 <p>
 
 Po udanym procesie powinno wyświetlić się takie okno:
 <p align="center">
-    <img src="screenshots/logowanie-7.png">
+    <img src="screenshoty/logowanie-7.png">
 <p>
 
 Ostatnim krokiem jest potwierdzenie zezwolenia uprawnień:
 <p align="center">
-    <img src="screenshots/logowanie-8.png">
+    <img src="screenshoty/logowanie-8.png">
 <p>
 
 
@@ -84,17 +84,17 @@ Użytkownik może przeglądać swoje zamówienia lub oferty z Allegro oraz zdecy
 
 Zatem aby dodać faktury sprzedaży do Subiekt GT, pierwszym krokiem jest dodanie towarów:
 <p align="center">
-    <img src="screenshots/produkty.png">
+    <img src="screenshoty/produkty.png">
 <p>
 
 Po zapisaniu produktów z danej strony w wybranej lokalizacji na dysku, następnym krokiem jest zaimportowanie ich do Subiekt GT. Proponuję zrobienie tego poprzez opcję `Dodaj na podstawie`:
 <p align="center">
-    <img src="screenshots/subiekt-towary-1.png">
+    <img src="screenshoty/subiekt-towary-1.png">
 <p>
 
 Powinno pojawić się podobne okno:
 <p align="center">
-    <img src="screenshots/subiekt-towary-2.png">
+    <img src="screenshoty/subiekt-towary-2.png">
 <p>
 
 Należy tak jak na powyższym screenie wybrać wplik, nacisnąć `Wczytaj`, następnie zaznaczyć, które produkty mają być zapisane i potwierdzić poprzez `Wykonaj`.
@@ -103,7 +103,7 @@ Podobnie proponuję postąpić z dostawą.
 
 Przykładowy widok zamówień:
 <p align="center">
-    <img src="screenshots/zamowienia.png">
+    <img src="screenshoty/zamowienia.png">
 <p>
 
 W tym przypadku również moim zdaniem dobrym pomysłem będzie skorzystanie z opcji `Dodaj na podstawie`, analogicznie dla produktów. Jednak w tym przypadku Subiekt GT umożliwia wcześniejsze sprawdzenie wczytanych danych i dokonanie ewentualnych korekt. Nie udało mi się zaimplementować tworzenia sumy kontrolnej, dlatego prawdopodobnie Subiekt GT będzie wysyłał ostrzeżenie odnośnie niezgodnej sumy kontrolnej.
