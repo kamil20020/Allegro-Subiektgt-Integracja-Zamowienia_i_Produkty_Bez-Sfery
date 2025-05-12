@@ -38,6 +38,6 @@ class AllegroProductOfferFactoryTest {
         assertNotNull(taxSettings.getTaxesFoCountries());
         assertEquals(1, taxSettings.getTaxesFoCountries().size());
         assertEquals(BigDecimal.valueOf(23), taxSettings.getTaxesFoCountries().get(0).getTaxRate());
-        assertEquals(Country.PL, taxSettings.getTaxesFoCountries().get(0).getCountry());
+        assertEquals(Country.PL.toString(), taxSettings.getTaxesFoCountries().get(0).getCountry());
     }
 }

@@ -32,7 +32,7 @@ public class InvoiceAddress {
     private String zipCode;
 
     @JsonProperty("countryCode")
-    private Country countryCode;
+    private String countryCode;
 
     @JsonProperty("company")
     private InvoiceCompany company;

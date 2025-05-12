@@ -103,11 +103,9 @@ public class ProductsGui implements ChangeableGui {
 
         String savedFilePath = fileDialog.getDirectory() + savedFileName;
 
-        ProductOffer deliveryService = productService.getDeliveryService();
-
         try {
 
-            productService.writeProductsToFile(List.of(deliveryService), savedFilePath, ProductType.SERVICES);
+            productService.writeDeliveryToFile(savedFilePath);
         } catch (IllegalStateException e) {
 
             e.printStackTrace();
@@ -227,8 +225,6 @@ public class ProductsGui implements ChangeableGui {
         mainPanel.setRequestFocusEnabled(true);
         mainPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(10, 50, 40, 50), "            ", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         final JLabel label1 = new JLabel();
-        Font label1Font = this.$$$getFont$$$(null, -1, 26, label1.getFont());
-        if (label1Font != null) label1.setFont(label1Font);
         label1.setHorizontalAlignment(0);
         label1.setHorizontalTextPosition(0);
         label1.setText("Produkty");
@@ -276,28 +272,6 @@ public class ProductsGui implements ChangeableGui {
         deliveryButton.setPreferredSize(new Dimension(180, 30));
         deliveryButton.setText("Zapisz dostawę do pliku");
         toolBar1.add(deliveryButton);
-    }
-
-    /**
-     * @noinspection ALL
-     */
-    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
-        if (currentFont == null) return null;
-        String resultName;
-        if (fontName == null) {
-            resultName = currentFont.getName();
-        } else {
-            Font testFont = new Font(fontName, Font.PLAIN, 10);
-            if (testFont.canDisplay('a') && testFont.canDisplay('1')) {
-                resultName = fontName;
-            } else {
-                resultName = currentFont.getName();
-            }
-        }
-        Font font = new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
-        boolean isMac = System.getProperty("os.name", "").toLowerCase(Locale.ENGLISH).startsWith("mac");
-        Font fontWithFallback = isMac ? new Font(font.getFamily(), font.getStyle(), font.getSize()) : new StyleContext().getFont(font.getFamily(), font.getStyle(), font.getSize());
-        return fontWithFallback instanceof FontUIResource ? fontWithFallback : new FontUIResource(fontWithFallback);
     }
 
     /**

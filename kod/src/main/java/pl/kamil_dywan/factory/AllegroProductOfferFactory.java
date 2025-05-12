@@ -24,7 +24,7 @@ public interface AllegroProductOfferFactory {
 
         TaxSettings taxSettings = new TaxSettings(
             List.of(
-                new TaxForCountry(new BigDecimal("23"), Country.PL)
+                new TaxForCountry(new BigDecimal("23"), Country.PL.toString())
             ),
             "",
             ""

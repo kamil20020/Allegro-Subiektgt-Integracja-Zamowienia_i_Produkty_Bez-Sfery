@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 public class Product extends EppSerializable {
 
     private ProductType type;
-    private Long id;
+    private String id;
     private String name;
     private BigDecimal taxRatePercentage;
     private BigDecimal unitPriceWithoutTax;
@@ -21,7 +21,7 @@ public class Product extends EppSerializable {
         super(args);
 
         type = ProductType.valueOf(Integer.valueOf(args[0]));
-        id = Long.valueOf(args[1]);
+        id = args[1];
         name = args[2];
         taxRatePercentage = new BigDecimal(args[3]);
         unitPriceWithoutTax = new BigDecimal(args[4]);
@@ -32,7 +32,7 @@ public class Product extends EppSerializable {
         super(null);
     }
 
-    public Product(ProductType type, Long id, String name, BigDecimal taxRatePercentage, BigDecimal unitPriceWithoutTax) {
+    public Product(ProductType type, String id, String name, BigDecimal taxRatePercentage, BigDecimal unitPriceWithoutTax) {
 
         super(null);
 
@@ -41,5 +41,10 @@ public class Product extends EppSerializable {
         this.name = name;
         this.taxRatePercentage = taxRatePercentage;
         this.unitPriceWithoutTax = unitPriceWithoutTax;
+    }
+
+    public void setId(String id) {
+
+        this.id = id;
     }
 }

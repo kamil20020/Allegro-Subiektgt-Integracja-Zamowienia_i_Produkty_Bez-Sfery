@@ -7,7 +7,7 @@ public enum Country {
     SK("SK"),
     HU("HU");
 
-    private String name;
+    private final String name;
 
     private Country(String name){
 

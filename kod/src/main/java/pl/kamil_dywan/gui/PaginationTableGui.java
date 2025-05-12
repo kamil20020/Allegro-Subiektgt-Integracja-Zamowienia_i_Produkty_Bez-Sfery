@@ -255,35 +255,68 @@ public class PaginationTableGui extends JPanel {
         int numberOfPages = getNumberOfPages();
         int actualPage = getActualPage();
 
-        int numberOfButtons = Math.min(numberOfPages, 4);
         int actualButtonIndex = actualPage % 4;
 
-        int minPageButton = actualPage - actualButtonIndex;
-        int minOffsetButton = minPageButton * offset;
+        int minButtonPage = actualPage - actualButtonIndex;
 
-        for (int i = 0; i < numberOfButtons; i++) {
+        int numberOfButtons = 4;
 
-            int buttonPage = minPageButton + i;
+        if(numberOfPages - 1 - minButtonPage < 4){
 
-            JButton pageButton = new JButton(String.valueOf(buttonPage + 1));
-
-            if (i == actualButtonIndex) {
-
-                pageButton.setBackground(Color.GRAY);
-            }
-
-            int finalButtonPageOffset = minOffsetButton + i;
-
-            pageButton.addActionListener(e -> {
-
-                offset += finalButtonPageOffset;
-
-                handleLoadTableExceptions();
-            });
-
-            paginationNumbers.add(pageButton);
-            paginationNumbers.repaint();
+            numberOfButtons = numberOfPages - minButtonPage;
         }
+
+        int minButtonOffset = minButtonPage * pageSize;
+
+        if(numberOfButtons == 0){
+            numberOfButtons = 1;
+        }
+
+        System.out.println(
+            "\nnumber of pages: " + numberOfPages +
+            "\nactualPage: " + actualPage +
+            "\nnumber of buttons: " + numberOfButtons +
+            "\nactual button index " + actualButtonIndex +
+            "\nmin button page " + minButtonPage +
+            "\nmin offset button " + minButtonOffset
+        );
+
+        //pages = 5
+        // (1)  2   3  4 -> actualPage = 0, actualButtonIndex = 0, numberOfButtons = 4, minOffsetButton =
+        // (5)
+
+        for (int i = 0, newOffset = minButtonOffset; i < numberOfButtons; i++, newOffset += pageSize) {
+
+            boolean isButtonActive = (i == actualButtonIndex);
+            int buttonPageIndex = minButtonPage + i;
+
+            JButton gotPageButton = getPageButton(isButtonActive, buttonPageIndex, newOffset);
+
+            paginationNumbers.add(gotPageButton);
+        }
+
+        paginationNumbers.repaint();
+    }
+
+    private JButton getPageButton(boolean isActive, int index, int newOffset){
+
+        String message = String.valueOf(index + 1);
+
+        JButton pageButton = new JButton(message);
+
+        if (isActive) {
+
+            pageButton.setBackground(Color.GRAY);
+        }
+
+        pageButton.addActionListener(e -> {
+
+            offset = newOffset;
+
+            handleLoadTableExceptions();
+        });
+
+        return pageButton;
     }
 
     private int getActualPage() {
@@ -293,14 +326,7 @@ public class PaginationTableGui extends JPanel {
 
     private int getNumberOfPages() {
 
-        int numberOfPages = 1;
-
-        if (totalNumberOfRows > pageSize) {
-
-            numberOfPages = totalNumberOfRows / pageSize;
-        }
-
-        return numberOfPages;
+        return (int) Math.ceil((double) totalNumberOfRows / (double) pageSize);
     }
 
     private Integer getCurrentPageSize() {

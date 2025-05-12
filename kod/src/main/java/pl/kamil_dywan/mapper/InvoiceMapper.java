@@ -63,6 +63,10 @@ public interface InvoiceMapper {
             })
             .collect(Collectors.toList());
 
+        int deliveryIndex = invoiceLines.size() - 1;
+
+        invoiceLines.get(deliveryIndex).getProduct().setSuppliersProductCode("DOSTAWA123");
+
         invoiceTotal.setNumberOfLines(invoiceLines.size());
         updateInvoiceTotal(invoiceTotal, taxSubtotalsMappings);
 

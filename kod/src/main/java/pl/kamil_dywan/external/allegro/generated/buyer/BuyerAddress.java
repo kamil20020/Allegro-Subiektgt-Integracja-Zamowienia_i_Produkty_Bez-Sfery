@@ -30,6 +30,6 @@ public class BuyerAddress {
     private String postCode;
 
     @JsonProperty("countryCode")
-    private Country countryCode;
+    private String countryCode;
 
 }

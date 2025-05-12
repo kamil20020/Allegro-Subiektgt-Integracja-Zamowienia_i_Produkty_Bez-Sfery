@@ -20,14 +20,14 @@ class ProductDetailedPriceFactoryTest {
 
         //when
         ProductDetailedPrice gotProductDetailedPrice = ProductDetailedPriceFactory.create(
-            expectedProductId,
+            expectedProductId.toString(),
             unitPriceWithoutTax,
             unitPriceWithTax
         );
 
         //then
         assertNotNull(gotProductDetailedPrice);
-        assertEquals(expectedProductId, gotProductDetailedPrice.getProductId());
+        assertEquals(expectedProductId.toString(), gotProductDetailedPrice.getProductId());
         assertEquals(ProductPriceGroup.RETAIL, gotProductDetailedPrice.getGroup());
         assertEquals(unitPriceWithoutTax, gotProductDetailedPrice.getUnitPriceWithoutTax());
         assertEquals(unitPriceWithTax, gotProductDetailedPrice.getUnitPriceWithTax());

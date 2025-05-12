@@ -13,7 +13,7 @@ public class ProductApi extends BearerAuthApi {
 
     public ProductApi(){
 
-        super("api", "/sale/offers");
+        super("api", "/sale");
     }
 
     public HttpResponse<String> getOffersProducts(int offset, int limit) throws IllegalStateException, UnloggedException {
@@ -23,7 +23,7 @@ public class ProductApi extends BearerAuthApi {
 
         HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
             .GET()
-            .uri(URI.create(API_PREFIX + getQueryParamsPostFix("offset", offsetStr, "limit", limitStr)))
+            .uri(URI.create(API_PREFIX +  "/offers" + getQueryParamsPostFix("offset", offsetStr, "limit", limitStr)))
             .header("Accept", "application/vnd.allegro.public.v1+json");
 
         return send(httpRequestBuilder);
@@ -33,7 +33,7 @@ public class ProductApi extends BearerAuthApi {
 
         HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
             .GET()
-            .uri(URI.create(API_PREFIX + "/" + id))
+            .uri(URI.create(API_PREFIX + "/product-offers/" + id))
             .header("Accept", "application/vnd.allegro.public.v1+json");
 
         return send(httpRequestBuilder);

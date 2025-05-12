@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 public interface ProductDetailedPriceFactory {
 
-    public static ProductDetailedPrice create(Long productId, BigDecimal unitPriceWithoutTax, BigDecimal unitPriceWithTax){
+    public static ProductDetailedPrice create(String productId, BigDecimal unitPriceWithoutTax, BigDecimal unitPriceWithTax){
 
         return ProductDetailedPrice.builder()
             .productId(productId)

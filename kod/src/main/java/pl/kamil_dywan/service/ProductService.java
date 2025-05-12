@@ -20,6 +20,7 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 public class ProductService {
@@ -27,6 +28,7 @@ public class ProductService {
     private final ProductApi productApi;
 
     private static FileWriter<ProductRelatedData> subiektOrderFileWriter;
+    private static ExecutorService productsExecutorService = Executors.newFixedThreadPool(8);
 
     static {
 
@@ -37,6 +39,7 @@ public class ProductService {
         writeIndexes.put("TOWARY", new Integer[]{0, 1, 4, 11, 14});
 
         subiektOrderFileWriter = new EppFileWriter<>(headersNames, toWriteHeadersIndexes, rowsLengths, writeIndexes);
+
     }
 
     public ProductService(ProductApi productApi){
@@ -51,11 +54,43 @@ public class ProductService {
         return Api.extractBody(gotResponse, OfferProductResponse.class);
     }
 
-    public List<ProductOffer> getDetailedProductsByIds(List<Long> productsIds) throws UnloggedException{
+    public List<ProductOffer> getDetailedProductsByIds(List<Long> productsIds) throws UnloggedException, IllegalStateException{
 
-        return productsIds.stream()
-            .map(productId -> getDetailedProductById(productId))
-            .collect(Collectors.toList());
+        List<Callable<ProductOffer>> productsOffersTasks = new ArrayList<>(productsIds.size());
+
+        for(Long productId : productsIds){
+
+            Callable<ProductOffer> productOfferCallable = () -> {
+
+                return getDetailedProductById(productId);
+            };
+
+            productsOffersTasks.add(productOfferCallable);
+        }
+
+        List<ProductOffer> gotProductsOffers = new ArrayList<>();
+
+        try{
+            List<Future<ProductOffer>> gotProductsOffersFutures = productsExecutorService.invokeAll(productsOffersTasks);
+
+            for(Future<ProductOffer> gotProductOfferFuture : gotProductsOffersFutures){
+
+                if(gotProductOfferFuture.isCancelled()){
+
+                    throw new IllegalStateException("Product detailed fetch was canceled");
+                }
+
+                gotProductsOffers.add(gotProductOfferFuture.get());
+            }
+        }
+        catch (InterruptedException | ExecutionException e) {
+
+            e.printStackTrace();
+
+            throw new IllegalStateException("Could not fetch detailed products");
+        }
+
+        return gotProductsOffers;
     }
 
     public ProductOffer getDetailedProductById(Long id) throws UnloggedException{
@@ -65,9 +100,20 @@ public class ProductService {
         return Api.extractBody(gotResponse, ProductOffer.class);
     }
 
-    public ProductOffer getDeliveryService(){
+    public void writeDeliveryToFile(String filePath) throws IllegalStateException{
 
-        return AllegroProductOfferFactory.createDeliveryProductOffer();
+        ProductOffer deliveryProductOffer = AllegroProductOfferFactory.createDeliveryProductOffer();
+
+        List<Product> gotConvertedSubiektProducts = new ArrayList<>();
+        List<ProductDetailedPrice> productsDetailedPrices = new ArrayList<>();
+
+        ProductRelatedData productRelatedData = new ProductRelatedData(gotConvertedSubiektProducts, productsDetailedPrices);
+
+        appendProduct(productRelatedData, deliveryProductOffer, ProductType.SERVICES);
+
+        gotConvertedSubiektProducts.get(0).setId("DOSTAWA123");
+
+        writeProductsToFile(productRelatedData, filePath);
     }
 
     public void writeProductsToFile(List<ProductOffer> productsOffers, String filePath, ProductType productsTypes) throws IllegalStateException{

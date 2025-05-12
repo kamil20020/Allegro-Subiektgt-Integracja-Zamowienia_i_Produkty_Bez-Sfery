@@ -20,4 +20,5 @@ public class Product {
 
     @JsonProperty("quantity")
     private Integer quantity;
+
 }

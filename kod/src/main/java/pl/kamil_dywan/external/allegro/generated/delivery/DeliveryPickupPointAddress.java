@@ -27,6 +27,6 @@ public class DeliveryPickupPointAddress {
     private String city;
 
     @JsonProperty("countryCode")
-    private Country countryCode;
+    private String countryCode;
 
 }

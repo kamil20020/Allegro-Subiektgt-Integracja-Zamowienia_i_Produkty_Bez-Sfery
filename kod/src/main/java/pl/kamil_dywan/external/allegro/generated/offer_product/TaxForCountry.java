@@ -26,5 +26,5 @@ public class TaxForCountry {
     private BigDecimal taxRate;
 
     @JsonProperty("countryCode")
-    private Country country;
+    private String country;
 }

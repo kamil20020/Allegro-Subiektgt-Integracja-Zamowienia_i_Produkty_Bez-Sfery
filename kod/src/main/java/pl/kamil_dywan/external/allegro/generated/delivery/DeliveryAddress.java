@@ -39,7 +39,7 @@ public class DeliveryAddress {
     private String zipCode;
 
     @JsonProperty("countryCode")
-    private Country countryCode;
+    private String countryCode;
 
     @JsonProperty("companyName")
     private String companyName;

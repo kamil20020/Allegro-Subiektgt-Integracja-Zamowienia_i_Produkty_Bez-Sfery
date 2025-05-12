@@ -33,7 +33,7 @@ public interface ProductOfferMapper {
         );
 
         return Product.builder()
-            .id(allegroProductOffer.getId())
+            .id(allegroProductOffer.getId().toString())
             .name(allegroProductOffer.getName())
             .type(productType)
             .unitPriceWithoutTax(unitPriceWithoutTax)
