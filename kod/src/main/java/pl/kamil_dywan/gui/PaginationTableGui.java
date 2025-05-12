@@ -261,24 +261,24 @@ public class PaginationTableGui extends JPanel {
 
         int numberOfButtons = 4;
 
-        if(numberOfPages - 1 - minButtonPage < 4){
+        if (numberOfPages - 1 - minButtonPage < 4) {
 
             numberOfButtons = numberOfPages - minButtonPage;
         }
 
         int minButtonOffset = minButtonPage * pageSize;
 
-        if(numberOfButtons == 0){
+        if (numberOfButtons == 0) {
             numberOfButtons = 1;
         }
 
         System.out.println(
-            "\nnumber of pages: " + numberOfPages +
-            "\nactualPage: " + actualPage +
-            "\nnumber of buttons: " + numberOfButtons +
-            "\nactual button index " + actualButtonIndex +
-            "\nmin button page " + minButtonPage +
-            "\nmin offset button " + minButtonOffset
+                "\nnumber of pages: " + numberOfPages +
+                        "\nactualPage: " + actualPage +
+                        "\nnumber of buttons: " + numberOfButtons +
+                        "\nactual button index " + actualButtonIndex +
+                        "\nmin button page " + minButtonPage +
+                        "\nmin offset button " + minButtonOffset
         );
 
         //pages = 5
@@ -298,7 +298,7 @@ public class PaginationTableGui extends JPanel {
         paginationNumbers.repaint();
     }
 
-    private JButton getPageButton(boolean isActive, int index, int newOffset){
+    private JButton getPageButton(boolean isActive, int index, int newOffset) {
 
         String message = String.valueOf(index + 1);
 
