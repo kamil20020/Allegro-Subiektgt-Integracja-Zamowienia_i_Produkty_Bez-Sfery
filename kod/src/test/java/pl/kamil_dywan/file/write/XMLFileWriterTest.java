@@ -1,7 +1,7 @@
 package pl.kamil_dywan.file.write;
 
 import org.junit.jupiter.api.Test;
-import pl.kamil_dywan.external.subiektgt.generated.Batch;
+import pl.kamil_dywan.external.subiektgt.generated.InvoiceBatch;
 import pl.kamil_dywan.file.read.FileReader;
 import pl.kamil_dywan.file.read.XMLFileReader;
 
@@ -362,8 +362,8 @@ class XMLFileWriterTest {
                 </Batch>
             """;
 
-    private static final FileWriter<Batch> fileWriter = new XMLFileWriter<>(Batch.class);
-    private static final FileReader<Batch> fileReader = new XMLFileReader<>(Batch.class);
+    private static final FileWriter<InvoiceBatch> fileWriter = new XMLFileWriter<>(InvoiceBatch.class);
+    private static final FileReader<InvoiceBatch> fileReader = new XMLFileReader<>(InvoiceBatch.class);
 
     @Test
     void shouldSave() throws Exception {
@@ -373,7 +373,7 @@ class XMLFileWriterTest {
         String savedMavenFilePath = "subiekt-test.xml";
 
         //when
-        Batch toSaveBatch = fileReader.loadFromStr(validBatchStr);
+        InvoiceBatch toSaveBatch = fileReader.loadFromStr(validBatchStr);
         fileWriter.save(toSaveNormalFilePath, toSaveBatch);
 
         File savedFile = FileReader.loadFile(savedMavenFilePath);
@@ -390,7 +390,7 @@ class XMLFileWriterTest {
         //given
 
         //when
-        Batch toSaveBatch = fileReader.loadFromStr(validBatchStr);
+        InvoiceBatch toSaveBatch = fileReader.loadFromStr(validBatchStr);
         String gotBatchStr = fileWriter.writeToStr(toSaveBatch).replaceAll("\\s", "");
 
         //then

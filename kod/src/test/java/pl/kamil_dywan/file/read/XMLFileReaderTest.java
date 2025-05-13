@@ -1,12 +1,9 @@
 package pl.kamil_dywan.file.read;
 
 import org.junit.jupiter.api.Test;
-import pl.kamil_dywan.external.subiektgt.generated.Batch;
+import pl.kamil_dywan.external.subiektgt.generated.InvoiceBatch;
 import pl.kamil_dywan.file.write.FileWriter;
 import pl.kamil_dywan.file.write.XMLFileWriter;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -360,8 +357,8 @@ class XMLFileReaderTest {
                 </Batch>
             """;
 
-    private static final FileReader<Batch> fileReader = new XMLFileReader<>(Batch.class);
-    private static final FileWriter<Batch> fileWriter = new XMLFileWriter<>(Batch.class);
+    private static final FileReader<InvoiceBatch> fileReader = new XMLFileReader<>(InvoiceBatch.class);
+    private static final FileWriter<InvoiceBatch> fileWriter = new XMLFileWriter<>(InvoiceBatch.class);
 
     @Test
     void shouldLoad() throws Exception {
@@ -370,7 +367,7 @@ class XMLFileReaderTest {
         String inputFilePath = "./data/subiekt/order.xml";
 
         //when
-        Batch gotBatch = fileReader.load(inputFilePath);
+        InvoiceBatch gotBatch = fileReader.load(inputFilePath);
         String gotBatchStr = fileWriter.writeToStr(gotBatch).replaceAll("\\s", "");
 
         //then
@@ -383,7 +380,7 @@ class XMLFileReaderTest {
         //given
 
         //when
-        Batch gotBatch = fileReader.loadFromStr(validBatchStr);
+        InvoiceBatch gotBatch = fileReader.loadFromStr(validBatchStr);
         String gotBatchStr = fileWriter.writeToStr(gotBatch).replaceAll("\\s", "");
 
         //then

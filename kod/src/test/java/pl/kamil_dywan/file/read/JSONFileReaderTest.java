@@ -1,15 +1,9 @@
 package pl.kamil_dywan.file.read;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import pl.kamil_dywan.external.allegro.generated.order.OrderResponse;
-import pl.kamil_dywan.external.allegro.own.JavaTimeObjectMapper;
-import pl.kamil_dywan.external.subiektgt.generated.Batch;
 import pl.kamil_dywan.file.write.FileWriter;
 import pl.kamil_dywan.file.write.JSONFileWriter;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
 
 import static org.junit.jupiter.api.Assertions.*;
 

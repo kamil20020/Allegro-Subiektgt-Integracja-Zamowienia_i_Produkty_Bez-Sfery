@@ -5,23 +5,20 @@ import pl.kamil_dywan.api.allegro.OrderApi;
 import pl.kamil_dywan.exception.UnloggedException;
 import pl.kamil_dywan.external.allegro.generated.order.Order;
 import pl.kamil_dywan.external.allegro.generated.order.OrderResponse;
-import pl.kamil_dywan.external.subiektgt.generated.Batch;
-import pl.kamil_dywan.external.subiektgt.generated.Invoice;
+import pl.kamil_dywan.external.subiektgt.generated.InvoiceBatch;
 import pl.kamil_dywan.file.write.FileWriter;
 import pl.kamil_dywan.file.write.XMLFileWriter;
-import pl.kamil_dywan.mapper.BatchMapper;
-import pl.kamil_dywan.mapper.InvoiceMapper;
+import pl.kamil_dywan.mapper.invoice.InvoiceBatchMapper;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.http.HttpResponse;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class OrderService {
 
     private final OrderApi orderApi;
-    private static final FileWriter<Batch> subiektOrderFileWriter = new XMLFileWriter<>(Batch.class);
+    private static final FileWriter<InvoiceBatch> subiektOrderFileWriter = new XMLFileWriter<>(InvoiceBatch.class);
 
     public OrderService(OrderApi orderApi){
 
@@ -37,7 +34,7 @@ public class OrderService {
 
     public void writeOrdersToFile(List<Order> allegroOrders, String filePath) throws IllegalStateException {
 
-        Batch invoicesBatch = BatchMapper.map("Subiekt", allegroOrders);
+        InvoiceBatch invoicesBatch = InvoiceBatchMapper.map("Subiekt", allegroOrders);
 
         try {
             subiektOrderFileWriter.save(filePath, invoicesBatch);

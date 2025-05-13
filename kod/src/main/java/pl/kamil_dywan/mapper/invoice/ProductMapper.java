@@ -1,4 +1,4 @@
-package pl.kamil_dywan.mapper;
+package pl.kamil_dywan.mapper.invoice;
 
 import pl.kamil_dywan.external.allegro.generated.invoice_item.Offer;
 import pl.kamil_dywan.external.subiektgt.generated.invoice_line.Product;

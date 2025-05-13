@@ -1,17 +1,15 @@
 package pl.kamil_dywan.mapper.unit;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import pl.kamil_dywan.external.allegro.generated.buyer.Buyer;
 import pl.kamil_dywan.external.allegro.generated.buyer.BuyerAddress;
 import pl.kamil_dywan.external.subiektgt.generated.Address;
 import pl.kamil_dywan.external.subiektgt.generated.Contact;
 import pl.kamil_dywan.mapper.AddressMapper;
-import pl.kamil_dywan.mapper.BuyerMapper;
-import pl.kamil_dywan.mapper.ContactMapper;
+import pl.kamil_dywan.mapper.invoice.BuyerMapper;
+import pl.kamil_dywan.mapper.invoice.ContactMapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;

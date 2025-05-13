@@ -28,6 +28,10 @@ import pl.kamil_dywan.external.subiektgt.own.product.TaxRateCodeMapping;
 import pl.kamil_dywan.factory.InvoiceHeadFactory;
 import pl.kamil_dywan.factory.SettlementFactory;
 import pl.kamil_dywan.mapper.*;
+import pl.kamil_dywan.mapper.invoice.BuyerMapper;
+import pl.kamil_dywan.mapper.invoice.InvoiceLineMapper;
+import pl.kamil_dywan.mapper.invoice.InvoiceMapper;
+import pl.kamil_dywan.mapper.invoice.SupplierMapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -211,12 +215,12 @@ class InvoiceMapperTest {
 
         //when
         try(
-            MockedStatic<SupplierMapper> mockedSupplierMapper = Mockito.mockStatic(SupplierMapper.class);
-            MockedStatic<BuyerMapper> mockedBuyerMapper = Mockito.mockStatic(BuyerMapper.class);
-            MockedStatic<InvoiceLineMapper> mockedInvoiceLineMapper = Mockito.mockStatic(InvoiceLineMapper.class);
-            MockedStatic<AllegroLineItemMapper> mockedAllegroLineItemMapper = Mockito.mockStatic(AllegroLineItemMapper.class);
-            MockedStatic<InvoiceHeadFactory> mockedInvoiceHeadFactory = Mockito.mockStatic(InvoiceHeadFactory.class);
-            MockedStatic<SettlementFactory> mockedSettlementFactory = Mockito.mockStatic(SettlementFactory.class)
+                MockedStatic<SupplierMapper> mockedSupplierMapper = Mockito.mockStatic(SupplierMapper.class);
+                MockedStatic<BuyerMapper> mockedBuyerMapper = Mockito.mockStatic(BuyerMapper.class);
+                MockedStatic<InvoiceLineMapper> mockedInvoiceLineMapper = Mockito.mockStatic(InvoiceLineMapper.class);
+                MockedStatic<AllegroLineItemMapper> mockedAllegroLineItemMapper = Mockito.mockStatic(AllegroLineItemMapper.class);
+                MockedStatic<InvoiceHeadFactory> mockedInvoiceHeadFactory = Mockito.mockStatic(InvoiceHeadFactory.class);
+                MockedStatic<SettlementFactory> mockedSettlementFactory = Mockito.mockStatic(SettlementFactory.class)
         ){
             mockedSupplierMapper.when(() -> SupplierMapper.map(any())).thenReturn(expectedSupplier);
             mockedBuyerMapper.when(() -> BuyerMapper.map(any())).thenReturn(expectedBuyer);

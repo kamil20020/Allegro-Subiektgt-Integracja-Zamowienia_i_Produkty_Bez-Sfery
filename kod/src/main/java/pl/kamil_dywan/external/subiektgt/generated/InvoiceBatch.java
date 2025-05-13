@@ -29,7 +29,7 @@ import java.util.List;
     }
 )
 @XmlRootElement(name = "Batch")
-public class Batch {
+public class InvoiceBatch {
 
     @XmlAttribute(name = "Date", required = true)
     @XmlJavaTypeAdapter(value = LocalDateAdapter.class)

@@ -272,15 +272,6 @@ public class PaginationTableGui extends JPanel {
             numberOfButtons = 1;
         }
 
-        System.out.println(
-                "\nnumber of pages: " + numberOfPages +
-                        "\nactualPage: " + actualPage +
-                        "\nnumber of buttons: " + numberOfButtons +
-                        "\nactual button index " + actualButtonIndex +
-                        "\nmin button page " + minButtonPage +
-                        "\nmin offset button " + minButtonOffset
-        );
-
         //pages = 5
         // (1)  2   3  4 -> actualPage = 0, actualButtonIndex = 0, numberOfButtons = 4, minOffsetButton =
         // (5)

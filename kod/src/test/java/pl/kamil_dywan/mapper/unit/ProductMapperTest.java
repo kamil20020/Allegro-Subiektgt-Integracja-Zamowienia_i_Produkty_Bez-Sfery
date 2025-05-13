@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import pl.kamil_dywan.external.allegro.generated.invoice_item.ExternalId;
 import pl.kamil_dywan.external.allegro.generated.invoice_item.Offer;
 import pl.kamil_dywan.external.subiektgt.generated.invoice_line.Product;
-import pl.kamil_dywan.mapper.ProductMapper;
+import pl.kamil_dywan.mapper.invoice.ProductMapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 

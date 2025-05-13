@@ -4,14 +4,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import pl.kamil_dywan.external.allegro.generated.order.Order;
-import pl.kamil_dywan.external.subiektgt.generated.Batch;
+import pl.kamil_dywan.external.subiektgt.generated.InvoiceBatch;
 import pl.kamil_dywan.external.subiektgt.generated.BatchTrailer;
 import pl.kamil_dywan.external.subiektgt.generated.Invoice;
 import pl.kamil_dywan.external.subiektgt.own.Code;
 import pl.kamil_dywan.external.subiektgt.own.invoice.DocType;
 import pl.kamil_dywan.factory.BatchTrailerFactory;
-import pl.kamil_dywan.mapper.BatchMapper;
-import pl.kamil_dywan.mapper.InvoiceMapper;
+import pl.kamil_dywan.mapper.invoice.InvoiceBatchMapper;
+import pl.kamil_dywan.mapper.invoice.InvoiceMapper;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
-class BatchMapperTest {
+class InvoiceInvoiceBatchMapperTest {
 
     @Test
     void shouldMap() {
@@ -49,7 +49,7 @@ class BatchMapperTest {
 
             mockedBatchTrailerFactory.when(() -> BatchTrailerFactory.create(any())).thenReturn(expectedBatchTrailer);
 
-            Batch gotBatch = BatchMapper.map(supplierName, allegroOrders);
+            InvoiceBatch gotBatch = InvoiceBatchMapper.map(supplierName, allegroOrders);
 
             //then
             assertNotNull(gotBatch);

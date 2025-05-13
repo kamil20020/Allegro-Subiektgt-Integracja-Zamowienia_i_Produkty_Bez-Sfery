@@ -11,8 +11,8 @@ import pl.kamil_dywan.external.subiektgt.generated.Address;
 import pl.kamil_dywan.external.subiektgt.generated.Contact;
 import pl.kamil_dywan.external.subiektgt.generated.supplier.Supplier;
 import pl.kamil_dywan.mapper.AddressMapper;
-import pl.kamil_dywan.mapper.ContactMapper;
-import pl.kamil_dywan.mapper.SupplierMapper;
+import pl.kamil_dywan.mapper.invoice.ContactMapper;
+import pl.kamil_dywan.mapper.invoice.SupplierMapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;

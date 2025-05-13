@@ -1,10 +1,11 @@
-package pl.kamil_dywan.mapper;
+package pl.kamil_dywan.mapper.invoice;
 
 import pl.kamil_dywan.external.allegro.generated.invoice.Invoice;
 import pl.kamil_dywan.external.allegro.generated.invoice.InvoiceAddress;
 import pl.kamil_dywan.external.subiektgt.generated.Address;
 import pl.kamil_dywan.external.subiektgt.generated.Contact;
 import pl.kamil_dywan.external.subiektgt.generated.supplier.Supplier;
+import pl.kamil_dywan.mapper.AddressMapper;
 
 public interface SupplierMapper {
 

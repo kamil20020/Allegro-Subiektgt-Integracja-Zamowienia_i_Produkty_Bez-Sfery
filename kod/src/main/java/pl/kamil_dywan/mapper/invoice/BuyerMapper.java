@@ -1,8 +1,9 @@
-package pl.kamil_dywan.mapper;
+package pl.kamil_dywan.mapper.invoice;
 
 import pl.kamil_dywan.external.subiektgt.generated.Address;
 import pl.kamil_dywan.external.subiektgt.generated.Contact;
 import pl.kamil_dywan.external.subiektgt.generated.buyer.Buyer;
+import pl.kamil_dywan.mapper.AddressMapper;
 
 public interface BuyerMapper {
 

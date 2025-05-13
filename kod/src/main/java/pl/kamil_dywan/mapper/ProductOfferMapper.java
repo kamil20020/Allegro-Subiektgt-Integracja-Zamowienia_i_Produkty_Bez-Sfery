@@ -25,7 +25,7 @@ public interface ProductOfferMapper {
         BigDecimal taxRatePercentage = getTaxRatePercentage(taxSettings);
         BigDecimal taxRateValue = taxRatePercentage.multiply(BigDecimal.valueOf(0.01));
 
-        BigDecimal unitPriceWithTax = sellingMode.getPrice().getAmount();
+        BigDecimal unitPriceWithTax = sellingMode.getPrice() != null ? sellingMode.getPrice().getAmount() : BigDecimal.ZERO;
 
         BigDecimal unitPriceWithoutTax = unitPriceWithTax.divide(
             BigDecimal.ONE.add(taxRateValue),

@@ -7,7 +7,7 @@ import pl.kamil_dywan.external.allegro.generated.invoice_item.Product;
 import pl.kamil_dywan.external.allegro.generated.invoice_item.ProductSet;
 import pl.kamil_dywan.external.subiektgt.generated.invoice_line.InvoiceLineQuantity;
 import pl.kamil_dywan.external.subiektgt.own.product.UOMCode;
-import pl.kamil_dywan.mapper.InvoiceLineQuantityMapper;
+import pl.kamil_dywan.mapper.invoice.InvoiceLineQuantityMapper;
 
 import java.util.List;
 

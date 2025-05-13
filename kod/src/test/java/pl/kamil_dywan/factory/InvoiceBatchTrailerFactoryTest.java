@@ -7,7 +7,7 @@ import pl.kamil_dywan.external.subiektgt.own.Code;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BatchTrailerFactoryTest {
+class InvoiceBatchTrailerFactoryTest {
 
     @Test
     void shouldCreate() {

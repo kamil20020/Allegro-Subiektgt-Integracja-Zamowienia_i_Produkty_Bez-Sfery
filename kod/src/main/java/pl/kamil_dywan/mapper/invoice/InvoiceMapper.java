@@ -1,4 +1,4 @@
-package pl.kamil_dywan.mapper;
+package pl.kamil_dywan.mapper.invoice;
 
 import pl.kamil_dywan.external.allegro.generated.delivery.Delivery;
 import pl.kamil_dywan.external.allegro.generated.invoice_item.LineItem;
@@ -9,12 +9,11 @@ import pl.kamil_dywan.external.subiektgt.generated.InvoiceTotal;
 import pl.kamil_dywan.external.subiektgt.generated.TaxSubTotal;
 import pl.kamil_dywan.external.subiektgt.generated.buyer.Buyer;
 import pl.kamil_dywan.external.subiektgt.generated.invoice_line.InvoiceLine;
-import pl.kamil_dywan.external.subiektgt.generated.supplier.Supplier;
 import pl.kamil_dywan.external.subiektgt.own.Code;
 import pl.kamil_dywan.external.subiektgt.own.invoice.InvoiceLineMoneyStats;
 import pl.kamil_dywan.external.subiektgt.own.product.TaxRateCodeMapping;
 import pl.kamil_dywan.factory.InvoiceReferencesFactory;
-import pl.kamil_dywan.factory.SettlementFactory;
+import pl.kamil_dywan.mapper.AllegroLineItemMapper;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -34,7 +33,6 @@ public interface InvoiceMapper {
 
         LocalDate invoiceDate = allegroOrder.getPayment().getFinishedAt().toLocalDate();
         String invoiceCity = allegroInvoice.getAddress().getCity();
-        Supplier supplier = SupplierMapper.map(allegroInvoice);
         Buyer buyer = BuyerMapper.map(allegroOrder.getBuyer());
 
         AtomicInteger lineItemNumber = new AtomicInteger(0);
@@ -82,7 +80,6 @@ public interface InvoiceMapper {
             .invoiceReferences(InvoiceReferencesFactory.create())
             .cityOfIssue(invoiceCity)
             .taxPointDate(allegroInvoice.getDueDate())
-            .supplier(supplier)
             .buyer(buyer)
             .invoiceLines(invoiceLines)
             .narrative("")

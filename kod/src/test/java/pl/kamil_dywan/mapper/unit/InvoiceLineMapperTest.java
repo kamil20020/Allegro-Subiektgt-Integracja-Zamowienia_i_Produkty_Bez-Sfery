@@ -15,9 +15,9 @@ import pl.kamil_dywan.external.subiektgt.own.invoice.InvoiceLineMoneyStats;
 import pl.kamil_dywan.external.subiektgt.own.product.TaxRateCodeMapping;
 import pl.kamil_dywan.factory.LineTaxFactory;
 import pl.kamil_dywan.factory.PercentDiscountFactory;
-import pl.kamil_dywan.mapper.InvoiceLineMapper;
-import pl.kamil_dywan.mapper.InvoiceLineQuantityMapper;
-import pl.kamil_dywan.mapper.ProductMapper;
+import pl.kamil_dywan.mapper.invoice.InvoiceLineMapper;
+import pl.kamil_dywan.mapper.invoice.InvoiceLineQuantityMapper;
+import pl.kamil_dywan.mapper.invoice.ProductMapper;
 
 import java.math.BigDecimal;
 
