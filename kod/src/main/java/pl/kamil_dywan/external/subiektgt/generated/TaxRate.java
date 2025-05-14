@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.kamil_dywan.external.subiektgt.own.BigDecimalAdapter;
+import pl.kamil_dywan.external.subiektgt.own.serialization.BigDecimalAdapter;
 import pl.kamil_dywan.external.subiektgt.own.Code;
 
 import java.math.BigDecimal;

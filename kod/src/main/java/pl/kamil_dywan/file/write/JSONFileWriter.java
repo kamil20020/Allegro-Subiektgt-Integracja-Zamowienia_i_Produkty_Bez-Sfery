@@ -1,14 +1,12 @@
 package pl.kamil_dywan.file.write;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import pl.kamil_dywan.external.allegro.own.JavaTimeObjectMapper;
+import pl.kamil_dywan.external.allegro.own.serialization.JavaTimeObjectMapper;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 public class JSONFileWriter<T> implements pl.kamil_dywan.file.write.FileWriter<T> {
 

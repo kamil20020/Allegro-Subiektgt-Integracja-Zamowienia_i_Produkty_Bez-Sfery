@@ -5,7 +5,6 @@ import pl.kamil_dywan.external.allegro.generated.offer_product.OfferProduct;
 import pl.kamil_dywan.external.allegro.generated.offer_product.OfferProductResponse;
 import pl.kamil_dywan.external.allegro.generated.offer_product.ProductOffer;
 import pl.kamil_dywan.external.subiektgt.own.product.ProductType;
-import pl.kamil_dywan.service.AuthService;
 import pl.kamil_dywan.service.ProductService;
 
 import javax.swing.*;
@@ -93,15 +92,15 @@ public class ProductsGui implements ChangeableGui {
 
     private void saveDeliveryToFile() {
 
-        FileDialog fileDialog = runEppFileSaveDialog("dostawa.epp", "Zapisywanie dostawy do pliku");
+        String savedFilePath = FileDialogHandler.getSaveFileDialogSelectedPath(
+                "Zapisywanie dostawy do pliku",
+                "dostawa.epp",
+                ".epp"
+        );
 
-        String savedFileName = fileDialog.getFile();
-
-        if (savedFileName == null) {
+        if (savedFilePath.isBlank()) {
             return;
         }
-
-        String savedFilePath = fileDialog.getDirectory() + savedFileName;
 
         try {
 
@@ -137,15 +136,15 @@ public class ProductsGui implements ChangeableGui {
             return;
         }
 
-        FileDialog fileDialog = runEppFileSaveDialog("produkty.epp", "Zapisywanie produktów do pliku");
+        String savedFilePath = FileDialogHandler.getSaveFileDialogSelectedPath(
+            "Zapisywanie produktów do pliku",
+            "produkty.epp",
+            ".epp"
+        );
 
-        String savedFileName = fileDialog.getFile();
-
-        if (savedFileName == null) {
+        if (savedFilePath.isBlank()) {
             return;
         }
-
-        String savedFilePath = fileDialog.getDirectory() + savedFileName;
 
         try {
 
@@ -168,21 +167,6 @@ public class ProductsGui implements ChangeableGui {
                 "Powiadomienie",
                 JOptionPane.INFORMATION_MESSAGE
         );
-    }
-
-    private FileDialog runEppFileSaveDialog(String fileName, String message) {
-
-        FileDialog fileDialog = new FileDialog((Frame) null, message, FileDialog.SAVE);
-
-        File homeDirectory = FileSystemView.getFileSystemView().getHomeDirectory();
-
-        fileDialog.setDirectory(homeDirectory.getAbsolutePath());
-        fileDialog.setFile(fileName);
-        fileDialog.setFilenameFilter((directory, name) -> name.endsWith(".epp"));
-
-        fileDialog.setVisible(true);
-
-        return fileDialog;
     }
 
     @Override

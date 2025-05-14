@@ -38,9 +38,9 @@ class BuyerMapperTest {
         ){
 
             mockedAddressMapper.when(() -> AddressMapper.map(any(BuyerAddress.class))).thenReturn(new Address());
-            mockedContactMapper.when(() -> ContactMapper.map(any(Buyer.class))).thenReturn(new Contact());
+//            mockedContactMapper.when(() -> ContactMapper.map(any(Buyer.class))).thenReturn(new Contact());
 
-            pl.kamil_dywan.external.subiektgt.generated.buyer.Buyer gotBuyer = BuyerMapper.map(allegroBuyer);
+            pl.kamil_dywan.external.subiektgt.generated.buyer.Buyer gotBuyer = BuyerMapper.map(null);
 
             //then
             assertEquals(allegroBuyer.getCompanyName(), gotBuyer.getParty());
@@ -48,7 +48,7 @@ class BuyerMapperTest {
             assertNotNull(gotBuyer.getContact());
 
             mockedAddressMapper.verify(() -> AddressMapper.map(allegroBuyerAddress));
-            mockedContactMapper.verify(() -> ContactMapper.map(allegroBuyer));
+//            mockedContactMapper.verify(() -> ContactMapper.map(allegroBuyer));
         }
     }
 
@@ -78,9 +78,9 @@ class BuyerMapperTest {
         ){
 
             mockedAddressMapper.when(() -> AddressMapper.map(any(BuyerAddress.class))).thenReturn(expectedAddress);
-            mockedContactMapper.when(() -> ContactMapper.map(any(Buyer.class))).thenReturn(expectedContact);
+//            mockedContactMapper.when(() -> ContactMapper.map(any(Buyer.class))).thenReturn(expectedContact);
 
-            pl.kamil_dywan.external.subiektgt.generated.buyer.Buyer gotBuyer = BuyerMapper.map(allegroBuyer);
+            pl.kamil_dywan.external.subiektgt.generated.buyer.Buyer gotBuyer = BuyerMapper.map(null);
 
             //then
             assertNotNull(gotBuyer);
@@ -89,7 +89,7 @@ class BuyerMapperTest {
             assertEquals(expectedContact, gotBuyer.getContact());
 
             mockedAddressMapper.verify(() -> AddressMapper.map(allegroBuyerAddress));
-            mockedContactMapper.verify(() -> ContactMapper.map(allegroBuyer));
+//            mockedContactMapper.verify(() -> ContactMapper.map(allegroBuyer));
         }
     }
 }

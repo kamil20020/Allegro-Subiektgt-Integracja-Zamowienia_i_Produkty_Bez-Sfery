@@ -1,9 +1,7 @@
 package pl.kamil_dywan.file.read;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import pl.kamil_dywan.external.allegro.own.JavaTimeObjectMapper;
-import pl.kamil_dywan.file.read.FileReader;
+import pl.kamil_dywan.external.allegro.own.serialization.JavaTimeObjectMapper;
 
 import java.io.File;
 import java.io.IOException;

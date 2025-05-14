@@ -43,17 +43,48 @@
         </border>
         <children/>
       </grid>
-      <component id="953f5" class="javax.swing.JButton" binding="saveOrdersButton">
+      <toolbar id="4134d">
         <constraints>
-          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="-1" height="20"/>
+          </grid>
           <gridbag top="0" left="0" bottom="20" right="0" weightx="1.0" weighty="1.0"/>
         </constraints>
         <properties>
-          <alignmentX value="0.5"/>
-          <opaque value="true"/>
-          <text value="Zapisz zamówienia do pliku"/>
+          <floatable value="false"/>
+          <opaque value="false"/>
+          <visible value="true"/>
         </properties>
-      </component>
+        <border type="none"/>
+        <children>
+          <component id="82b37" class="javax.swing.JButton" binding="saveInvoicesButton">
+            <constraints/>
+            <properties>
+              <text value="Zapisz faktury do pliku"/>
+            </properties>
+          </component>
+          <component id="b6eb3" class="javax.swing.JToolBar$Separator">
+            <constraints/>
+            <properties/>
+          </component>
+          <component id="2e4e3" class="javax.swing.JButton" binding="saveReceiptsButton">
+            <constraints/>
+            <properties>
+              <text value="Zapisz paragony do pliku"/>
+            </properties>
+          </component>
+          <component id="76ca6" class="javax.swing.JToolBar$Separator">
+            <constraints/>
+            <properties/>
+          </component>
+          <component id="7c176" class="javax.swing.JButton" binding="saveClientsButton">
+            <constraints/>
+            <properties>
+              <text value="Zapisz klientów do pliku"/>
+            </properties>
+          </component>
+        </children>
+      </toolbar>
     </children>
   </grid>
 </form>

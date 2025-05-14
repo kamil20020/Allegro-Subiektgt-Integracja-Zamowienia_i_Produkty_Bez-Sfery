@@ -25,4 +25,9 @@ public class InvoiceNaturalPerson {
     @JsonProperty("lastName")
     private String lastName;
 
+    public String simpleToString(){
+
+        return firstName + " " + lastName;
+    }
+
 }

@@ -27,7 +27,7 @@ public class ProductService {
 
     private final ProductApi productApi;
 
-    private static FileWriter<ProductRelatedData> subiektOrderFileWriter;
+    private static FileWriter<ProductRelatedData> subiektProductFileWriter;
     private static ExecutorService productsExecutorService = Executors.newFixedThreadPool(8);
 
     static {
@@ -38,7 +38,7 @@ public class ProductService {
         LinkedHashMap<String, Integer[]> writeIndexes = new LinkedHashMap<>();
         writeIndexes.put("TOWARY", new Integer[]{0, 1, 4, 11, 14});
 
-        subiektOrderFileWriter = new EppFileWriter<>(headersNames, toWriteHeadersIndexes, rowsLengths, writeIndexes);
+        subiektProductFileWriter = new EppFileWriter<>(headersNames, toWriteHeadersIndexes, rowsLengths, writeIndexes);
 
     }
 
@@ -151,7 +151,7 @@ public class ProductService {
     private static void writeProductsToFile(ProductRelatedData productRelatedData, String filePath){
 
         try {
-            subiektOrderFileWriter.save(filePath, productRelatedData);
+            subiektProductFileWriter.save(filePath, productRelatedData);
         }
         catch (IOException | URISyntaxException e) {
 

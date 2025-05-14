@@ -11,7 +11,7 @@ import pl.kamil_dywan.external.subiektgt.generated.invoice_head.InvoiceHead;
 import pl.kamil_dywan.external.subiektgt.generated.invoice_line.InvoiceLine;
 import pl.kamil_dywan.external.subiektgt.generated.settlement.Settlement;
 import pl.kamil_dywan.external.subiektgt.generated.supplier.Supplier;
-import pl.kamil_dywan.external.subiektgt.own.LocalDateAdapter;
+import pl.kamil_dywan.external.subiektgt.own.serialization.LocalDateAdapter;
 
 import java.time.LocalDate;
 import java.util.List;

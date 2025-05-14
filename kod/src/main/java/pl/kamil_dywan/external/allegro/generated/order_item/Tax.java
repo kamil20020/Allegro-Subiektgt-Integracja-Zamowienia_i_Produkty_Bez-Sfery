@@ -1,15 +1,13 @@
 
-package pl.kamil_dywan.external.allegro.generated.invoice_item;
+package pl.kamil_dywan.external.allegro.generated.order_item;
 
 import java.math.BigDecimal;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import javax.annotation.processing.Generated;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
-import pl.kamil_dywan.external.allegro.own.BigDecimalStringSerializer;
+import pl.kamil_dywan.external.allegro.own.serialization.BigDecimalStringSerializer;
 
 @Data
 @AllArgsConstructor

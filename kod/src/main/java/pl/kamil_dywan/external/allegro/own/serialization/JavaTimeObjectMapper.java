@@ -1,4 +1,4 @@
-package pl.kamil_dywan.external.allegro.own;
+package pl.kamil_dywan.external.allegro.own.serialization;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;

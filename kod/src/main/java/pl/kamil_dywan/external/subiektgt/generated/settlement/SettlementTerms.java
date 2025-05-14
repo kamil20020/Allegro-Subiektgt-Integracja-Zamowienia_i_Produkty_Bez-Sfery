@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.kamil_dywan.external.subiektgt.own.Code;
-import pl.kamil_dywan.external.subiektgt.own.LocalDateAdapter;
+import pl.kamil_dywan.external.subiektgt.own.serialization.LocalDateAdapter;
 
 import java.time.LocalDate;
 

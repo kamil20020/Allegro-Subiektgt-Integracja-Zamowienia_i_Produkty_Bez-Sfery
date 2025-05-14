@@ -2,7 +2,7 @@ package pl.kamil_dywan.external.allegro.generated.order;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
-import pl.kamil_dywan.external.allegro.own.FulFillmentStatus;
+import pl.kamil_dywan.external.allegro.own.order.FulFillmentStatus;
 
 import javax.annotation.processing.Generated;
 

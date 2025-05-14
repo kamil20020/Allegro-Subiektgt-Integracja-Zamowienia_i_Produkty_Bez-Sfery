@@ -21,7 +21,7 @@ class ContactMapperTest {
             .build();
 
         //when
-        Contact gotContact = ContactMapper.map(buyer);
+        Contact gotContact = ContactMapper.map(null);
 
         //then
         assertEquals(buyer.getFirstName() + " " + buyer.getLastName(), gotContact.getName());

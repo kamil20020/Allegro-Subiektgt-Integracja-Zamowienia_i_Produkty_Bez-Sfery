@@ -1,6 +1,7 @@
 package pl.kamil_dywan.gui;
 
 import pl.kamil_dywan.service.AuthService;
+import pl.kamil_dywan.service.ClientService;
 import pl.kamil_dywan.service.OrderService;
 import pl.kamil_dywan.service.ProductService;
 
@@ -21,33 +22,28 @@ public class MainGui {
 
     private final AuthService authService;
 
-    public MainGui(AuthService authService, ProductService productService, OrderService orderService) {
+    private final JFrame frame;
+
+    public MainGui(AuthService authService, ProductService productService, OrderService orderService, ClientService clientService) {
 
         this.authService = authService;
 
         loginGui = new LoginGui(authService, this::handleSuccessAuth);
         productsGui = new ProductsGui(productService, this::handleLogout);
-        ordersGui = new OrdersGui(orderService, this::handleLogout);
+        ordersGui = new OrdersGui(orderService, clientService, this::handleLogout);
 
         tabbedPane.addTab("Zamówienia", ordersGui.getMainPanel());
         tabbedPane.addTab("Produkty", productsGui.getMainPanel());
 
         loadMainPanelLayoutConstraints();
 
-        if (authService.doesUserPassedFirstLoginToApp() && authService.isUserLogged()) {
-
-            handleSuccessAuth();
-        }
-        else {
-
-            changeMainPanelContent(loginGui.getMainPanel());
-        }
-
-        JFrame frame = new JFrame("Integracja Allegro i Subiekt GT");
+        frame = new JFrame("Integracja Allegro i Subiekt GT");
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1000, 680);
         frame.setLocationRelativeTo(null);
+
+        handleAuth();
 
         frame.add(mainPanel);
 
@@ -65,12 +61,42 @@ public class MainGui {
         mainPanelLayoutConstrains.weighty = 1;
     }
 
+    private void handleAuth() {
+
+        if (authService.doesUserPassedFirstLoginToApp() && authService.isUserLogged()) {
+
+            handleSuccessAuth();
+        } else {
+
+            changeMainPanelContent(loginGui.getMainPanel());
+        }
+    }
+
     private void handleSuccessAuth() {
+
+        loadMenu();
 
         productsGui.load();
         ordersGui.load();
 
         changeMainPanelContent(tabbedPane);
+    }
+
+    private void loadMenu() {
+
+        JMenuBar menuBar = new JMenuBar();
+
+            JMenu accountMenu = new JMenu("Konto");
+
+                JMenuItem accountMenuItem = new JMenuItem("Wyloguj");
+
+                accountMenuItem.addActionListener(e -> handleLogout());
+
+            accountMenu.add(accountMenuItem);
+
+        menuBar.add(accountMenu);
+
+        frame.setJMenuBar(menuBar);
     }
 
     private void changeMainPanelContent(Component component) {
@@ -84,7 +110,11 @@ public class MainGui {
 
     private void handleLogout() {
 
+        frame.setJMenuBar(new JMenuBar());
+
         authService.logout();
+
+        loginGui.handleLogout();
         changeMainPanelContent(loginGui.getMainPanel());
     }
 

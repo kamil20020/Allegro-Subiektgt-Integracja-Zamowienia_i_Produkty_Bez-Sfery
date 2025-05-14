@@ -28,6 +28,8 @@ public class AuthService {
 
     private final LoginApi loginApi;
 
+    private String loggedUser;
+
     private static EncryptedAllegroLoginDetails encryptedAllegroLoginDetails;
 
     private static final FileReader<EncryptedAllegroLoginDetails> allegroLoginDetailsFileReader = new JSONFileReader<>(EncryptedAllegroLoginDetails.class);

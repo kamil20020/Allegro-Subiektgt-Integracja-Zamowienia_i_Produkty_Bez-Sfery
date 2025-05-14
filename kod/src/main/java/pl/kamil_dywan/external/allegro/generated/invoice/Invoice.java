@@ -3,7 +3,7 @@ package pl.kamil_dywan.external.allegro.generated.invoice;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
-import pl.kamil_dywan.external.allegro.own.LocalDateSerializer;
+import pl.kamil_dywan.external.allegro.own.serialization.LocalDateSerializer;
 
 import javax.annotation.processing.Generated;
 import java.time.LocalDate;
@@ -36,5 +36,15 @@ public class Invoice {
 
     @JsonProperty("features")
     private List<String> features = new ArrayList<>();
+
+    public String getClientName(){
+
+        if (address.getCompany() == null) {
+
+            return address.getNaturalPerson().simpleToString();
+        }
+
+        return address.getCompany().getName();
+    }
 
 }

@@ -3,7 +3,7 @@ package pl.kamil_dywan.external.subiektgt.generated.invoice_line;
 import jakarta.xml.bind.annotation.*;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import lombok.*;
-import pl.kamil_dywan.external.subiektgt.own.BigDecimalAdapter;
+import pl.kamil_dywan.external.subiektgt.own.serialization.BigDecimalAdapter;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

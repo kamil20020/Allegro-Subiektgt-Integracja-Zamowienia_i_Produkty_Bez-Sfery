@@ -3,7 +3,7 @@ package pl.kamil_dywan.external.allegro.generated;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
-import pl.kamil_dywan.external.allegro.own.BigDecimalStringSerializer;
+import pl.kamil_dywan.external.allegro.own.serialization.BigDecimalStringSerializer;
 import pl.kamil_dywan.external.allegro.own.Currency;
 
 import javax.annotation.processing.Generated;

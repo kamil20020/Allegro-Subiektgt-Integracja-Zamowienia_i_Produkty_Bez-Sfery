@@ -32,7 +32,7 @@ public class OrderService {
         return Api.extractBody(gotResponse, OrderResponse.class);
     }
 
-    public void writeOrdersToFile(List<Order> allegroOrders, String filePath) throws IllegalStateException {
+    public void writeInvoicesToFile(List<Order> allegroOrders, String filePath) throws IllegalStateException {
 
         InvoiceBatch invoicesBatch = InvoiceBatchMapper.map("Subiekt", allegroOrders);
 

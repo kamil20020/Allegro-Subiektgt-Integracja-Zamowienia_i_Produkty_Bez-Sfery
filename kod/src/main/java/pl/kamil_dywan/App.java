@@ -50,8 +50,9 @@ public class App {
         AuthService authService = new AuthService(loginApi);
         OrderService orderService = new OrderService(orderApi);
         ProductService productService = new ProductService(productApi);
+        ClientService clientService = new ClientService();
 
-        new MainGui(authService, productService, orderService);
+        new MainGui(authService, productService, orderService, clientService);
     }
 
 }

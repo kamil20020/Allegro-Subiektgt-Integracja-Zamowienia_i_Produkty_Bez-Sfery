@@ -1,11 +1,9 @@
 package pl.kamil_dywan.api.allegro;
 
-import pl.kamil_dywan.api.Api;
 import pl.kamil_dywan.api.BearerAuthApi;
 import pl.kamil_dywan.exception.UnloggedException;
-import pl.kamil_dywan.external.allegro.own.OrderStatus;
+import pl.kamil_dywan.external.allegro.own.order.OrderStatus;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;

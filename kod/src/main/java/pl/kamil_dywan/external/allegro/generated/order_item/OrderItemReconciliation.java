@@ -1,5 +1,5 @@
 
-package pl.kamil_dywan.external.allegro.generated.invoice_item;
+package pl.kamil_dywan.external.allegro.generated.order_item;
 
 import javax.annotation.processing.Generated;
 
@@ -17,7 +17,7 @@ import pl.kamil_dywan.external.allegro.generated.Cost;
     "quantity"
 })
 @Generated("jsonschema2pojo")
-public class LineItemReconciliation {
+public class OrderItemReconciliation {
 
     @JsonProperty("value")
     private Cost value;

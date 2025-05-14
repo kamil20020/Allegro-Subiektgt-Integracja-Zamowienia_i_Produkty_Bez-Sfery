@@ -6,15 +6,6 @@ import pl.kamil_dywan.external.subiektgt.generated.Contact;
 
 public interface ContactMapper {
 
-    static Contact map(Buyer allegroBuyer){
-
-        return Contact.builder()
-            .name(allegroBuyer.getFirstName() + " " + allegroBuyer.getLastName())
-            .switchboard(allegroBuyer.getPhoneNumber())
-            .fax("")
-            .build();
-    }
-
     static Contact map(InvoiceNaturalPerson invoiceNaturalPerson){
 
         if(invoiceNaturalPerson == null){

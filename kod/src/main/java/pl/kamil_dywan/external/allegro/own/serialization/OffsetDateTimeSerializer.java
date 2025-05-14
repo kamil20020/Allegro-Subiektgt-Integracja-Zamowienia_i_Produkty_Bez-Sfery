@@ -1,4 +1,4 @@
-package pl.kamil_dywan.external.allegro.own;
+package pl.kamil_dywan.external.allegro.own.serialization;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;

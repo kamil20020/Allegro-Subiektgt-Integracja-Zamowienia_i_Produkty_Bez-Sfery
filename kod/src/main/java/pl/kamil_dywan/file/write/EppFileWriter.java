@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class EppFileWriter<T> implements FileWriter<T>{
@@ -46,7 +48,7 @@ public class EppFileWriter<T> implements FileWriter<T>{
 
         Field[] rootFields = toSave.getClass().getDeclaredFields();
 
-        try(BufferedWriter bufferedWriter = new BufferedWriter(new java.io.FileWriter(newFile))){
+        try(BufferedWriter bufferedWriter = new BufferedWriter(new java.io.FileWriter(newFile, Charset.forName("windows-1250")))){
 
             bufferedWriter.write(BEFORE_INFO_HEADER);
             bufferedWriter.newLine();

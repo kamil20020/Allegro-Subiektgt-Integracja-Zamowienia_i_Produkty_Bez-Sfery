@@ -3,23 +3,26 @@ package pl.kamil_dywan.gui;
 import pl.kamil_dywan.exception.UnloggedException;
 import pl.kamil_dywan.external.allegro.generated.Payment;
 import pl.kamil_dywan.external.allegro.generated.buyer.Buyer;
-import pl.kamil_dywan.external.allegro.generated.invoice_item.LineItem;
+import pl.kamil_dywan.external.allegro.generated.invoice.Invoice;
+import pl.kamil_dywan.external.allegro.generated.order_item.OrderItem;
 import pl.kamil_dywan.external.allegro.generated.order.Order;
 import pl.kamil_dywan.external.allegro.generated.order.OrderResponse;
 import pl.kamil_dywan.external.allegro.generated.order.Summary;
+import pl.kamil_dywan.external.subiektgt.own.client.Client;
+import pl.kamil_dywan.mapper.ClientMapper;
+import pl.kamil_dywan.service.ClientService;
 import pl.kamil_dywan.service.OrderService;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import javax.swing.filechooser.FileSystemView;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.text.StyleContext;
 import java.awt.*;
-import java.io.File;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class OrdersGui implements ChangeableGui {
 
@@ -28,21 +31,27 @@ public class OrdersGui implements ChangeableGui {
     private JPanel ordersPanelPlaceholder;
     private PaginationTableGui paginationTableGui;
 
-    private JButton saveOrdersButton;
+    private JButton saveInvoicesButton;
+    private JButton saveReceiptsButton;
+    private JButton saveClientsButton;
 
-    private List<Order> orders;
+    private final List<Order> ordersWithInvoices = new ArrayList<>();
+    private final List<Order> ordersWithReceipts = new ArrayList<>();
 
     private final OrderService orderService;
+    private final ClientService clientService;
     private final Runnable handleLogout;
 
-    public OrdersGui(OrderService orderService, Runnable handleLogout) {
+    public OrdersGui(OrderService orderService, ClientService clientService, Runnable handleLogout) {
 
         this.orderService = orderService;
+        this.clientService = clientService;
         this.handleLogout = handleLogout;
 
         $$$setupUI$$$();
 
-        saveOrdersButton.addActionListener(e -> saveOrdersToFile());
+        saveInvoicesButton.addActionListener(e -> saveInvoicesToFile());
+        saveClientsButton.addActionListener(e -> saveClientsToFile());
     }
 
     private PaginationTableGui.PaginationTableData loadData(int offset, int limit) {
@@ -58,12 +67,27 @@ public class OrdersGui implements ChangeableGui {
             return null;
         }
 
-        orders = orderResponse.getOrders();
+        ordersWithInvoices.clear();
+        ordersWithReceipts.clear();
+
+        List<Order> allegroOrders = orderResponse.getOrders();
+
+        allegroOrders
+                .forEach(allegroOrder -> {
+
+                    Invoice allegroInvoice = allegroOrder.getInvoice();
+
+                    if (allegroInvoice.isRequired()) {
+                        ordersWithInvoices.add(allegroOrder);
+                    } else {
+                        ordersWithReceipts.add(allegroOrder);
+                    }
+                });
 
         int totalNumberOfRows = orderResponse.getTotalCount();
 
         PaginationTableGui.PaginationTableData data = new PaginationTableGui.PaginationTableData(
-                orders,
+                allegroOrders,
                 totalNumberOfRows
         );
 
@@ -74,46 +98,49 @@ public class OrdersGui implements ChangeableGui {
 
         Order order = (Order) rawOrder;
         Buyer orderBuyer = order.getBuyer();
-        List<LineItem> orderLineItems = order.getLineItems();
+        Invoice invoice = order.getInvoice();
+        List<OrderItem> orderOrderItems = order.getOrderItems();
         Summary orderSummary = order.getSummary();
         Payment orderPayment = order.getPayment();
 
+        String clientName;
+
+        if (invoice.isRequired()) {
+
+            clientName = invoice.getClientName();
+        } else {
+            clientName = orderBuyer.getFirstName() + " " + orderBuyer.getLastName();
+        }
+
         return new String[]{
                 order.getId().toString(),
-                orderBuyer.getFirstName() + " " + orderBuyer.getLastName(),
-                String.valueOf(orderLineItems.size()),
+                clientName,
+                String.valueOf(orderOrderItems.size()),
                 orderSummary.getTotalToPay().getAmount().toString() + " zł",
-                orderPayment.getFinishedAt().toLocalDate().toString()
+                orderPayment.getFinishedAt().toLocalDate().toString(),
+                invoice.isRequired() ? "Tak" : "Nie"
         };
     }
 
-    private void saveOrdersToFile() {
+    private void saveInvoicesToFile() {
 
-        FileDialog fileDialog = new FileDialog((Frame) null, "Zapisywanie zamówień do pliku", FileDialog.SAVE);
+        String savedFilePath = FileDialogHandler.getSaveFileDialogSelectedPath(
+                "Zapisywanie faktur do pliku",
+                "faktury.xml",
+                ".xml"
+        );
 
-        File homeDirectory = FileSystemView.getFileSystemView().getHomeDirectory();
-
-        fileDialog.setDirectory(homeDirectory.getAbsolutePath());
-        fileDialog.setFile("zamowienia.xml");
-        fileDialog.setFilenameFilter((directory, name) -> name.endsWith(".xml"));
-
-        fileDialog.setVisible(true);
-
-        String savedFileName = fileDialog.getFile();
-
-        if (savedFileName == null) {
+        if (savedFilePath.isBlank()) {
             return;
         }
 
-        String savedFilePath = fileDialog.getDirectory() + savedFileName;
-
         try {
-            orderService.writeOrdersToFile(orders, savedFilePath);
+            orderService.writeInvoicesToFile(ordersWithInvoices, savedFilePath);
         } catch (IllegalStateException e) {
 
             JOptionPane.showMessageDialog(
                     mainPanel,
-                    "Nie udało się zapisać zamówień do pliku",
+                    "Nie udało się zapisać faktur do pliku",
                     "Powiadomienie o błędzie",
                     JOptionPane.ERROR_MESSAGE
             );
@@ -123,7 +150,49 @@ public class OrdersGui implements ChangeableGui {
 
         JOptionPane.showMessageDialog(
                 mainPanel,
-                "Zapisano zamówienia do pliku " + savedFilePath,
+                "Zapisano faktury do pliku " + savedFilePath,
+                "Powiadomienie",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+    }
+
+    private void saveClientsToFile() {
+
+        String savedFilePath = FileDialogHandler.getSaveFileDialogSelectedPath(
+                "Zapisywanie klientów do pliku",
+                "klienci.epp",
+                ".epp"
+        );
+
+        if (savedFilePath.isBlank()) {
+            return;
+        }
+
+        List<Client> clients = Stream.concat(
+            ordersWithInvoices.stream(),
+            ordersWithReceipts.stream()
+        )
+            .map(ClientMapper::map)
+            .collect(Collectors.toList());
+
+        try {
+
+            clientService.writeClientsToFile(clients, savedFilePath);
+        } catch (IllegalStateException e) {
+
+            JOptionPane.showMessageDialog(
+                    mainPanel,
+                    "Nie udało się zapisać klientów do pliku",
+                    "Powiadomienie o błędzie",
+                    JOptionPane.ERROR_MESSAGE
+            );
+
+            return;
+        }
+
+        JOptionPane.showMessageDialog(
+                mainPanel,
+                "Zapisano klientów do pliku " + savedFilePath,
                 "Powiadomienie",
                 JOptionPane.INFORMATION_MESSAGE
         );
@@ -143,8 +212,8 @@ public class OrdersGui implements ChangeableGui {
     private void createUIComponents() {
         // TODO: place custom component creation code here
 
-        String[] tableHeaders = {"Identyfikator", "Kupujący", "Liczba ofert", "Kwota brutto", "Data"};
-        Integer[] tableWidths = {100, 100, 100, 100, 100};
+        String[] tableHeaders = {"Identyfikator", "Kupujący", "Liczba ofert", "Kwota brutto", "Data", "Czy wybrano fakturę"};
+        Integer[] tableWidths = {100, 100, 100, 100, 100, 100};
 
         paginationTableGui = new PaginationTableGui(tableHeaders, tableWidths, this::loadData, this::convertToRow);
 
@@ -195,17 +264,30 @@ public class OrdersGui implements ChangeableGui {
         gbc.insets = new Insets(10, 0, 0, 0);
         mainPanel.add(ordersPanelPlaceholder, gbc);
         ordersPanelPlaceholder.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
-        saveOrdersButton = new JButton();
-        saveOrdersButton.setAlignmentX(0.5f);
-        saveOrdersButton.setOpaque(true);
-        saveOrdersButton.setText("Zapisz zamówienia do pliku");
+        final JToolBar toolBar1 = new JToolBar();
+        toolBar1.setFloatable(false);
+        toolBar1.setOpaque(false);
+        toolBar1.setVisible(true);
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.insets = new Insets(0, 0, 20, 0);
-        mainPanel.add(saveOrdersButton, gbc);
+        mainPanel.add(toolBar1, gbc);
+        saveInvoicesButton = new JButton();
+        saveInvoicesButton.setText("Zapisz faktury do pliku");
+        toolBar1.add(saveInvoicesButton);
+        final JToolBar.Separator toolBar$Separator1 = new JToolBar.Separator();
+        toolBar1.add(toolBar$Separator1);
+        saveReceiptsButton = new JButton();
+        saveReceiptsButton.setText("Zapisz paragony do pliku");
+        toolBar1.add(saveReceiptsButton);
+        final JToolBar.Separator toolBar$Separator2 = new JToolBar.Separator();
+        toolBar1.add(toolBar$Separator2);
+        saveClientsButton = new JButton();
+        saveClientsButton.setText("Zapisz klientów do pliku");
+        toolBar1.add(saveClientsButton);
     }
 
     /**

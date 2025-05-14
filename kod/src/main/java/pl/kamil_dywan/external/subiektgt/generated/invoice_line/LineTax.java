@@ -10,7 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.kamil_dywan.external.subiektgt.generated.TaxRate;
-import pl.kamil_dywan.external.subiektgt.own.BigDecimalAdapter;
+import pl.kamil_dywan.external.subiektgt.own.serialization.BigDecimalAdapter;
 
 import java.math.BigDecimal;
 

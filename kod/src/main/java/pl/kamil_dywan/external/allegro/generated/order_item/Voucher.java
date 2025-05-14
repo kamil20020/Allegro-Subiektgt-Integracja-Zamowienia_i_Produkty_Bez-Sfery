@@ -1,4 +1,4 @@
-package pl.kamil_dywan.external.allegro.generated.invoice_item;
+package pl.kamil_dywan.external.allegro.generated.order_item;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

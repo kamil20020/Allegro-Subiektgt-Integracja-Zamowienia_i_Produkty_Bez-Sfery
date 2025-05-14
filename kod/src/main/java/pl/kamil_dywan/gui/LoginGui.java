@@ -43,6 +43,12 @@ public class LoginGui {
         });
     }
 
+    public void handleLogout() {
+
+        deviceCode = null;
+        loginButton.setText("Połącz");
+    }
+
     private void handleFirstLogin() {
 
         String gotUserPassword = JOptionPane.showInputDialog(
@@ -249,4 +255,5 @@ public class LoginGui {
     public JComponent $$$getRootComponent$$$() {
         return mainPanel;
     }
+
 }

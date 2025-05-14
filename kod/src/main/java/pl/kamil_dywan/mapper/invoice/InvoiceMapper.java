@@ -1,8 +1,11 @@
 package pl.kamil_dywan.mapper.invoice;
 
 import pl.kamil_dywan.external.allegro.generated.delivery.Delivery;
-import pl.kamil_dywan.external.allegro.generated.invoice_item.LineItem;
+import pl.kamil_dywan.external.allegro.generated.order_item.OrderItem;
 import pl.kamil_dywan.external.allegro.generated.order.Order;
+import pl.kamil_dywan.external.allegro.own.order.OrderMoneyStats;
+import pl.kamil_dywan.external.allegro.own.order.OrderTaxSummary;
+import pl.kamil_dywan.external.allegro.own.order.OrderTotalMoneyStats;
 import pl.kamil_dywan.factory.InvoiceHeadFactory;
 import pl.kamil_dywan.external.subiektgt.generated.Invoice;
 import pl.kamil_dywan.external.subiektgt.generated.InvoiceTotal;
@@ -10,18 +13,14 @@ import pl.kamil_dywan.external.subiektgt.generated.TaxSubTotal;
 import pl.kamil_dywan.external.subiektgt.generated.buyer.Buyer;
 import pl.kamil_dywan.external.subiektgt.generated.invoice_line.InvoiceLine;
 import pl.kamil_dywan.external.subiektgt.own.Code;
-import pl.kamil_dywan.external.subiektgt.own.invoice.InvoiceLineMoneyStats;
-import pl.kamil_dywan.external.subiektgt.own.product.TaxRateCodeMapping;
+import pl.kamil_dywan.external.allegro.own.order.OrderItemMoneyStats;
 import pl.kamil_dywan.factory.InvoiceReferencesFactory;
-import pl.kamil_dywan.mapper.AllegroLineItemMapper;
+import pl.kamil_dywan.mapper.AllegroOrderItemMapper;
+import pl.kamil_dywan.mapper.TaxSubTotalMapper;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public interface InvoiceMapper {
@@ -33,46 +32,39 @@ public interface InvoiceMapper {
 
         LocalDate invoiceDate = allegroOrder.getPayment().getFinishedAt().toLocalDate();
         String invoiceCity = allegroInvoice.getAddress().getCity();
-        Buyer buyer = BuyerMapper.map(allegroOrder.getBuyer());
+        Buyer buyer = BuyerMapper.map(allegroInvoice.getAddress());
 
-        AtomicInteger lineItemNumber = new AtomicInteger(0);
+        OrderMoneyStats allegroOrderMoneyStats = allegroOrder.getMoneySummary();
+        List<OrderItemMoneyStats> orderItemsMoneyStats = allegroOrderMoneyStats.orderItemsMoneyStats();
+        List<OrderTaxSummary> orderTaxesSummaries = allegroOrderMoneyStats.orderTaxesSummaries();
+        OrderTotalMoneyStats orderTotalMoneyStats = allegroOrderMoneyStats.orderTotalMoneyStats();
 
-        Map<TaxRateCodeMapping, TaxSubTotal> taxSubtotalsMappings = TaxSubTotal.getEmptyMappingsForAllTaxesRates();
+        List<OrderItem> allegroOrderItems = new ArrayList<>(allegroOrder.getOrderItems());
 
-        InvoiceTotal invoiceTotal = InvoiceTotal.getEmpty();
+        allegroOrderItems.add(AllegroOrderItemMapper.mapDeliveryToLineItem(allegroDelivery));
 
-        List<LineItem> allegroLineItems = new ArrayList<>(allegroOrder.getLineItems());
+        List<InvoiceLine> subiektInvoiceLines = new ArrayList<>();
 
-        allegroLineItems.add(AllegroLineItemMapper.mapDeliveryToLineItem(allegroDelivery));
+        for(int i=0; i < allegroOrderItems.size(); i++){
 
-        List<InvoiceLine> invoiceLines = allegroLineItems.stream()
-            .map(allegroLineItem -> {
+            Integer newOrderItemNumber = i + 1;
+            OrderItem orderItem = allegroOrderItems.get(i);
+            OrderItemMoneyStats orderItemMoneyStats = orderItemsMoneyStats.get(i);
 
-                Integer newLineItemNumber = lineItemNumber.incrementAndGet();
-                InvoiceLineMoneyStats lineItemMoneyStats = InvoiceLineMapper.getInvoiceItemMoneyStats(allegroLineItem);
+            InvoiceLine subiektInvoiceLine = InvoiceLineMapper.map(newOrderItemNumber, orderItem, orderItemMoneyStats);
 
-                InvoiceLine invoiceLine = InvoiceLineMapper.map(newLineItemNumber, allegroLineItem, lineItemMoneyStats);
-                invoiceLine.scale(2, RoundingMode.HALF_UP);
+            subiektInvoiceLines.add(subiektInvoiceLine);
+        }
 
-                BigDecimal taxRatePercentage = lineItemMoneyStats.taxRatePercentage();
-                updateTaxSubTotal(taxSubtotalsMappings, taxRatePercentage, lineItemMoneyStats);
+        int deliveryIndex = subiektInvoiceLines.size() - 1;
 
-                return invoiceLine;
-            })
+        subiektInvoiceLines.get(deliveryIndex).getProduct().setSuppliersProductCode("DOSTAWA123");
+
+        List<TaxSubTotal> taxSubTotals = orderTaxesSummaries.stream()
+            .map(TaxSubTotalMapper::map)
             .collect(Collectors.toList());
 
-        int deliveryIndex = invoiceLines.size() - 1;
-
-        invoiceLines.get(deliveryIndex).getProduct().setSuppliersProductCode("DOSTAWA123");
-
-        invoiceTotal.setNumberOfLines(invoiceLines.size());
-        updateInvoiceTotal(invoiceTotal, taxSubtotalsMappings);
-
-        scaleTaxesSubTotalsMappings(taxSubtotalsMappings, 2, RoundingMode.HALF_UP);
-        invoiceTotal.scale(2, RoundingMode.HALF_UP);
-
-        List<TaxSubTotal> taxSubTotals = taxSubtotalsMappings.values().stream()
-            .toList();
+        InvoiceTotal invoiceTotal = InvoiceTotalMapper.map(orderTotalMoneyStats);
 
         return Invoice.builder()
             .invoiceHead(InvoiceHeadFactory.create(Code.PLN))
@@ -81,56 +73,12 @@ public interface InvoiceMapper {
             .cityOfIssue(invoiceCity)
             .taxPointDate(allegroInvoice.getDueDate())
             .buyer(buyer)
-            .invoiceLines(invoiceLines)
+            .invoiceLines(subiektInvoiceLines)
             .narrative("")
             .specialInstructions("dokument liczony wg cen netto")
             .settlement(null)
             .taxSubTotals(taxSubTotals)
             .invoiceTotal(invoiceTotal)
             .build();
-    }
-
-    private static void updateTaxSubTotal(
-        Map<TaxRateCodeMapping, TaxSubTotal> taxSubtotalsMappings,
-        BigDecimal taxRatePercentage,
-        InvoiceLineMoneyStats lineItemMoneyStats
-    ){
-        TaxRateCodeMapping taxRateCodeMapping = TaxRateCodeMapping.getByValue(taxRatePercentage);
-        TaxSubTotal taxSubTotalForTaxRate = taxSubtotalsMappings.get(taxRateCodeMapping);
-
-        taxSubTotalForTaxRate.update(
-            lineItemMoneyStats.totalPriceWithoutTax(),
-            lineItemMoneyStats.totalTaxValue(),
-            lineItemMoneyStats.totalPriceWithTax()
-        );
-    }
-
-    private static void updateInvoiceTotal(
-            InvoiceTotal invoiceTotal,
-            Map<TaxRateCodeMapping, TaxSubTotal> taxSubtotalsMappings
-    ){
-        invoiceTotal.setNumberOfTaxRates(TaxSubTotal.getNumberOfPresentTaxSubTotals(taxSubtotalsMappings));
-
-        taxSubtotalsMappings.values()
-            .forEach(taxSubTotal -> {
-
-                invoiceTotal.update(
-                    taxSubTotal.getTaxableValueAtRate(),
-                    taxSubTotal.getTaxAtRate(),
-                    taxSubTotal.getNetPaymentAtRate()
-                );
-            });
-    }
-
-    private static void scaleTaxesSubTotalsMappings(
-        Map<TaxRateCodeMapping, TaxSubTotal> taxSubtotalsMappings,
-        int scale,
-        RoundingMode roundingMode
-    ){
-        taxSubtotalsMappings.values()
-            .forEach(taxSubTotal -> {
-
-                taxSubTotal.scale(scale, roundingMode);
-            });
     }
 }
