@@ -87,8 +87,8 @@ public class OrdersGui implements ChangeableGui {
         int totalNumberOfRows = orderResponse.getTotalCount();
 
         PaginationTableGui.PaginationTableData data = new PaginationTableGui.PaginationTableData(
-                allegroOrders,
-                totalNumberOfRows
+            allegroOrders,
+            totalNumberOfRows
         );
 
         return data;
@@ -213,9 +213,8 @@ public class OrdersGui implements ChangeableGui {
         // TODO: place custom component creation code here
 
         String[] tableHeaders = {"Identyfikator", "Kupujący", "Liczba ofert", "Kwota brutto", "Data", "Czy wybrano fakturę"};
-        Integer[] tableWidths = {100, 100, 100, 100, 100, 100};
 
-        paginationTableGui = new PaginationTableGui(tableHeaders, tableWidths, this::loadData, this::convertToRow);
+        paginationTableGui = new PaginationTableGui(tableHeaders, this::loadData, this::convertToRow);
 
         ordersPanelPlaceholder = paginationTableGui.getMainPanel();
     }

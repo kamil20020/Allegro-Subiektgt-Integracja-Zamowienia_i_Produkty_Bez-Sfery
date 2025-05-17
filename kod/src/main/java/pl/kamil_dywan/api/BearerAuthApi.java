@@ -65,9 +65,9 @@ public class BearerAuthApi extends Api{
             if(!handleRefreshAccessToken()){
                 throw new UnloggedException();
             }
-        }
-        else{
-            gotResponse = super.send(httpRequestBuilder);
+            else{
+                gotResponse = super.send(httpRequestBuilder);
+            }
         }
 
         return gotResponse;

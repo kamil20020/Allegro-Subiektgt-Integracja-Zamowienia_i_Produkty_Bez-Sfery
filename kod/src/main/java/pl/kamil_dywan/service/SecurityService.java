@@ -7,11 +7,10 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 
 public interface SecurityService {
 
-    public static byte[] decryptAes(byte[] key, byte[] encryptedValue) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
+    static byte[] decryptAes(byte[] key, byte[] encryptedValue) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
 
         if(encryptedValue == null){
             return null;
@@ -27,7 +26,7 @@ public interface SecurityService {
         return aesCipher.doFinal(encryptedValue);
     }
 
-    public static byte[] hashSha(byte[] value) throws NoSuchAlgorithmException {
+    static byte[] hashSha(byte[] value) throws NoSuchAlgorithmException {
 
         if(value == null){
             return null;

@@ -9,11 +9,9 @@ import pl.kamil_dywan.service.ProductService;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import javax.swing.filechooser.FileSystemView;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.text.StyleContext;
 import java.awt.*;
-import java.io.File;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -61,16 +59,16 @@ public class ProductsGui implements ChangeableGui {
         List<OfferProduct> gotGeneralProducts = generalProductsPage.getOffersProducts();
 
         List<Long> productsIds = gotGeneralProducts.stream()
-                .map(offerProduct -> offerProduct.getId())
-                .collect(Collectors.toList());
+            .map(offerProduct -> offerProduct.getId())
+            .collect(Collectors.toList());
 
         products = productService.getDetailedProductsByIds(productsIds);
 
         int totalNumberOfRows = generalProductsPage.getTotalCount();
 
         PaginationTableGui.PaginationTableData tableData = new PaginationTableGui.PaginationTableData(
-                products,
-                totalNumberOfRows
+            products,
+            totalNumberOfRows
         );
 
         return tableData;
@@ -184,9 +182,8 @@ public class ProductsGui implements ChangeableGui {
         // TODO: place custom component creation code here
 
         String[] columnsHeaders = {"Identyfikator", "Nazwa", "Cena netto", "Cena brutto", "Podatek", "Data dodania"};
-        Integer[] columnsWidths = {50, 100, 50, 80, 80, 50, 40};
 
-        paginationTableGui = new PaginationTableGui(columnsHeaders, columnsWidths, this::loadProductsPage, this::convertProductToRow);
+        paginationTableGui = new PaginationTableGui(columnsHeaders, this::loadProductsPage, this::convertProductToRow);
 
         productsPanelPlaceholder = paginationTableGui.getMainPanel();
     }

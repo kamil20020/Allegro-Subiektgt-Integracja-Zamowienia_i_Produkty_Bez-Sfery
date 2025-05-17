@@ -100,7 +100,7 @@ class AuthServiceTest {
     }
 
     @Test
-    public void shouldInitWhenItIsFirstLoginOfTheUser() throws URISyntaxException, IOException, NoSuchFieldException, IllegalAccessException {
+    public void shouldInitWhenItIsFirstLoginOfTheUser() throws URISyntaxException, IOException {
 
         FileReader<EncryptedAllegroLoginDetails> fileReaderMock = Mockito.mock(FileReader.class);
 
@@ -114,9 +114,6 @@ class AuthServiceTest {
             "secret"
         );
 
-        Field encryptedAllegroLoginDetailsField = AuthService.class.getDeclaredField("encryptedAllegroLoginDetails");
-        encryptedAllegroLoginDetailsField.setAccessible(true);
-
         Mockito.when(fileReaderMock.loadFromOutside(any())).thenReturn(expectedEncryptedAllegroLoginDetails);
 
         try(
@@ -125,7 +122,11 @@ class AuthServiceTest {
 
             secureStorageMock.when(() -> SecureStorage.doesExist(any())).thenReturn(false);
 
-            EncryptedAllegroLoginDetails assignedEncryptedAllegroLoginDetails = (EncryptedAllegroLoginDetails) encryptedAllegroLoginDetailsField.get(authService);
+            EncryptedAllegroLoginDetails assignedEncryptedAllegroLoginDetails = TestUtils.getPrivateStaticField(
+                AuthService.class,
+                "encryptedAllegroLoginDetails",
+                EncryptedAllegroLoginDetails.class
+            );
 
             assertEquals(expectedEncryptedAllegroLoginDetails, assignedEncryptedAllegroLoginDetails);
 
@@ -140,12 +141,9 @@ class AuthServiceTest {
     }
 
     @Test
-    public void shouldInitWhenUserWasLoggedInForTheFirstTime() throws NoSuchFieldException, IllegalAccessException {
+    public void shouldInitWhenUserWasLoggedInForTheFirstTime(){
 
         String authDataPath = "./auth-data.json";
-
-        Field encryptedAllegroLoginDetailsField = AuthService.class.getDeclaredField("encryptedAllegroLoginDetails");
-        encryptedAllegroLoginDetailsField.setAccessible(true);
 
         try(
             MockedStatic<SecureStorage> secureStorageMock = Mockito.mockStatic(SecureStorage.class);
@@ -155,7 +153,11 @@ class AuthServiceTest {
 
             authService.init();
 
-            EncryptedAllegroLoginDetails assignedEncryptedAllegroLoginDetails = (EncryptedAllegroLoginDetails) encryptedAllegroLoginDetailsField.get(authService);
+            EncryptedAllegroLoginDetails assignedEncryptedAllegroLoginDetails = TestUtils.getPrivateStaticField(
+                AuthService.class,
+                "encryptedAllegroLoginDetails",
+                EncryptedAllegroLoginDetails.class
+            );
 
             assertNull(assignedEncryptedAllegroLoginDetails);
 
@@ -168,12 +170,9 @@ class AuthServiceTest {
     }
 
     @Test
-    void shouldInitAllegroSecret() throws NoSuchFieldException, IllegalAccessException {
+    void shouldInitAllegroSecret(){
 
         String gotPassword = "1234568901234567";
-
-        Field encryptedAllegroLoginDetailsField = AuthService.class.getDeclaredField("encryptedAllegroLoginDetails");
-        encryptedAllegroLoginDetailsField.setAccessible(true);
 
         EncryptedAllegroLoginDetails expectedEncryptedAllegroLoginDetails = new EncryptedAllegroLoginDetails(
             "encrypted key",
@@ -184,7 +183,7 @@ class AuthServiceTest {
         byte[] encryptedKey = expectedEncryptedAllegroLoginDetails.getKey().getBytes();
         byte[] encryptedSecret = "encrypted secret".getBytes();
 
-        encryptedAllegroLoginDetailsField.set(authService, expectedEncryptedAllegroLoginDetails);
+        TestUtils.updatePrivateStaticField(AuthService.class, "encryptedAllegroLoginDetails", expectedEncryptedAllegroLoginDetails);
 
         byte[] expectedGotDecryptedAes = "got decrypted aes".getBytes();
         byte[] expectedGotDecryptedAesHashArr = expectedEncryptedAllegroLoginDetails.getKeyHash().getBytes(StandardCharsets.UTF_8);
@@ -242,12 +241,9 @@ class AuthServiceTest {
     }
 
     @Test
-    void shouldNotInitAllegroSecretWhenUserGaveWrongPassword() throws Exception {
+    void shouldNotInitAllegroSecretWhenUserGaveWrongPassword(){
 
         String gotPassword = "1234568901234567";
-
-        Field encryptedAllegroLoginDetailsField = AuthService.class.getDeclaredField("encryptedAllegroLoginDetails");
-        encryptedAllegroLoginDetailsField.setAccessible(true);
 
         EncryptedAllegroLoginDetails expectedEncryptedAllegroLoginDetails = new EncryptedAllegroLoginDetails(
             "encrypted key",
@@ -255,7 +251,7 @@ class AuthServiceTest {
             "encrypted secret"
         );
 
-        encryptedAllegroLoginDetailsField.set(authService, expectedEncryptedAllegroLoginDetails);
+        TestUtils.updatePrivateStaticField(AuthService.class, "encryptedAllegroLoginDetails", expectedEncryptedAllegroLoginDetails);
 
         try(
             MockedStatic<SecureStorage> secureStorageMock = Mockito.mockStatic(SecureStorage.class);

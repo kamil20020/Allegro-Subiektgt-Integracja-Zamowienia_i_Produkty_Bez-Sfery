@@ -1,6 +1,5 @@
 package pl.kamil_dywan.service;
 
-import com.thoughtworks.xstream.core.util.Base64Encoder;
 import pl.kamil_dywan.api.Api;
 import pl.kamil_dywan.api.BasicAuthApi;
 import pl.kamil_dywan.api.BearerAuthApi;
@@ -13,22 +12,16 @@ import pl.kamil_dywan.file.read.FileReader;
 import pl.kamil_dywan.file.read.JSONFileReader;
 
 import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.http.HttpResponse;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 public class AuthService {
 
     private final LoginApi loginApi;
-
-    private String loggedUser;
 
     private static EncryptedAllegroLoginDetails encryptedAllegroLoginDetails;
 

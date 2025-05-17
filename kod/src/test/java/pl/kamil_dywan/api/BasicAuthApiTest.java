@@ -1,5 +1,6 @@
 package pl.kamil_dywan.api;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -31,15 +32,19 @@ class BasicAuthApiTest {
         TestUtils.updatePrivateStaticField(Api.class, "httpClient", httpClientMock);
     }
 
+    @AfterEach
+    public void clear(){
+
+        TestUtils.updatePrivateStaticField(BasicAuthApi.class, "clientId", "");
+        TestUtils.updatePrivateStaticField(BasicAuthApi.class, "authHeaderContent", "");
+    }
+
     @Test
-    void shouldInit() throws Exception{
+    void shouldInit(){
 
         String expectedClientId = "expected client id";
         String expectedSecret = "expected secret";
         String expectedAuthHeader = "Basic ZXhwZWN0ZWQgY2xpZW50IGlkOmV4cGVjdGVkIHNlY3JldA==";
-
-        Field secretField = BasicAuthApi.class.getDeclaredField("authHeaderContent");
-        secretField.setAccessible(true);
 
         try(
             MockedStatic<SecureStorage> secureStorageMock = Mockito.mockStatic(SecureStorage.class);
@@ -53,7 +58,7 @@ class BasicAuthApiTest {
             BasicAuthApi.init();
 
             String gotClientId = BasicAuthApi.clientId;
-            String gotAuthHeader = (String) secretField.get(null);
+            String gotAuthHeader = TestUtils.getPrivateStaticField(BasicAuthApi.class, "authHeaderContent", String.class);
 
             assertEquals(expectedClientId, gotClientId);
             assertEquals(expectedAuthHeader, gotAuthHeader);

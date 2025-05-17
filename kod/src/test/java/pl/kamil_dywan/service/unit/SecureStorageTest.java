@@ -36,28 +36,15 @@ class SecureStorageTest {
 
     private static void setUpCredentialsKeyPrefix(String credentialsKeyPrefix){
 
-        try {
-
-            Field field = SecureStorage.class.getDeclaredField("CREDENTIALS_KEY_PREFIX");
-            field.setAccessible(true);
-
-            field.set(null, credentialsKeyPrefix + "-");
-        }
-        catch (Exception e) {
-
-            e.printStackTrace();
-        }
+        TestUtils.updatePrivateStaticField(SecureStorage.class, "CREDENTIALS_KEY_PREFIX", credentialsKeyPrefix + "-");
     }
 
     @Test
-    void shouldLoad() throws Exception{
+    void shouldLoad(){
 
         String expectedCredentialsPrefix = "expected credentials prefix";
         String expectedCredentialsPrefixKey = "secure-store.credentials-key";
         String expectedValue = expectedCredentialsPrefix + "-";
-
-        Field field = SecureStorage.class.getDeclaredField("CREDENTIALS_KEY_PREFIX");
-        field.setAccessible(true);
 
         try(
             MockedStatic<AppProperties> appPropertiesMock = Mockito.mockStatic(AppProperties.class);
@@ -67,7 +54,7 @@ class SecureStorageTest {
 
             SecureStorage.load();
 
-            String gotValue = (String) field.get(null);
+            String gotValue = TestUtils.getPrivateStaticField(SecureStorage.class, "CREDENTIALS_KEY_PREFIX", String.class);
 
             assertEquals(expectedValue, gotValue);
 

@@ -21,14 +21,13 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
 
 public class ProductService {
 
     private final ProductApi productApi;
 
-    private static FileWriter<ProductRelatedData> subiektProductFileWriter;
-    private static ExecutorService productsExecutorService = Executors.newFixedThreadPool(8);
+    private static final FileWriter<ProductRelatedData> subiektProductFileWriter;
+    private static final ExecutorService productsExecutorService = Executors.newFixedThreadPool(8);
 
     static {
 

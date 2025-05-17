@@ -28,7 +28,6 @@ public class PaginationTableGui extends JPanel {
     private JLabel rowsInfo;
 
     private final String[] tableHeaders;
-    private final Integer[] columnsWidths;
 
     private final BiFunction<Integer, Integer, PaginationTableData> loadData;
     private final Function<Object, Object[]> convertToRow;
@@ -38,13 +37,11 @@ public class PaginationTableGui extends JPanel {
     private int totalNumberOfRows = 0;
 
     public PaginationTableGui(
-            String[] tableHeaders,
-            Integer[] columnsWidths,
-            BiFunction<Integer, Integer, PaginationTableData> loadData,
-            Function<Object, Object[]> convertToRow
+        String[] tableHeaders,
+        BiFunction<Integer, Integer, PaginationTableData> loadData,
+        Function<Object, Object[]> convertToRow
     ) {
         this.tableHeaders = tableHeaders;
-        this.columnsWidths = columnsWidths;
         this.loadData = loadData;
         this.convertToRow = convertToRow;
 
@@ -345,12 +342,9 @@ public class PaginationTableGui extends JPanel {
 
         for (int i = 0; i < tableHeaders.length; i++) {
 
-            Integer columnWidth = columnsWidths[i];
-
             TableColumn column = table.getColumnModel().getColumn(i);
 
             column.setCellRenderer(cellsCenterRenderer);
-//            column.setMaxWidth(columnWidth);
         }
     }
 }

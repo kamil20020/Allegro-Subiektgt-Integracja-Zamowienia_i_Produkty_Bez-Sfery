@@ -2,7 +2,6 @@ package pl.kamil_dywan.service;
 
 import pl.kamil_dywan.external.subiektgt.own.client.Client;
 import pl.kamil_dywan.external.subiektgt.own.client.Clients;
-import pl.kamil_dywan.external.subiektgt.own.product.ProductRelatedData;
 import pl.kamil_dywan.file.write.EppFileWriter;
 import pl.kamil_dywan.file.write.FileWriter;
 
@@ -13,7 +12,7 @@ import java.util.List;
 
 public class ClientService {
 
-    private static FileWriter<Clients> subiektClientFileWriter;
+    private static final FileWriter<Clients> subiektClientFileWriter;
 
     static {
 

@@ -2,6 +2,8 @@ package pl.kamil_dywan.service.integration;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import pl.kamil_dywan.App;
+import pl.kamil_dywan.TestUtils;
 import pl.kamil_dywan.service.AppProperties;
 
 import java.lang.reflect.Field;
@@ -18,16 +20,13 @@ class AppPropertiesTestIT {
     }
 
     @Test
-    void shouldLoadProperties() throws Exception{
+    void shouldLoadProperties(){
 
         //given
-        Field field = AppProperties.class.getDeclaredField("properties");
-        field.setAccessible(true);
-
         String expectedProperty = "allegro.pl.allegrosandbox.pl";
 
         //when
-        Properties gotProperties = (Properties) field.get(null);
+        Properties gotProperties = TestUtils.getPrivateStaticField(AppProperties.class, "properties", Properties.class);
 
         String gotProperty = gotProperties.getProperty("allegro.api.host");
 
