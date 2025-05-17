@@ -84,7 +84,7 @@ public class AuthService {
         String expectedAesHash = encryptedAllegroLoginDetails.getKeyHash();
         String base64EncryptedSecret = encryptedAllegroLoginDetails.getSecret();
 
-        byte[] gotDecryptedAes = decryptAesWithUserPassword(base64EncryptedAes, gotPassword);
+        byte[] gotDecryptedAes = decryptAesWithUserPassword(gotPassword, base64EncryptedAes);
         String gotDecryptedAesHash = hashValue(gotDecryptedAes);
 
         if(!gotDecryptedAesHash.equals(expectedAesHash)){
@@ -99,7 +99,7 @@ public class AuthService {
         BasicAuthApi.init();
     }
 
-    private byte[] decryptAesWithUserPassword(byte[] base64EncryptedAes, String gotPassword) throws UnloggedException, IllegalStateException{
+    private byte[] decryptAesWithUserPassword(String gotPassword, byte[] base64EncryptedAes) throws UnloggedException, IllegalStateException{
 
         byte[] gotPasswordBytes = gotPassword.getBytes();
 

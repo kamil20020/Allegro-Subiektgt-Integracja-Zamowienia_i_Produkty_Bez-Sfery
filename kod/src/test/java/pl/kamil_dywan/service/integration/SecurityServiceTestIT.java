@@ -1,19 +1,13 @@
-package pl.kamil_dywan.service;
+package pl.kamil_dywan.service.integration;
 
 import org.junit.jupiter.api.Test;
+import pl.kamil_dywan.service.SecurityService;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import java.nio.charset.StandardCharsets;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SecurityServiceTest {
+class SecurityServiceTestIT {
 
     @Test
     void shouldDecryptAes() throws Exception {
@@ -39,6 +33,21 @@ class SecurityServiceTest {
     }
 
     @Test
-    void shouldHashSha() {
+    void shouldHashSha() throws Exception{
+
+        byte[] rawValue = "raw value".getBytes();
+        byte[] expectedHash = "c0b31b84a261c7fe82ab163d6f1e3068de1e17ba0c5e12a3c57669236ec91a5c".getBytes();
+
+        byte[] gotHash = SecurityService.hashSha(rawValue);
+
+        assertArrayEquals(expectedHash, gotHash);
+    }
+
+    @Test
+    void shouldNotHashWhenValueIsNull() throws Exception{
+
+        byte[] gotHash = SecurityService.hashSha(null);
+
+        assertNull(gotHash);
     }
 }

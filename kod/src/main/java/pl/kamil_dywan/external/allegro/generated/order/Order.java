@@ -94,9 +94,19 @@ public class Order {
     private static final int ROUNDING_SCALE = 2;
     private static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
 
+    public boolean hasInvoice(){
+
+        return invoice.isRequired();
+    }
+
+    public boolean isBuyerCompany(){
+
+        return buyer.getCompanyName() != null;
+    }
+
     public String getClientName(){
 
-        if(invoice.isRequired()){
+        if(hasInvoice()){
 
             InvoiceAddress invoiceAddress = invoice.getAddress();
 
@@ -108,7 +118,7 @@ public class Order {
             return invoiceAddress.getCompany().getName();
         }
 
-        if(buyer.getCompanyName() != null){
+        if(isBuyerCompany()){
 
             return buyer.getCompanyName();
         }

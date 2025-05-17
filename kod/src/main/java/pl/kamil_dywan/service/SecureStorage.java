@@ -6,7 +6,7 @@ import com.microsoft.credentialstorage.model.StoredCredential;
 
 public class SecureStorage {
 
-    private static final SecretStore<StoredCredential> store = StorageProvider.getCredentialStorage(true, StorageProvider.SecureOption.REQUIRED);
+    private static SecretStore<StoredCredential> store; //StorageProvider.getCredentialStorage(true, StorageProvider.SecureOption.REQUIRED)
 
     private static String CREDENTIALS_KEY_PREFIX;
 
@@ -41,18 +41,19 @@ public class SecureStorage {
         store.add(credentialsKey, storedCredential);
     }
 
-    public static String getCredentialsPassword(String credentialsKeyPrefix){
-
-        char[] storedPassword = getCredentials(credentialsKeyPrefix).getPassword();
-
-        return new String(storedPassword);
-    }
-
-    public static StoredCredential getCredentials(String credentialsKeyPostfix){
+    public static String getCredentialsPassword(String credentialsKeyPostfix) throws IllegalArgumentException{
 
         String credentialsKey = getCredentialsKey(credentialsKeyPostfix);
 
-        return store.get(credentialsKey);
+        StoredCredential gotStoredCredentials = store.get(credentialsKey);
+
+        if(gotStoredCredentials == null){
+            throw new IllegalArgumentException("Secure storage did not find given credentials: " + credentialsKey);
+        }
+
+        char[] storedPassword = gotStoredCredentials.getPassword();
+
+        return new String(storedPassword);
     }
 
     public static boolean delete(String credentialsKeyPostfix){
