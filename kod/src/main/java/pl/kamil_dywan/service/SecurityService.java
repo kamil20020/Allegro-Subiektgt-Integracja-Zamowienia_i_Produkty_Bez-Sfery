@@ -11,27 +11,23 @@ import java.util.Base64;
 
 public interface SecurityService {
 
-    public static String decryptAes(byte[] key, String base64EncryptedValue) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
+    public static byte[] decryptAes(byte[] key, byte[] encryptedValue) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
 
-        Base64.Decoder base64Decoder = Base64.getDecoder();
+        if(encryptedValue == null){
+            return null;
+        }
 
         Cipher aesCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 
-        byte[] decodedBase64Key = base64Decoder.decode(key);
-
-        SecretKey secretKey = new SecretKeySpec(decodedBase64Key, "AES");
+        SecretKey secretKey = new SecretKeySpec(key, "AES");
         IvParameterSpec ivParameterSpec = new IvParameterSpec(new byte[16]);
 
         aesCipher.init(Cipher.DECRYPT_MODE, secretKey, ivParameterSpec);
 
-        byte[] decodedEncryptedValue = base64Decoder.decode(base64EncryptedValue);
-
-        byte[] decryptedValue = aesCipher.doFinal(decodedEncryptedValue);
-
-        return new String(decryptedValue);
+        return aesCipher.doFinal(encryptedValue);
     }
 
-    public static byte[] hashSha(String value) throws NoSuchAlgorithmException {
+    public static byte[] hashSha(byte[] value) throws NoSuchAlgorithmException {
 
         if(value == null){
             return null;
@@ -39,9 +35,7 @@ public interface SecurityService {
 
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
 
-        byte[] valueBytes = value.getBytes();
-
-        byte[] gotHash = messageDigest.digest(valueBytes);
+        byte[] gotHash = messageDigest.digest(value);
 
         // Convert to hex
 

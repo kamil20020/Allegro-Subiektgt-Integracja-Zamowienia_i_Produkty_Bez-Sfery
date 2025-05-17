@@ -39,7 +39,6 @@ public class ProductService {
         writeIndexes.put("TOWARY", new Integer[]{0, 1, 4, 11, 14});
 
         subiektProductFileWriter = new EppFileWriter<>(headersNames, toWriteHeadersIndexes, rowsLengths, writeIndexes);
-
     }
 
     public ProductService(ProductApi productApi){

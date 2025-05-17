@@ -48,6 +48,8 @@ public class App {
         BasicAuthApi.init();
 
         AuthService authService = new AuthService(loginApi);
+        authService.init();
+
         OrderService orderService = new OrderService(orderApi);
         ProductService productService = new ProductService(productApi);
         ClientService clientService = new ClientService();

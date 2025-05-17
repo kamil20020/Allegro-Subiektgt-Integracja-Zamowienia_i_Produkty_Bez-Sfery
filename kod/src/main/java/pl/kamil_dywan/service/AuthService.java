@@ -37,8 +37,6 @@ public class AuthService {
     public AuthService(LoginApi loginApi){
 
         this.loginApi = loginApi;
-
-        init();
     }
 
     public boolean isUserLogged(){
@@ -51,7 +49,7 @@ public class AuthService {
         return SecureStorage.doesExist(BasicAuthApi.ALLEGRO_SECRET_POSTFIX);
     }
 
-    private void init() throws IllegalStateException{
+    public void init() throws IllegalStateException{
 
         if(doesUserPassedFirstLoginToApp()){
             return;
@@ -82,7 +80,26 @@ public class AuthService {
             throw new IllegalStateException("The user was already logged in to the app for the first time");
         }
 
-        Base64.Encoder base64Encoder = Base64.getEncoder();
+        byte[] base64EncryptedAes = encryptedAllegroLoginDetails.getKey().getBytes();
+        String expectedAesHash = encryptedAllegroLoginDetails.getKeyHash();
+        String base64EncryptedSecret = encryptedAllegroLoginDetails.getSecret();
+
+        byte[] gotDecryptedAes = decryptAesWithUserPassword(base64EncryptedAes, gotPassword);
+        String gotDecryptedAesHash = hashValue(gotDecryptedAes);
+
+        if(!gotDecryptedAesHash.equals(expectedAesHash)){
+
+            throw new UnloggedException();
+        }
+
+        byte[] gotAllegroSecret = decryptAllegroSecret(gotDecryptedAes, base64EncryptedSecret);
+
+        SecureStorage.saveCredentials(BasicAuthApi.ALLEGRO_SECRET_POSTFIX, new String(gotAllegroSecret));
+
+        BasicAuthApi.init();
+    }
+
+    private byte[] decryptAesWithUserPassword(byte[] base64EncryptedAes, String gotPassword) throws UnloggedException, IllegalStateException{
 
         byte[] gotPasswordBytes = gotPassword.getBytes();
 
@@ -90,29 +107,27 @@ public class AuthService {
 
         System.arraycopy(gotPasswordBytes, 0, targetGotPasswordBytes, 0, Math.min(gotPasswordBytes.length, targetGotPasswordBytes.length));
 
-        byte[] base64EncodedPassword = base64Encoder.encode(targetGotPasswordBytes);
-
-        String base64EncryptedAes = encryptedAllegroLoginDetails.getKey();
-
-        String gotDecryptedAes;
-
         try {
-            gotDecryptedAes = SecurityService.decryptAes(base64EncodedPassword, base64EncryptedAes);
+            return SecurityService.decryptAes(targetGotPasswordBytes, base64EncryptedAes);
         }
         catch (BadPaddingException e){
 
             throw new UnloggedException();
         }
         catch (Exception e) {
+
             e.printStackTrace();
 
             throw new IllegalStateException("Could not decrypt with user password");
         }
+    }
 
-        byte[] gotDecryptedAesHashArr;
+    private String hashValue(byte[] value) throws IllegalStateException{
+
+        byte[] gotHashValue;
 
         try {
-            gotDecryptedAesHashArr = SecurityService.hashSha(gotDecryptedAes);
+            gotHashValue = SecurityService.hashSha(value);
         }
         catch (NoSuchAlgorithmException e) {
 
@@ -121,22 +136,15 @@ public class AuthService {
             throw new IllegalStateException("Did not found hash algorithm");
         }
 
-        String gotDecryptedAesHash = new String(gotDecryptedAesHashArr);
-        String expectedAesHash = encryptedAllegroLoginDetails.getKeyHash();
+        return new String(gotHashValue);
+    }
 
-        if(!gotDecryptedAesHash.equals(expectedAesHash)){
+    private byte[] decryptAllegroSecret(byte[] decryptedAes, String base64EncryptedSecret) throws IllegalStateException{
 
-            throw new UnloggedException();
-        }
-
-        String base64EncryptedSecret = encryptedAllegroLoginDetails.getSecret();
-
-        gotDecryptedAes = Base64.getEncoder().encodeToString(gotDecryptedAes.getBytes());
-
-        String gotAllegroSecret;
+        byte[] decodedEncryptedSecret = Base64.getDecoder().decode(base64EncryptedSecret);
 
         try {
-            gotAllegroSecret = SecurityService.decryptAes(gotDecryptedAes.getBytes(), base64EncryptedSecret);
+            return SecurityService.decryptAes(decryptedAes, decodedEncryptedSecret);
         }
         catch (Exception e) {
 
@@ -144,10 +152,6 @@ public class AuthService {
 
             throw new IllegalStateException("Could not decrypt allegro secret");
         }
-
-        SecureStorage.saveCredentials(BasicAuthApi.ALLEGRO_SECRET_POSTFIX, gotAllegroSecret);
-
-        BasicAuthApi.init();
     }
 
     public GenerateDeviceCodeResponse generateDeviceCodeAndVerificationToAllegro() throws IllegalStateException{
