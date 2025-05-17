@@ -25,7 +25,7 @@ public class BasicAuthApi extends Api {
 
     public BasicAuthApi(String laterPrefix) {
 
-        this("", laterPrefix);
+        super(laterPrefix);
     }
 
     public static void init(){

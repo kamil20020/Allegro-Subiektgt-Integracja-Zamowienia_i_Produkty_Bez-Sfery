@@ -6,7 +6,7 @@ import com.microsoft.credentialstorage.model.StoredCredential;
 
 public class SecureStorage {
 
-    private static SecretStore<StoredCredential> store; //StorageProvider.getCredentialStorage(true, StorageProvider.SecureOption.REQUIRED)
+    private static final SecretStore<StoredCredential> store = StorageProvider.getCredentialStorage(true, StorageProvider.SecureOption.REQUIRED);
 
     private static String CREDENTIALS_KEY_PREFIX;
 

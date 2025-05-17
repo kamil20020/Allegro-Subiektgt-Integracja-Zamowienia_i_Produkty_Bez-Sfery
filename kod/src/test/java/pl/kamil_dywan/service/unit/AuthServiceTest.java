@@ -10,6 +10,7 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.kamil_dywan.TestHttpResponse;
+import pl.kamil_dywan.TestUtils;
 import pl.kamil_dywan.api.Api;
 import pl.kamil_dywan.api.BasicAuthApi;
 import pl.kamil_dywan.api.BearerAuthApi;
@@ -85,7 +86,7 @@ class AuthServiceTest {
     void shouldGetDoesUserPassedFirstLoginToApp(boolean expectedResult, boolean secureStorageValue) {
 
         try(
-                MockedStatic<SecureStorage> secureStorageMock = Mockito.mockStatic(SecureStorage.class);
+            MockedStatic<SecureStorage> secureStorageMock = Mockito.mockStatic(SecureStorage.class);
         ){
 
             secureStorageMock.when(() -> SecureStorage.doesExist(any())).thenReturn(secureStorageValue);
@@ -103,17 +104,7 @@ class AuthServiceTest {
 
         FileReader<EncryptedAllegroLoginDetails> fileReaderMock = Mockito.mock(FileReader.class);
 
-        Field field = AuthService.class.getDeclaredField("allegroLoginDetailsFileReader");
-        field.setAccessible(true);
-
-        Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
-        unsafeField.setAccessible(true);
-        Unsafe unsafe = (Unsafe) unsafeField.get(null);
-
-        Object staticFieldBase = unsafe.staticFieldBase(field);
-        long staticFieldOffset = unsafe.staticFieldOffset(field);
-
-        unsafe.putObject(staticFieldBase, staticFieldOffset, fileReaderMock);
+        TestUtils.updatePrivateStaticField(AuthService.class, "allegroLoginDetailsFileReader", fileReaderMock);
 
         String authDataPath = "./auth-data.json";
 
@@ -200,9 +191,9 @@ class AuthServiceTest {
         String expectedGotAllegroSecret = "got allegro secret";
 
         try(
-                MockedStatic<SecureStorage> secureStorageMock = Mockito.mockStatic(SecureStorage.class);
-                MockedStatic<SecurityService> securityServiceMock = Mockito.mockStatic(SecurityService.class);
-                MockedStatic<BasicAuthApi> basicAuthApiMock = Mockito.mockStatic(BasicAuthApi.class);
+            MockedStatic<SecureStorage> secureStorageMock = Mockito.mockStatic(SecureStorage.class);
+            MockedStatic<SecurityService> securityServiceMock = Mockito.mockStatic(SecurityService.class);
+            MockedStatic<BasicAuthApi> basicAuthApiMock = Mockito.mockStatic(BasicAuthApi.class);
         ){
 
             secureStorageMock.when(() -> SecureStorage.doesExist(any())).thenReturn(false);

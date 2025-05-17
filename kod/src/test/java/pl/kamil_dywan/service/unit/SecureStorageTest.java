@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+import pl.kamil_dywan.TestUtils;
 import pl.kamil_dywan.service.AppProperties;
 import pl.kamil_dywan.service.SecureStorage;
 import sun.misc.Unsafe;
@@ -21,20 +22,16 @@ class SecureStorageTest {
 
     private static final SecretStore<StoredCredential> secretStoreMock = Mockito.mock(SecretStore.class);
 
+    private static final String expectedKeyPrefix = "prefix";
+    private static final String expectedKeyPostfix = "key";
+    private static final String expectedKey = "prefix-key";
+    private static final String expectedUsername = "username";
+    private static final String expectedPassword = "password";
+
     @BeforeAll
-    public static void setUp() throws Exception{
+    public static void setUp(){
 
-        Field field = SecureStorage.class.getDeclaredField("store");
-        field.setAccessible(true);
-
-        Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
-        unsafeField.setAccessible(true);
-        Unsafe unsafe = (Unsafe) unsafeField.get(null);
-
-        Object staticFieldBase = unsafe.staticFieldBase(field);
-        long staticFieldOffset = unsafe.staticFieldOffset(field);
-
-        unsafe.putObject(staticFieldBase, staticFieldOffset, secretStoreMock);
+        TestUtils.updatePrivateStaticField(SecureStorage.class, "store", secretStoreMock);
     }
 
     private static void setUpCredentialsKeyPrefix(String credentialsKeyPrefix){
@@ -81,9 +78,6 @@ class SecureStorageTest {
     @Test
     void shouldGetDoesExistWhenExist(){
 
-        String expectedKeyPrefix = "prefix";
-        String expectedKeyPostfix = "key";
-        String expectedKey = "prefix-key";
         StoredCredential expectedValue = new StoredCredential("", new char[0]);
 
         setUpCredentialsKeyPrefix(expectedKeyPrefix);
@@ -100,10 +94,6 @@ class SecureStorageTest {
     @Test
     void shouldNotGetDoesExistWhenDoesNotExist(){
 
-        String expectedKeyPrefix = "prefix";
-        String expectedKeyPostfix = "key";
-        String expectedKey = "prefix-key";
-
         setUpCredentialsKeyPrefix(expectedKeyPrefix);
 
         Mockito.when(secretStoreMock.get(any())).thenReturn(null);
@@ -117,13 +107,6 @@ class SecureStorageTest {
 
     @Test
     void shouldSaveCredentials(){
-
-        String expectedKeyPrefix = "prefix";
-        String expectedKeyPostfix = "key";
-        String expectedKey = "prefix-key";
-
-        String expectedUsername = "username";
-        String expectedPassword = "password";
 
         setUpCredentialsKeyPrefix(expectedKeyPrefix);
 
@@ -142,12 +125,6 @@ class SecureStorageTest {
     @Test
     void shouldSaveCredentialsPassword(){
 
-        String expectedKeyPrefix = "prefix";
-        String expectedKeyPostfix = "key";
-        String expectedKey = "prefix-key";
-
-        String expectedPassword = "password";
-
         setUpCredentialsKeyPrefix(expectedKeyPrefix);
 
         SecureStorage.saveCredentials(expectedKeyPostfix, expectedPassword);
@@ -164,12 +141,6 @@ class SecureStorageTest {
 
     @Test
     void shouldGetCredentialsPassword(){
-
-        String expectedKeyPrefix = "prefix";
-        String expectedKeyPostfix = "key";
-        String expectedKey = "prefix-key";
-
-        String expectedPassword = "password";
 
         setUpCredentialsKeyPrefix(expectedKeyPrefix);
 
@@ -190,10 +161,6 @@ class SecureStorageTest {
     @Test
     void shouldNotGetCredentialsPasswordWhenKeyPostfixDoestNotExist(){
 
-        String expectedKeyPrefix = "prefix";
-        String expectedKeyPostfix = "key";
-        String expectedKey = "prefix-key";
-
         setUpCredentialsKeyPrefix(expectedKeyPrefix);
 
         Mockito.when(secretStoreMock.get(any())).thenReturn(null);
@@ -209,16 +176,10 @@ class SecureStorageTest {
     @Test
     void shouldDelete() {
 
-        String expectedKeyPrefix = "prefix";
-        String expectedKeyPostfix = "key";
-        String expectedKey = "prefix-key";
-
         setUpCredentialsKeyPrefix(expectedKeyPrefix);
 
-        String expectedPassword = "password";
-
         StoredCredential expectedStoredCredential = new StoredCredential(
-            "username",
+            expectedUsername,
             expectedPassword.toCharArray()
         );
 
@@ -235,10 +196,6 @@ class SecureStorageTest {
 
     @Test
     void shouldNotDeleteWhenKeyPostfixDoestNotExist() {
-
-        String expectedKeyPrefix = "prefix";
-        String expectedKeyPostfix = "key";
-        String expectedKey = "prefix-key";
 
         setUpCredentialsKeyPrefix(expectedKeyPrefix);
 

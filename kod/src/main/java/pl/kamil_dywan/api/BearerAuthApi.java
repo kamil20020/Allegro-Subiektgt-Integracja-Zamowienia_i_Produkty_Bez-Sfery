@@ -27,7 +27,7 @@ public class BearerAuthApi extends Api{
 
     public BearerAuthApi(String laterPrefix){
 
-        this("", laterPrefix);
+        super(laterPrefix);
     }
 
     public static void init(Function<String, HttpResponse<String>> refreshAccessToken1){
