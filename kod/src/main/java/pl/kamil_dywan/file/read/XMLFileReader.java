@@ -75,7 +75,7 @@ public class XMLFileReader<T> implements FileReader<T> {
         try(FileInputStream is = new FileInputStream(file)){
 
             XMLStreamReader xsr = XMLInputFactory.newFactory()
-                    .createXMLStreamReader(is, "windows-1250");
+                .createXMLStreamReader(is, "windows-1250");
 
             XMLReaderWithoutNamespace xr = new XMLReaderWithoutNamespace(xsr);
 

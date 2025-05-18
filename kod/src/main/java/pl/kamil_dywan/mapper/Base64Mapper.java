@@ -1,7 +1,5 @@
 package pl.kamil_dywan.mapper;
 
-import com.thoughtworks.xstream.core.util.Base64Encoder;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 

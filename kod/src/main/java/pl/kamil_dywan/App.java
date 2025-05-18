@@ -30,9 +30,8 @@ public class App {
 
         OrderService orderService = new OrderService(orderApi);
         ProductService productService = new ProductService(productApi);
-        ClientService clientService = new ClientService();
 
-        new MainGui(authService, productService, orderService, clientService);
+        new MainGui(authService, productService, orderService);
     }
 
 }

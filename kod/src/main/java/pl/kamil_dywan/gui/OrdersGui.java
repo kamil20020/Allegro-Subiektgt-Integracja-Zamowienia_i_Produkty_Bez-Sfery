@@ -8,9 +8,6 @@ import pl.kamil_dywan.external.allegro.generated.order_item.OrderItem;
 import pl.kamil_dywan.external.allegro.generated.order.Order;
 import pl.kamil_dywan.external.allegro.generated.order.OrderResponse;
 import pl.kamil_dywan.external.allegro.generated.order.Summary;
-import pl.kamil_dywan.external.subiektgt.own.client.Client;
-import pl.kamil_dywan.mapper.ClientMapper;
-import pl.kamil_dywan.service.ClientService;
 import pl.kamil_dywan.service.OrderService;
 
 import javax.swing.*;
@@ -33,25 +30,22 @@ public class OrdersGui implements ChangeableGui {
 
     private JButton saveInvoicesButton;
     private JButton saveReceiptsButton;
-    private JButton saveClientsButton;
 
     private final List<Order> ordersWithInvoices = new ArrayList<>();
     private final List<Order> ordersWithReceipts = new ArrayList<>();
 
     private final OrderService orderService;
-    private final ClientService clientService;
+
     private final Runnable handleLogout;
 
-    public OrdersGui(OrderService orderService, ClientService clientService, Runnable handleLogout) {
+    public OrdersGui(OrderService orderService, Runnable handleLogout) {
 
         this.orderService = orderService;
-        this.clientService = clientService;
         this.handleLogout = handleLogout;
 
         $$$setupUI$$$();
 
         saveInvoicesButton.addActionListener(e -> saveInvoicesToFile());
-        saveClientsButton.addActionListener(e -> saveClientsToFile());
     }
 
     private PaginationTableGui.PaginationTableData loadData(int offset, int limit) {
@@ -87,8 +81,8 @@ public class OrdersGui implements ChangeableGui {
         int totalNumberOfRows = orderResponse.getTotalCount();
 
         PaginationTableGui.PaginationTableData data = new PaginationTableGui.PaginationTableData(
-            allegroOrders,
-            totalNumberOfRows
+                allegroOrders,
+                totalNumberOfRows
         );
 
         return data;
@@ -151,48 +145,6 @@ public class OrdersGui implements ChangeableGui {
         JOptionPane.showMessageDialog(
                 mainPanel,
                 "Zapisano faktury do pliku " + savedFilePath,
-                "Powiadomienie",
-                JOptionPane.INFORMATION_MESSAGE
-        );
-    }
-
-    private void saveClientsToFile() {
-
-        String savedFilePath = FileDialogHandler.getSaveFileDialogSelectedPath(
-                "Zapisywanie klientów do pliku",
-                "klienci.epp",
-                ".epp"
-        );
-
-        if (savedFilePath.isBlank()) {
-            return;
-        }
-
-        List<Client> clients = Stream.concat(
-            ordersWithInvoices.stream(),
-            ordersWithReceipts.stream()
-        )
-            .map(ClientMapper::map)
-            .collect(Collectors.toList());
-
-        try {
-
-            clientService.writeClientsToFile(clients, savedFilePath);
-        } catch (IllegalStateException e) {
-
-            JOptionPane.showMessageDialog(
-                    mainPanel,
-                    "Nie udało się zapisać klientów do pliku",
-                    "Powiadomienie o błędzie",
-                    JOptionPane.ERROR_MESSAGE
-            );
-
-            return;
-        }
-
-        JOptionPane.showMessageDialog(
-                mainPanel,
-                "Zapisano klientów do pliku " + savedFilePath,
                 "Powiadomienie",
                 JOptionPane.INFORMATION_MESSAGE
         );
@@ -282,11 +234,6 @@ public class OrdersGui implements ChangeableGui {
         saveReceiptsButton = new JButton();
         saveReceiptsButton.setText("Zapisz paragony do pliku");
         toolBar1.add(saveReceiptsButton);
-        final JToolBar.Separator toolBar$Separator2 = new JToolBar.Separator();
-        toolBar1.add(toolBar$Separator2);
-        saveClientsButton = new JButton();
-        saveClientsButton.setText("Zapisz klientów do pliku");
-        toolBar1.add(saveClientsButton);
     }
 
     /**

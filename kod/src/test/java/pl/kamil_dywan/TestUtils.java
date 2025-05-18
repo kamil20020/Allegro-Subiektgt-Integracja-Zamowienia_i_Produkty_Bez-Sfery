@@ -2,7 +2,11 @@ package pl.kamil_dywan;
 
 import sun.misc.Unsafe;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public interface TestUtils {
 
@@ -64,5 +68,14 @@ public interface TestUtils {
         }
 
         return null;
+    }
+
+    static String removeWhiteSpace(String value){
+
+        if(value == null){
+            return null;
+        }
+
+        return value.replaceAll("\\s", "");
     }
 }

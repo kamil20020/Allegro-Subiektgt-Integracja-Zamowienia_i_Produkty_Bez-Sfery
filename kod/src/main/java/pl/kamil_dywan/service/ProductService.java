@@ -101,7 +101,6 @@ public class ProductService {
     public void writeDeliveryToFile(String filePath) throws IllegalStateException{
 
         ProductOffer deliveryProductOffer = AllegroProductOfferFactory.createDeliveryProductOffer();
-
         List<Product> gotConvertedSubiektProducts = new ArrayList<>();
         List<ProductDetailedPrice> productsDetailedPrices = new ArrayList<>();
 

@@ -73,16 +73,6 @@
               <text value="Zapisz paragony do pliku"/>
             </properties>
           </component>
-          <component id="76ca6" class="javax.swing.JToolBar$Separator">
-            <constraints/>
-            <properties/>
-          </component>
-          <component id="7c176" class="javax.swing.JButton" binding="saveClientsButton">
-            <constraints/>
-            <properties>
-              <text value="Zapisz klientów do pliku"/>
-            </properties>
-          </component>
         </children>
       </toolbar>
     </children>
