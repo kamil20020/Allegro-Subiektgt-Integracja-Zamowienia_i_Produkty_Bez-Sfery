@@ -26,7 +26,7 @@ class InvoiceBatchMapperTestIT {
     void shouldMap() throws Exception {
 
         //given
-        OrderResponse allegroOrderResponse = allegroOrderReader.load("data/allegro/real-order-1.json");
+        OrderResponse allegroOrderResponse = allegroOrderReader.load("data/allegro/order-invoice-company.json");
         InvoiceBatch expectedSubiektBatch = subiektOrderReader.load("data/subiekt/order-for-allegro-minimalized.xml");
         String expectedSubiektBatchStr = subiektOrderWriter.writeToStr(expectedSubiektBatch);
         expectedSubiektBatchStr = TestUtils.removeWhiteSpace(expectedSubiektBatchStr);

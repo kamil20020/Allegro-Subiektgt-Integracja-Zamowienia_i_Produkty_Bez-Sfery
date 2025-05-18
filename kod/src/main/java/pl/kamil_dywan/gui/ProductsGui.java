@@ -79,12 +79,12 @@ public class ProductsGui implements ChangeableGui {
         ProductOffer productOffer = (ProductOffer) rawProductOffer;
 
         return new Object[]{
-                productOffer.getId(),
-                productOffer.getName(),
-                productOffer.getPriceWithoutTax().toString() + " zł",
-                productOffer.getPriceWithTax() + " zł",
-                productOffer.getTaxRate().toString() + '%',
-                productOffer.getCreatedAt().toLocalDate().toString()
+            productOffer.getId(),
+            productOffer.getName(),
+            productOffer.getPriceWithoutTax().toString() + " zł",
+            productOffer.getPriceWithTax() + " zł",
+            productOffer.getTaxRate().toString() + '%',
+            productOffer.getCreatedAt().toLocalDate().toString()
         };
     }
 

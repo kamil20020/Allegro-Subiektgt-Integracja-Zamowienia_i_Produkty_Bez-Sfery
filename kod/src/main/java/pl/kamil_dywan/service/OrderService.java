@@ -18,7 +18,6 @@ import java.util.List;
 public class OrderService {
 
     private final OrderApi orderApi;
-    private static final FileWriter<InvoiceBatch> subiektOrderFileWriter = new XMLFileWriter<>(InvoiceBatch.class);
 
     public OrderService(OrderApi orderApi){
 
@@ -30,20 +29,5 @@ public class OrderService {
         HttpResponse<String> gotResponse = orderApi.getOrders(offset, limit);
 
         return Api.extractBody(gotResponse, OrderResponse.class);
-    }
-
-    public void writeInvoicesToFile(List<Order> allegroOrders, String filePath) throws IllegalStateException {
-
-        InvoiceBatch invoicesBatch = InvoiceBatchMapper.map("Subiekt", allegroOrders);
-
-        try {
-            subiektOrderFileWriter.save(filePath, invoicesBatch);
-        }
-        catch (IOException | URISyntaxException e) {
-
-            e.printStackTrace();
-
-            throw new IllegalStateException(e.getMessage());
-        }
     }
 }

@@ -8,6 +8,7 @@ import pl.kamil_dywan.external.allegro.generated.order_item.OrderItem;
 import pl.kamil_dywan.external.allegro.generated.order.Order;
 import pl.kamil_dywan.external.allegro.generated.order.OrderResponse;
 import pl.kamil_dywan.external.allegro.generated.order.Summary;
+import pl.kamil_dywan.service.InvoiceService;
 import pl.kamil_dywan.service.OrderService;
 
 import javax.swing.*;
@@ -35,12 +36,14 @@ public class OrdersGui implements ChangeableGui {
     private final List<Order> ordersWithReceipts = new ArrayList<>();
 
     private final OrderService orderService;
+    private final InvoiceService invoiceService;
 
     private final Runnable handleLogout;
 
-    public OrdersGui(OrderService orderService, Runnable handleLogout) {
+    public OrdersGui(OrderService orderService, InvoiceService invoiceService, Runnable handleLogout) {
 
         this.orderService = orderService;
+        this.invoiceService = invoiceService;
         this.handleLogout = handleLogout;
 
         $$$setupUI$$$();
@@ -129,7 +132,7 @@ public class OrdersGui implements ChangeableGui {
         }
 
         try {
-            orderService.writeInvoicesToFile(ordersWithInvoices, savedFilePath);
+            invoiceService.writeInvoicesToFile(ordersWithInvoices, savedFilePath);
         } catch (IllegalStateException e) {
 
             JOptionPane.showMessageDialog(
