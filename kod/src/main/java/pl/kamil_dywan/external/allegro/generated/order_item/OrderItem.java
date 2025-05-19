@@ -66,36 +66,20 @@ public class OrderItem {
     @JsonProperty("boughtAt")
     private OffsetDateTime boughtAt;
 
-    public OrderItemMoneyStats getMoneySummary(){
+    private static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
 
-        BigDecimal quantityValue = BigDecimal.valueOf(quantity);
-
-        BigDecimal taxRatePercentage = getTaxRatePercentage();
-        BigDecimal taxRateValue = taxRatePercentage.multiply(
-            BigDecimal.valueOf(0.01)
-        );
+    public BigDecimal getUnitPriceWithoutTax(){
 
         BigDecimal unitPriceWithTax = price.getAmount();
-        BigDecimal unitPriceWithoutTax = unitPriceWithTax.divide(
-            BigDecimal.ONE.add(taxRateValue),
-            RoundingMode.HALF_UP
-        );
 
-        BigDecimal totalPriceWithTax = unitPriceWithTax.multiply(quantityValue);
-        BigDecimal totalPriceWithoutTax = unitPriceWithoutTax.multiply(quantityValue);
-        BigDecimal totalTaxValue = totalPriceWithTax.subtract(totalPriceWithoutTax);
+        BigDecimal taxRatePercentage = getTaxRatePercentage();
+        BigDecimal taxRateValue = taxRatePercentage.divide(BigDecimal.valueOf(100));
+        BigDecimal taxRateValuePlusOne = taxRateValue.add(BigDecimal.ONE);
 
-        return new OrderItemMoneyStats(
-            taxRatePercentage,
-            unitPriceWithTax,
-            unitPriceWithoutTax,
-            totalPriceWithTax,
-            totalPriceWithoutTax,
-            totalTaxValue
-        );
+        return unitPriceWithTax.divide(taxRateValuePlusOne, ROUNDING_MODE);
     }
 
-    private BigDecimal getTaxRatePercentage(){
+    public BigDecimal getTaxRatePercentage(){
 
         if(tax == null){
 
@@ -104,7 +88,5 @@ public class OrderItem {
 
         return tax.getRate();
     }
-
-
 
 }

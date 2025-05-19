@@ -34,7 +34,7 @@ public interface InvoiceMapper {
         String invoiceCity = allegroInvoice.getAddress().getCity();
         Buyer buyer = BuyerMapper.map(allegroInvoice.getAddress());
 
-        OrderMoneyStats allegroOrderMoneyStats = allegroOrder.getMoneySummary();
+        OrderMoneyStats allegroOrderMoneyStats = OrderMoneyStats.getSummary(allegroOrder);
         List<OrderItemMoneyStats> orderItemsMoneyStats = allegroOrderMoneyStats.orderItemsMoneyStats();
         List<OrderTaxSummary> orderTaxesSummaries = allegroOrderMoneyStats.orderTaxesSummaries();
         OrderTotalMoneyStats orderTotalMoneyStats = allegroOrderMoneyStats.orderTotalMoneyStats();

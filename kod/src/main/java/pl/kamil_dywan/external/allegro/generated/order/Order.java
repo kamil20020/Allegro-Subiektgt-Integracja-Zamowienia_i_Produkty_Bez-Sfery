@@ -91,9 +91,6 @@ public class Order {
     @JsonProperty("revision")
     private String revision;
 
-    private static final int ROUNDING_SCALE = 2;
-    private static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
-
     public boolean hasInvoice(){
 
         return invoice.isRequired();
@@ -124,79 +121,6 @@ public class Order {
         }
 
         return buyer.getFirstName() + " " + buyer.getLastName();
-    }
-
-    public OrderMoneyStats getMoneySummary(){
-
-        Map<TaxRateCodeMapping, OrderTaxSummary> taxesMappings = OrderTaxSummary.getEmptyMappingsForAllTaxesRates();
-
-        List<OrderItemMoneyStats> orderItemsMoneyStats = new ArrayList<>();
-
-        orderItems.stream()
-            .forEach(orderItem -> {
-
-                OrderItemMoneyStats orderItemMoneyStats = orderItem.getMoneySummary();
-                orderItemsMoneyStats.add(orderItemMoneyStats);
-
-                BigDecimal taxRatePercentage = orderItemMoneyStats.getTaxRatePercentage();
-
-                updateTaxesMappings(taxesMappings, taxRatePercentage, orderItemMoneyStats);
-                orderItemMoneyStats.scale(ROUNDING_SCALE, ROUNDING_MODE);
-            });
-
-        OrderTotalMoneyStats totalSummary = getTotalSummary(taxesMappings);
-
-        scaleTaxesMappings(taxesMappings, ROUNDING_SCALE, ROUNDING_MODE);
-        totalSummary.scale(ROUNDING_SCALE, ROUNDING_MODE);
-
-        return new OrderMoneyStats(
-            orderItemsMoneyStats,
-            (List<OrderTaxSummary>) taxesMappings.values(),
-            totalSummary
-        );
-    }
-
-    private static void updateTaxesMappings(
-        Map<TaxRateCodeMapping, OrderTaxSummary> taxesMappings,
-        BigDecimal taxRatePercentage,
-        OrderItemMoneyStats orderItemMoneyStats
-    ){
-        TaxRateCodeMapping taxRateCodeMapping = TaxRateCodeMapping.getByValue(taxRatePercentage);
-        OrderTaxSummary actualTaxSummary = taxesMappings.get(taxRateCodeMapping);
-
-        actualTaxSummary.update(orderItemMoneyStats);
-    }
-
-    private OrderTotalMoneyStats getTotalSummary(Map<TaxRateCodeMapping, OrderTaxSummary> taxesMappings){
-
-        OrderTotalMoneyStats totalSummary = new OrderTotalMoneyStats();
-
-        totalSummary.setNumberOfOrderItems(orderItems.size());
-        totalSummary.setNumberOfTaxes(OrderTaxSummary.getNumberOfPresentTaxes(taxesMappings));
-
-        taxesMappings.values()
-            .forEach(taxSummary -> {
-
-                totalSummary.update(
-                    taxSummary.getTotalWithoutTax(),
-                    taxSummary.getTotalTaxValue(),
-                    taxSummary.getTotalWithTax()
-                );
-            });
-
-        return totalSummary;
-    }
-
-    private static void scaleTaxesMappings(
-        Map<TaxRateCodeMapping, OrderTaxSummary> taxesMappings,
-        int scale,
-        RoundingMode roundingMode
-    ){
-        taxesMappings.values()
-            .forEach(taxSummary -> {
-
-                taxSummary.scale(scale, roundingMode);
-            });
     }
 
 }
