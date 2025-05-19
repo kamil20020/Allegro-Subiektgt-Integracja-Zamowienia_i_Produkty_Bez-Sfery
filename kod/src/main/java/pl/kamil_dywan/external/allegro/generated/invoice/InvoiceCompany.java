@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonPropertyOrder({
     "name",
@@ -24,7 +27,7 @@ public class InvoiceCompany {
     private String name;
 
     @JsonProperty("ids")
-    private List<Object> ids = new ArrayList<Object>();
+    private List<Object> ids = new ArrayList<>();
 
     @JsonProperty("vatPayerStatus")
     private String vatPayerStatus;

@@ -98,29 +98,22 @@ public class Order {
 
     public boolean isBuyerCompany(){
 
-        return buyer.getCompanyName() != null;
+        if(hasInvoice()){
+
+            return invoice.hasCompany();
+        }
+
+        return buyer.hasCompany();
     }
 
     public String getClientName(){
 
         if(hasInvoice()){
 
-            InvoiceAddress invoiceAddress = invoice.getAddress();
-
-            if (invoiceAddress.getCompany() == null) {
-
-                return invoiceAddress.getNaturalPerson().simpleToString();
-            }
-
-            return invoiceAddress.getCompany().getName();
+            return invoice.getClientName();
         }
 
-        if(isBuyerCompany()){
-
-            return buyer.getCompanyName();
-        }
-
-        return buyer.getFirstName() + " " + buyer.getLastName();
+        return buyer.getName();
     }
 
 }
