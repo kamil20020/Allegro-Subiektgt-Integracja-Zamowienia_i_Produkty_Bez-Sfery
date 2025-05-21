@@ -3,7 +3,11 @@ package pl.kamil_dywan.model.unit;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import pl.kamil_dywan.external.allegro.generated.buyer.Buyer;
 import pl.kamil_dywan.external.allegro.generated.invoice.Invoice;
+import pl.kamil_dywan.external.allegro.generated.invoice.InvoiceAddress;
+import pl.kamil_dywan.external.allegro.generated.invoice.InvoiceCompany;
+import pl.kamil_dywan.external.allegro.generated.invoice.InvoiceNaturalPerson;
 import pl.kamil_dywan.external.allegro.generated.order.Order;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,15 +38,227 @@ class OrderTest {
     }
 
     @Test
-    void shouldGetIsBuyerCompany() {
+    void shouldGetIsBuyerCompanyWhenIsGivenInvoiceAndCompany() {
 
+        //given
+        InvoiceCompany invoiceCompany = InvoiceCompany.builder()
+            .name("Company 123")
+            .build();
 
+        InvoiceAddress invoiceAddress = InvoiceAddress.builder()
+            .company(invoiceCompany)
+            .build();
+
+        Invoice invoice = Invoice.builder()
+            .required(true)
+            .address(invoiceAddress)
+            .build();
+
+        Order order = Order.builder()
+            .invoice(invoice)
+            .build();
+
+        //when
+        boolean result = order.isBuyerCompany();
+
+        //then
+        assertTrue(result);
     }
 
     @Test
-    void shouldGetClientName() {
+    void shouldGetIsBuyerCompanyWhenIsNotGivenInvoiceAndIsGivenCompany(){
 
+        //given
+        Buyer buyer = Buyer.builder()
+            .companyName("Company 123")
+            .build();
 
+        Invoice invoice = Invoice.builder()
+            .required(false)
+            .build();
+
+        Order order = Order.builder()
+            .buyer(buyer)
+            .invoice(invoice)
+            .build();
+
+        //when
+        boolean result = order.isBuyerCompany();
+
+        //then
+        assertTrue(result);
+    }
+
+    @Test
+    void shouldGetIsBuyerCompanyWhenIsGivenInvoiceAndIsPerson(){
+
+        //given
+        InvoiceNaturalPerson invoiceNaturalPerson = InvoiceNaturalPerson.builder()
+            .firstName("Adam")
+            .lastName("Nowak")
+            .build();
+
+        InvoiceAddress invoiceAddress = InvoiceAddress.builder()
+            .naturalPerson(invoiceNaturalPerson)
+            .build();
+
+        Invoice invoice = Invoice.builder()
+            .required(true)
+            .address(invoiceAddress)
+            .build();
+
+        Order order = Order.builder()
+            .invoice(invoice)
+            .build();
+
+        //when
+        boolean result = order.isBuyerCompany();
+
+        //then
+        assertFalse(result);
+    }
+
+    @Test
+    void shouldGetIsBuyerCompanyWhenIsNotGivenInvoiceAndIsPerson(){
+
+        //given
+        Buyer buyer = Buyer.builder()
+            .firstName("Adam")
+            .lastName("Nowak")
+            .build();
+
+        Invoice invoice = Invoice.builder()
+            .required(false)
+            .build();
+
+        Order order = Order.builder()
+            .buyer(buyer)
+            .invoice(invoice)
+            .build();
+
+        //when
+        boolean result = order.isBuyerCompany();
+
+        //then
+        assertFalse(result);
+    }
+
+    @Test
+    void shouldGetClientNameForInvoiceAndCompany() {
+
+        //given
+        String name = "Company 123";
+
+        InvoiceCompany invoiceCompany = InvoiceCompany.builder()
+            .name(name)
+            .build();
+
+        InvoiceAddress invoiceAddress = InvoiceAddress.builder()
+            .company(invoiceCompany)
+            .build();
+
+        Invoice invoice = Invoice.builder()
+            .required(true)
+            .address(invoiceAddress)
+            .build();
+
+        Order order = Order.builder()
+            .invoice(invoice)
+            .build();
+
+        //when
+        String gotName = order.getClientName();
+
+        //then
+        assertEquals(name, gotName);
+    }
+
+    @Test
+    void shouldGetClientNameForNotInvoiceAndCompany() {
+
+        //given
+        String name = "Company 123";
+
+        Buyer buyer = Buyer.builder()
+            .companyName(name)
+            .build();
+
+        Invoice invoice = Invoice.builder()
+            .required(false)
+            .build();
+
+        Order order = Order.builder()
+            .buyer(buyer)
+            .invoice(invoice)
+            .build();
+
+        //when
+        String gotName = order.getClientName();
+
+        //then
+        assertEquals(name, gotName);
+    }
+
+    @Test
+    void shouldGetClientNameForInvoiceAndPerson() {
+
+        //given
+        String firstName = "Adam";
+        String lastName = "Nowak";
+        String expectedName = firstName + " " + lastName;
+
+        InvoiceNaturalPerson invoiceNaturalPerson = InvoiceNaturalPerson.builder()
+            .firstName(firstName)
+            .lastName(lastName)
+            .build();
+
+        InvoiceAddress invoiceAddress = InvoiceAddress.builder()
+            .naturalPerson(invoiceNaturalPerson)
+            .build();
+
+        Invoice invoice = Invoice.builder()
+            .required(true)
+            .address(invoiceAddress)
+            .build();
+
+        Order order = Order.builder()
+            .invoice(invoice)
+            .build();
+
+        //when
+        String gotName = order.getClientName();
+
+        //then
+        assertEquals(expectedName, gotName);
+    }
+
+    @Test
+    void shouldGetClientNameForNotInvoiceAndPerson() {
+
+        //given
+        String firstName = "Adam";
+        String lastName = "Nowak";
+        String expectedName = firstName + " " + lastName;
+
+        Buyer buyer = Buyer.builder()
+            .firstName(firstName)
+            .lastName(lastName)
+            .build();
+
+        Invoice invoice = Invoice.builder()
+            .required(false)
+            .build();
+
+        Order order = Order.builder()
+            .buyer(buyer)
+            .invoice(invoice)
+            .build();
+
+        //when
+        String gotName = order.getClientName();
+
+        //then
+        assertEquals(expectedName, gotName);
     }
 
 }

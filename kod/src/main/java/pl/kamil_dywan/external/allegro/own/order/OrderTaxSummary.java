@@ -12,6 +12,8 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@EqualsAndHashCode
+@ToString
 public class OrderTaxSummary {
 
     private BigDecimal taxRateValue = BigDecimal.ZERO;
@@ -40,7 +42,6 @@ public class OrderTaxSummary {
 
     public void scale(int scale, RoundingMode roundingMode){
 
-        taxRateValue = taxRateValue.setScale(scale, roundingMode);
         totalWithoutTax = totalWithoutTax.setScale(scale, roundingMode);
         totalWithTax = totalWithTax.setScale(scale, roundingMode);
         totalTaxValue = totalTaxValue.setScale(scale, roundingMode);
@@ -57,24 +58,12 @@ public class OrderTaxSummary {
         return taxesMappings;
     }
 
-    public static Map<TaxRateCodeMapping, Integer> getTaxesRatesOccurs(){
-
-        Map<TaxRateCodeMapping, Integer> taxRatesOccurs = new LinkedHashMap<>();
-
-        taxRatesOccurs.put(TaxRateCodeMapping.H, 0);
-        taxRatesOccurs.put(TaxRateCodeMapping.L, 0);
-        taxRatesOccurs.put(TaxRateCodeMapping.Z, 0);
-
-        return taxRatesOccurs;
-    }
-
     public static int getNumberOfPresentTaxes(Map<TaxRateCodeMapping, OrderTaxSummary> taxesSubTotalsMappings){
 
         return (int) taxesSubTotalsMappings.values().stream()
             .map(taxSummary -> taxSummary.totalWithoutTax)
             .filter(totalWithoutTax -> totalWithoutTax.doubleValue() > 0d)
             .count();
-
     }
 
 }

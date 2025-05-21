@@ -9,6 +9,7 @@ import java.math.RoundingMode;
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode
+@ToString
 public class OrderItemMoneyStats {
 
     private BigDecimal taxRatePercentage;

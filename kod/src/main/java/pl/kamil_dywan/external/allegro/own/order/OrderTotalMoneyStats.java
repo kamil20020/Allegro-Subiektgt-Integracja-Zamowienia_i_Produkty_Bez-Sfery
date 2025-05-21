@@ -4,11 +4,13 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Objects;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@ToString
 public class OrderTotalMoneyStats {
 
     private Integer numberOfOrderItems = 0;
@@ -39,5 +41,18 @@ public class OrderTotalMoneyStats {
         totalWithoutTax = totalWithoutTax.setScale(scale, roundingMode);
         taxValue = taxValue.setScale(scale, roundingMode);
         totalWithTax = totalWithTax.setScale(scale, roundingMode);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderTotalMoneyStats that = (OrderTotalMoneyStats) o;
+        return Objects.equals(numberOfOrderItems, that.numberOfOrderItems) && Objects.equals(numberOfTaxes, that.numberOfTaxes) && Objects.equals(totalWithoutTax, that.totalWithoutTax) && Objects.equals(totalWithTax, that.totalWithTax) && Objects.equals(taxValue, that.taxValue);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(numberOfOrderItems, numberOfTaxes, totalWithoutTax, totalWithTax, taxValue);
     }
 }
