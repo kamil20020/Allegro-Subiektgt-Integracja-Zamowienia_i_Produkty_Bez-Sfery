@@ -91,11 +91,13 @@ public class Order {
     @JsonProperty("revision")
     private String revision;
 
+    @JsonIgnore
     public boolean hasInvoice(){
 
         return invoice.isRequired();
     }
 
+    @JsonIgnore
     public boolean isBuyerCompany(){
 
         if(hasInvoice()){
@@ -106,6 +108,7 @@ public class Order {
         return buyer.hasCompany();
     }
 
+    @JsonIgnore
     public String getClientName(){
 
         if(hasInvoice()){

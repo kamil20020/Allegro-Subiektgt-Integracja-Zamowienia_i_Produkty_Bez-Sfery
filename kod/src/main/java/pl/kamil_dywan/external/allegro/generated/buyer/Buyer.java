@@ -59,11 +59,13 @@ public class Buyer {
     @JsonProperty("address")
     private BuyerAddress address;
 
+    @JsonIgnore
     public boolean hasCompany(){
 
         return companyName != null;
     }
 
+    @JsonIgnore
     public String getName(){
 
         if(companyName != null){

@@ -37,11 +37,13 @@ public class Invoice {
     @JsonProperty("features")
     private List<String> features = new ArrayList<>();
 
+    @JsonIgnore
     public boolean hasCompany(){
 
         return address.getCompany() != null;
     }
 
+    @JsonIgnore
     public String getClientName(){
 
         if (address.getCompany() == null) {

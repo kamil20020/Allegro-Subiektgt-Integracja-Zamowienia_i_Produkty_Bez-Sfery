@@ -1,9 +1,6 @@
 package pl.kamil_dywan.external.allegro.generated.offer_product;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -45,6 +42,7 @@ public class ProductOffer {
     @JsonProperty("createdAt")
     private OffsetDateTime createdAt;
 
+    @JsonIgnore
     public BigDecimal getTaxRate(){
 
         if(getTaxSettings() != null){
@@ -55,11 +53,13 @@ public class ProductOffer {
         return BigDecimal.valueOf(23);
     }
 
+    @JsonIgnore
     public BigDecimal getPriceWithTax(){
 
         return sellingMode.getPrice().getAmount();
     }
 
+    @JsonIgnore
     public BigDecimal getPriceWithoutTax(){
 
         BigDecimal taxRate = getTaxRate();

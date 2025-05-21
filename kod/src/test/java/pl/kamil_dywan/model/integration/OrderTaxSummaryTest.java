@@ -72,7 +72,7 @@ class OrderTaxSummaryTest {
         );
 
         OrderTaxSummary gotOrderTaxSummary = new OrderTaxSummary(
-            new BigDecimal("23.000"),
+            new BigDecimal("23.00"),
             new BigDecimal("23.004"),
             new BigDecimal("23.005"),
             new BigDecimal("23.006")

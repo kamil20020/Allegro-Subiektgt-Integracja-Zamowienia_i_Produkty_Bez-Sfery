@@ -40,25 +40,9 @@ public interface InvoiceMapper {
         OrderTotalMoneyStats orderTotalMoneyStats = allegroOrderMoneyStats.orderTotalMoneyStats();
 
         List<OrderItem> allegroOrderItems = new ArrayList<>(allegroOrder.getOrderItems());
-
         allegroOrderItems.add(AllegroOrderItemMapper.mapDeliveryToLineItem(allegroDelivery));
 
-        List<InvoiceLine> subiektInvoiceLines = new ArrayList<>();
-
-        for(int i=0; i < allegroOrderItems.size(); i++){
-
-            Integer newOrderItemNumber = i + 1;
-            OrderItem orderItem = allegroOrderItems.get(i);
-            OrderItemMoneyStats orderItemMoneyStats = orderItemsMoneyStats.get(i);
-
-            InvoiceLine subiektInvoiceLine = InvoiceLineMapper.map(newOrderItemNumber, orderItem, orderItemMoneyStats);
-
-            subiektInvoiceLines.add(subiektInvoiceLine);
-        }
-
-        int deliveryIndex = subiektInvoiceLines.size() - 1;
-
-        subiektInvoiceLines.get(deliveryIndex).getProduct().setSuppliersProductCode("DOSTAWA123");
+        List<InvoiceLine> subiektInvoiceLines = mapInvoiceLines(allegroOrderItems, orderItemsMoneyStats);
 
         List<TaxSubTotal> taxSubTotals = orderTaxesSummaries.stream()
             .map(TaxSubTotalMapper::map)
@@ -80,5 +64,32 @@ public interface InvoiceMapper {
             .taxSubTotals(taxSubTotals)
             .invoiceTotal(invoiceTotal)
             .build();
+    }
+
+    private static List<InvoiceLine> mapInvoiceLines(List<OrderItem> allegroOrderItems, List<OrderItemMoneyStats> orderItemsMoneyStats){
+
+        List<InvoiceLine> subiektInvoiceLines = new ArrayList<>();
+
+        for(int i=0; i < allegroOrderItems.size(); i++){
+
+            Integer newOrderItemNumber = i + 1;
+            OrderItem orderItem = allegroOrderItems.get(i);
+            OrderItemMoneyStats orderItemMoneyStats = orderItemsMoneyStats.get(i);
+
+            InvoiceLine subiektInvoiceLine = InvoiceLineMapper.map(newOrderItemNumber, orderItem, orderItemMoneyStats);
+
+            subiektInvoiceLines.add(subiektInvoiceLine);
+        }
+
+        appendDelivery(subiektInvoiceLines);
+
+        return subiektInvoiceLines;
+    }
+
+    private static void appendDelivery(List<InvoiceLine> subiektInvoiceLines){
+
+        int deliveryIndex = subiektInvoiceLines.size() - 1;
+
+        subiektInvoiceLines.get(deliveryIndex).getProduct().setSuppliersProductCode("DOSTAWA123");
     }
 }

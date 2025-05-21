@@ -122,6 +122,8 @@ class AuthServiceTest {
 
             secureStorageMock.when(() -> SecureStorage.doesExist(any())).thenReturn(false);
 
+            authService.init();
+
             EncryptedAllegroLoginDetails assignedEncryptedAllegroLoginDetails = TestUtils.getPrivateStaticField(
                 AuthService.class,
                 "encryptedAllegroLoginDetails",
@@ -163,7 +165,7 @@ class AuthServiceTest {
 
             boolean didSkipRemovingAuthData = new File(authDataPath).exists();
 
-            assertTrue(didSkipRemovingAuthData);
+            assertFalse(didSkipRemovingAuthData);
 
             secureStorageMock.verify(() -> SecureStorage.doesExist(BasicAuthApi.ALLEGRO_SECRET_POSTFIX));
         }

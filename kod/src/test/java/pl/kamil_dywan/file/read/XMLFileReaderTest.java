@@ -17,12 +17,13 @@ class XMLFileReaderTest {
     private static final Charset charset = Charset.forName("windows-1250");
 
     private static String validBatchStr = "";
+    private static String validBatchStrWithWhitespace = "";
 
     static {
 
         try {
-            validBatchStr = FileReader.loadStrFromFile(savedInvoiceFilePath, charset);
-            validBatchStr = TestUtils.removeWhiteSpace(validBatchStr);
+            validBatchStrWithWhitespace = FileReader.loadStrFromFile(savedInvoiceFilePath, charset);
+            validBatchStr = TestUtils.removeWhiteSpace(validBatchStrWithWhitespace);
         }
         catch (URISyntaxException e) {
             e.printStackTrace();
@@ -52,7 +53,7 @@ class XMLFileReaderTest {
         //given
 
         //when
-        InvoiceBatch gotBatch = fileReader.loadFromStr(validBatchStr);
+        InvoiceBatch gotBatch = fileReader.loadFromStr(validBatchStrWithWhitespace);
         String gotBatchStr = fileWriter.writeToStr(gotBatch);
         gotBatchStr = TestUtils.removeWhiteSpace(gotBatchStr);
 

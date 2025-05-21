@@ -20,6 +20,7 @@ class JSONFileReaderTest {
 
         try {
             validAllegroOrderResponseStr = FileReader.loadStrFromFile(savedOrderFilePath);
+            validAllegroOrderResponseStr = TestUtils.removeWhiteSpace(validAllegroOrderResponseStr);
         }
         catch (URISyntaxException e) {
             e.printStackTrace();
