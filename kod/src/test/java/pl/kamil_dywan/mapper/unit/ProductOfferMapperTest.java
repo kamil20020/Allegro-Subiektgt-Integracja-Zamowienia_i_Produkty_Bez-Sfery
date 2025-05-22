@@ -14,7 +14,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class OfferProductMapperTest {
+class ProductOfferMapperTest {
 
     @Test
     void shouldMap(){
@@ -52,7 +52,7 @@ class OfferProductMapperTest {
         //then
         assertNotNull(subiektProduct);
         assertEquals(ProductType.GOODS, subiektProduct.getType());
-        assertEquals(12L, subiektProduct.getId());
+        assertEquals(allegroProductOffer.getId().toString(), subiektProduct.getId());
         assertEquals(allegroProductOffer.getName(), subiektProduct.getName());
         assertEquals(expectedTaxRate, subiektProduct.getTaxRatePercentage());
         assertEquals(expectedUnitPriceWithoutTax, subiektProduct.getUnitPriceWithoutTax());

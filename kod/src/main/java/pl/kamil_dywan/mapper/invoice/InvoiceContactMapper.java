@@ -1,10 +1,9 @@
 package pl.kamil_dywan.mapper.invoice;
 
-import pl.kamil_dywan.external.allegro.generated.buyer.Buyer;
 import pl.kamil_dywan.external.allegro.generated.invoice.InvoiceNaturalPerson;
 import pl.kamil_dywan.external.subiektgt.generated.Contact;
 
-public interface ContactMapper {
+public interface InvoiceContactMapper {
 
     static Contact map(InvoiceNaturalPerson invoiceNaturalPerson){
 

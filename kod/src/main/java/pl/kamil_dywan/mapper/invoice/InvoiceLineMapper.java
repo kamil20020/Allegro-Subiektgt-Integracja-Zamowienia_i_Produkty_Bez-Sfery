@@ -23,7 +23,7 @@ public interface InvoiceLineMapper {
 
         return InvoiceLine.builder()
             .lineNumber(invoiceLineNumber)
-            .product(ProductMapper.map(allegroOffer))
+            .product(InvoiceProductMapper.map(allegroOffer))
             .quantity(quantity)
             .unitPrice(new UnitPriceHolder(orderItemMoneyStats.getUnitPriceWithoutTax()))
             .percentDiscount(PercentDiscountFactory.create())

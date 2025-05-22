@@ -32,9 +32,10 @@ class InvoiceBatchMapperTestIT {
         expectedSubiektBatchStr = TestUtils.removeWhiteSpace(expectedSubiektBatchStr);
 
         List<Order> allegroOrders = allegroOrderResponse.getOrders();
+        allegroOrders.forEach(order -> order.addDeliveryToOrderItems());
 
         //when
-        InvoiceBatch convertedInvoiceBatch = InvoiceBatchMapper.map("Firma przykładowa systemu InsERT GT", allegroOrders);
+        InvoiceBatch convertedInvoiceBatch = InvoiceBatchMapper.map("Subiekt", allegroOrders);
         String convertedBatchStr = subiektOrderWriter.writeToStr(convertedInvoiceBatch);
         convertedBatchStr = TestUtils.removeWhiteSpace(convertedBatchStr);
 

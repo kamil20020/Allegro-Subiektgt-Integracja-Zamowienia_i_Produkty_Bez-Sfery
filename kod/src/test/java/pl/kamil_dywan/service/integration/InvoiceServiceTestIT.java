@@ -53,6 +53,7 @@ class InvoiceServiceTestIT {
         String toCreateFilePath = "test-invoice.xml";
 
         List<Order> expectedAllegroOrders = allegroOrderResponse.getOrders();
+        expectedAllegroOrders.forEach(order -> order.addDeliveryToOrderItems());
 
         //when
         invoiceService.writeInvoicesToFile(expectedAllegroOrders, toCreateFilePath);

@@ -3,12 +3,23 @@ package pl.kamil_dywan.model.unit;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import pl.kamil_dywan.external.allegro.generated.Cost;
 import pl.kamil_dywan.external.allegro.generated.buyer.Buyer;
+import pl.kamil_dywan.external.allegro.generated.delivery.Delivery;
+import pl.kamil_dywan.external.allegro.generated.delivery.DeliveryTime;
 import pl.kamil_dywan.external.allegro.generated.invoice.Invoice;
 import pl.kamil_dywan.external.allegro.generated.invoice.InvoiceAddress;
 import pl.kamil_dywan.external.allegro.generated.invoice.InvoiceCompany;
 import pl.kamil_dywan.external.allegro.generated.invoice.InvoiceNaturalPerson;
 import pl.kamil_dywan.external.allegro.generated.order.Order;
+import pl.kamil_dywan.external.allegro.generated.order_item.Offer;
+import pl.kamil_dywan.external.allegro.generated.order_item.OrderItem;
+import pl.kamil_dywan.external.allegro.own.Currency;
+
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -259,6 +270,91 @@ class OrderTest {
 
         //then
         assertEquals(expectedName, gotName);
+    }
+
+    @Test
+    void shouldGetHasDeliveryWhenHas() {
+
+        //given
+        Order order = Order.builder()
+            .delivery(Delivery.builder()
+                .cost(new Cost(new BigDecimal("0"), Currency.PLN))
+                .time(new DeliveryTime(OffsetDateTime.now(), null, null, null))
+                .build()
+            )
+            .orderItems(new ArrayList<>())
+            .build();
+
+        //when
+        boolean gotResult = order.hasDelivery();
+
+        //then
+        assertTrue(gotResult);
+    }
+
+    @Test
+    void shouldGetHasDeliveryWhenHasNot() {
+
+        //given
+        Order order = new Order();
+
+        //when
+        boolean gotResult = order.hasDelivery();
+
+        //then
+        assertFalse(gotResult);
+    }
+
+    @Test
+    void shouldCreateWithoutDelivery() {
+
+        //given
+        OrderItem orderItem = OrderItem.builder()
+            .quantity(1)
+            .build();
+
+        //when
+        Order order = Order.builder()
+            .orderItems(List.of(orderItem))
+            .build();
+
+        //then
+        assertNotNull(order);
+        assertTrue(order.getOrderItems().contains(orderItem));
+    }
+
+    @Test
+    void shouldCreateWithDelivery() {
+
+        //given
+        OrderItem orderItem = OrderItem.builder()
+            .quantity(1)
+            .offer(Offer.builder()
+                .name("Product 123")
+                .build()
+            )
+            .build();
+
+        Delivery delivery = Delivery.builder()
+            .cost(new Cost(new BigDecimal("1"), Currency.PLN))
+            .time(new DeliveryTime(OffsetDateTime.now(), null, null, null))
+            .build();
+
+        List<OrderItem> orderItems = new ArrayList<>();
+
+        orderItems.add(orderItem);
+
+        //when
+        Order order = Order.builder()
+            .delivery(delivery)
+            .orderItems(orderItems)
+            .build();
+
+        //then
+        assertNotNull(order);
+        assertEquals(2, order.getOrderItems().size());
+        assertTrue(order.getOrderItems().contains(orderItem));
+        assertEquals("DOSTAWA", order.getOrderItems().get(1).getOffer().getId());
     }
 
 }

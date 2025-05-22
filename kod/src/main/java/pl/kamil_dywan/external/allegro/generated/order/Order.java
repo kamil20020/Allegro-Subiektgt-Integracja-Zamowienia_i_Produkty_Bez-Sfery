@@ -6,21 +6,17 @@ import pl.kamil_dywan.external.allegro.generated.Payment;
 import pl.kamil_dywan.external.allegro.generated.buyer.Buyer;
 import pl.kamil_dywan.external.allegro.generated.delivery.Delivery;
 import pl.kamil_dywan.external.allegro.generated.invoice.Invoice;
-import pl.kamil_dywan.external.allegro.generated.invoice.InvoiceAddress;
 import pl.kamil_dywan.external.allegro.generated.order_item.OrderItem;
 import pl.kamil_dywan.external.allegro.own.order.*;
-import pl.kamil_dywan.external.subiektgt.own.product.TaxRateCodeMapping;
+import pl.kamil_dywan.mapper.AllegroOrderItemMapper;
 
 import javax.annotation.processing.Generated;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.OffsetDateTime;
 import java.util.*;
 
 @Data
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.ALWAYS)
 @JsonPropertyOrder({
     "id",
@@ -91,6 +87,53 @@ public class Order {
     @JsonProperty("revision")
     private String revision;
 
+    public Order(UUID id, String messageToSeller, Buyer buyer, Payment payment, OrderStatus status, Fulfillment fulfillment, Delivery delivery, Invoice invoice, List<OrderItem> orderItems, List<Surcharge> surcharges, List<Discount> discounts, Note note, Marketplace marketplace, Summary summary, OffsetDateTime updatedAt, String revision) {
+
+        this.id = id;
+        this.messageToSeller = messageToSeller;
+        this.buyer = buyer;
+        this.payment = payment;
+        this.status = status;
+        this.fulfillment = fulfillment;
+        this.delivery = delivery;
+        this.invoice = invoice;
+        this.orderItems = orderItems;
+        this.surcharges = surcharges;
+        this.discounts = discounts;
+        this.note = note;
+        this.marketplace = marketplace;
+        this.summary = summary;
+        this.updatedAt = updatedAt;
+        this.revision = revision;
+
+        addDeliveryToOrderItems();
+    }
+
+    @JsonIgnore
+    public void addDeliveryToOrderItems(){
+
+        if(delivery == null){
+            return;
+        }
+
+        if(!orderItems.isEmpty()){
+
+            int lastItemIndex = orderItems.size() - 1;
+            OrderItem lastItem = orderItems.get(lastItemIndex);
+
+            String lastOfferName = lastItem.getOffer().getName();
+
+            if(lastOfferName != null && lastOfferName.startsWith("DOSTAWA")){
+
+                orderItems.remove(lastItemIndex);
+            }
+        }
+
+        OrderItem allegroDeliveryItem = AllegroOrderItemMapper.mapDeliveryToLineItem(delivery);
+
+        this.orderItems.add(allegroDeliveryItem);
+    }
+
     @JsonIgnore
     public boolean hasInvoice(){
 
@@ -117,6 +160,12 @@ public class Order {
         }
 
         return buyer.getName();
+    }
+
+    @JsonIgnore
+    public boolean hasDelivery(){
+
+        return delivery != null;
     }
 
 }

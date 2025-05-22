@@ -1,7 +1,10 @@
 package pl.kamil_dywan.external.allegro.own.order;
 
+import pl.kamil_dywan.external.allegro.generated.delivery.Delivery;
 import pl.kamil_dywan.external.allegro.generated.order.Order;
+import pl.kamil_dywan.external.allegro.generated.order_item.OrderItem;
 import pl.kamil_dywan.external.subiektgt.own.product.TaxRateCodeMapping;
+import pl.kamil_dywan.mapper.AllegroOrderItemMapper;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

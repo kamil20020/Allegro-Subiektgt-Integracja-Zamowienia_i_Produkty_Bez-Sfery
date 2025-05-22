@@ -20,6 +20,11 @@ public class OrderService {
 
         HttpResponse<String> gotResponse = orderApi.getOrders(offset, limit);
 
-        return Api.extractBody(gotResponse, OrderResponse.class);
+        OrderResponse gotOrderResponse = Api.extractBody(gotResponse, OrderResponse.class);
+
+        gotOrderResponse.getOrders()
+            .forEach(order -> order.addDeliveryToOrderItems());
+
+        return gotOrderResponse;
     }
 }

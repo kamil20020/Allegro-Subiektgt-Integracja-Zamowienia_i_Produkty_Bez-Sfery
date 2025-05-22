@@ -1,4 +1,4 @@
-package pl.kamil_dywan.mapper.unit;
+package pl.kamil_dywan.mapper.unit.invoice;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
-class InvoiceInvoiceBatchMapperTest {
+class InvoiceBatchMapperTest {
 
     @Test
     void shouldMap() {
@@ -41,8 +41,8 @@ class InvoiceInvoiceBatchMapperTest {
 
         //when
         try(
-                MockedStatic<InvoiceMapper> mockedInvoiceMapper = Mockito.mockStatic(InvoiceMapper.class);
-                MockedStatic<InvoiceBatchTrailerFactory> mockedBatchTrailerFactory = Mockito.mockStatic(InvoiceBatchTrailerFactory.class);
+            MockedStatic<InvoiceMapper> mockedInvoiceMapper = Mockito.mockStatic(InvoiceMapper.class);
+            MockedStatic<InvoiceBatchTrailerFactory> mockedBatchTrailerFactory = Mockito.mockStatic(InvoiceBatchTrailerFactory.class);
         ){
             mockedInvoiceMapper.when(() -> InvoiceMapper.map(eq(allegroOrder1))).thenReturn(expectedInvoice1);
             mockedInvoiceMapper.when(() -> InvoiceMapper.map(eq(allegroOrder2))).thenReturn(expectedInvoice2);

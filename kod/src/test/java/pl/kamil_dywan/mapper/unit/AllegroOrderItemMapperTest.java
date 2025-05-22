@@ -24,7 +24,7 @@ class AllegroOrderItemMapperTest {
             .time(new DeliveryTime(OffsetDateTime.now(), null, null, null))
             .build();
 
-        BigDecimal expectedTaxRatePercentage = new BigDecimal("23.00");
+        BigDecimal expectedTaxRatePercentage = new BigDecimal("23");
 
         //when
         OrderItem gotDeliveryOrderItem = AllegroOrderItemMapper.mapDeliveryToLineItem(allegroDelivery);

@@ -1,27 +1,26 @@
-package pl.kamil_dywan.mapper.unit;
+package pl.kamil_dywan.mapper.unit.invoice;
 
 import org.junit.jupiter.api.Test;
 import pl.kamil_dywan.external.allegro.generated.order_item.ExternalId;
 import pl.kamil_dywan.external.allegro.generated.order_item.Offer;
 import pl.kamil_dywan.external.subiektgt.generated.invoice_line.Product;
-import pl.kamil_dywan.mapper.invoice.ProductMapper;
+import pl.kamil_dywan.mapper.invoice.InvoiceProductMapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ProductMapperTest {
+class InvoiceProductMapperTest {
 
     @Test
-    void shouldMapWithExternalId() {
+    void shouldMap() {
 
         //given
         Offer allegroOffer = Offer.builder()
             .id("123")
-            .external(new ExternalId("Id"))
             .name("Offer name")
             .build();
 
         //when
-        Product product = ProductMapper.map(allegroOffer);
+        Product product = InvoiceProductMapper.map(allegroOffer);
 
         //then
         assertNotNull(product);
@@ -29,19 +28,4 @@ class ProductMapperTest {
         assertEquals(allegroOffer.getName(), product.getDescription());
     }
 
-    @Test
-    public void shouldMapWithoutExternalId(){
-
-        //given
-        Offer allegroOffer = Offer.builder()
-            .name("Offer name")
-            .build();
-
-        //when
-        Product product = ProductMapper.map(allegroOffer);
-
-        //then
-        assertNotNull(product);
-        assertEquals(allegroOffer.getName(), product.getDescription());
-    }
 }

@@ -2,6 +2,8 @@ package pl.kamil_dywan.model.integration;
 
 import org.junit.jupiter.api.Test;
 import pl.kamil_dywan.external.allegro.generated.Cost;
+import pl.kamil_dywan.external.allegro.generated.delivery.Delivery;
+import pl.kamil_dywan.external.allegro.generated.delivery.DeliveryTime;
 import pl.kamil_dywan.external.allegro.generated.order.Order;
 import pl.kamil_dywan.external.allegro.generated.order_item.OrderItem;
 import pl.kamil_dywan.external.allegro.generated.order_item.Tax;
@@ -13,6 +15,7 @@ import pl.kamil_dywan.external.allegro.own.order.OrderTotalMoneyStats;
 import pl.kamil_dywan.external.subiektgt.own.product.TaxRateCodeMapping;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class OrderMoneyStatsTest {
 
     @Test
-    void shouldGetSummary() {
+    void shouldGetSummaryWithoutDelivery() {
 
         //given
         List<OrderItem> orderItems = new ArrayList<>();

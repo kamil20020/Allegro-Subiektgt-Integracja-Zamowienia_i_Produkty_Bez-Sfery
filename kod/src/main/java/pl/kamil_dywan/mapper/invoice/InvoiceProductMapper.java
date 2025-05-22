@@ -3,7 +3,7 @@ package pl.kamil_dywan.mapper.invoice;
 import pl.kamil_dywan.external.allegro.generated.order_item.Offer;
 import pl.kamil_dywan.external.subiektgt.generated.invoice_line.Product;
 
-public interface ProductMapper {
+public interface InvoiceProductMapper {
 
     static Product map(Offer allegroOffer){
 
