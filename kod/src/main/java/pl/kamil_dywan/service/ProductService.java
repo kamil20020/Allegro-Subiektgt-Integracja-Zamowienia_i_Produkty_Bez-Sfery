@@ -9,6 +9,7 @@ import pl.kamil_dywan.external.allegro.generated.offer_product.SellingMode;
 import pl.kamil_dywan.external.subiektgt.own.product.*;
 import pl.kamil_dywan.factory.ProductDetailedPriceFactory;
 import pl.kamil_dywan.factory.AllegroProductOfferFactory;
+import pl.kamil_dywan.file.EppSerializable;
 import pl.kamil_dywan.file.write.EppFileWriter;
 import pl.kamil_dywan.file.write.FileWriter;
 import pl.kamil_dywan.mapper.ProductOfferMapper;
@@ -43,6 +44,11 @@ public class ProductService {
     public ProductService(ProductApi productApi){
 
         this.productApi = productApi;
+    }
+
+    public static EppFileWriter<?> getFileWriter(){
+
+        return (EppFileWriter) subiektProductFileWriter;
     }
 
     public OfferProductResponse getGeneralProductsPage(int offset, int limit) throws UnloggedException {

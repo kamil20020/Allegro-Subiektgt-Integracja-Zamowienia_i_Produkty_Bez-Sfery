@@ -1,5 +1,6 @@
 package pl.kamil_dywan.file.write;
 
+import lombok.Getter;
 import pl.kamil_dywan.external.subiektgt.own.product.Product;
 import pl.kamil_dywan.external.subiektgt.own.product.ProductDetailedPrice;
 import pl.kamil_dywan.external.subiektgt.own.product.ProductRelatedData;
@@ -19,10 +20,10 @@ import java.util.*;
 
 public class EppFileWriter<T> implements FileWriter<T>{
 
-    private List<String> headersNames;
-    private List<Integer> toWriteHeadersIndexes;
-    private List<Integer> rowsLengths;
-    private LinkedHashMap<String, Integer[]> writeIndexes;
+    private List<String> headersNames = new ArrayList<>();
+    private List<Integer> toWriteHeadersIndexes = new ArrayList<>();
+    private List<Integer> rowsLengths = new ArrayList<>();
+    private LinkedHashMap<String, Integer[]> writeIndexes = new LinkedHashMap<>();
 
     private static final String BEFORE_HEADER_HEADER = "[NAGLOWEK]";
     private static final String BEFORE_INFO_HEADER = "[INFO]";
@@ -34,6 +35,11 @@ public class EppFileWriter<T> implements FileWriter<T>{
         this.toWriteHeadersIndexes = toWriteHeadersIndexes;
         this.rowsLengths = rowsLengths;
         this.writeIndexes = writeIndexes;
+    }
+
+    public EppFileWriter(){
+
+
     }
 
     @Override
@@ -67,12 +73,16 @@ public class EppFileWriter<T> implements FileWriter<T>{
 
     private void drawAllRows(Field[] rootFields, BufferedWriter bufferedWriter, Object toSave) throws IOException {
 
-        for(int i = 0; i < headersNames.size(); i++){
+        for(int headerIndex = 0, fieldIndex = 0; headerIndex < headersNames.size(); headerIndex++, fieldIndex++){
 
-            drawHeader(i, bufferedWriter);
+            if(!drawHeader(headerIndex, bufferedWriter)){
+                headerIndex--;
 
-            Field rootField = rootFields[i];
-            handleRootFieldException(rootField, i, bufferedWriter, toSave);
+                continue;
+            }
+
+            Field rootField = rootFields[fieldIndex];
+            handleRootFieldException(rootField, headerIndex, bufferedWriter, toSave);
 
             bufferedWriter.newLine();
         }
@@ -80,19 +90,17 @@ public class EppFileWriter<T> implements FileWriter<T>{
 
     private void drawSelectedRows(Field[] rootFields, BufferedWriter bufferedWriter, Object toSave) throws IOException {
 
-        for(int i = 0, j = 0; i < headersNames.size(); i++){
+        for(int headerIndex = 0, cellIndex = 0; headerIndex < headersNames.size(); headerIndex++){
 
-            drawHeader(i, bufferedWriter);
+            if(cellIndex < toWriteHeadersIndexes.size()){
 
-            if(j < toWriteHeadersIndexes.size()){
+                int toWriteHeaderIndex = toWriteHeadersIndexes.get(cellIndex);
 
-                int toWriteHeaderIndex = toWriteHeadersIndexes.get(j);
-
-                if(i == toWriteHeaderIndex){
+                if(headerIndex == toWriteHeaderIndex){
 
                     Field rootField = rootFields[toWriteHeaderIndex];
-                    handleRootFieldException(rootField, i, bufferedWriter, toSave);
-                    j++;
+                    handleRootFieldException(rootField, headerIndex, bufferedWriter, toSave);
+                    cellIndex++;
                 }
             }
 
@@ -100,17 +108,24 @@ public class EppFileWriter<T> implements FileWriter<T>{
         }
     }
 
-    private void drawHeader(int headerIndex, BufferedWriter bufferedWriter) throws IOException {
+    private boolean drawHeader(int headerIndex, BufferedWriter bufferedWriter) throws IOException {
 
         String headerName = headersNames.get(headerIndex);
 
         bufferedWriter.write(BEFORE_HEADER_HEADER);
         bufferedWriter.newLine();
-        bufferedWriter.write('"' + headerName + '"');
+
+        if(headerName != null){
+
+            bufferedWriter.write('"' + headerName + '"');
+        }
+
         bufferedWriter.newLine();
         bufferedWriter.newLine();
         bufferedWriter.write(BEFORE_CONTENT_HEADER);
         bufferedWriter.newLine();
+
+        return headerName != null;
     }
 
     private void handleRootFieldException(Field rootField, int headerIndex, BufferedWriter bufferedWriter, Object obj){
@@ -128,33 +143,46 @@ public class EppFileWriter<T> implements FileWriter<T>{
 
     private void handleRootField(Field rootField, int headerIndex, BufferedWriter bufferedWriter, Object obj) throws IllegalAccessException, IOException {
 
-        String headerName = headersNames.get(headerIndex);
-
         rootField.setAccessible(true);
 
         ParameterizedType parameterizedFieldType = (ParameterizedType) rootField.getGenericType();
         Class<?> actualFieldParameter = (Class<?>) parameterizedFieldType.getActualTypeArguments()[0];
 
-        Collection<?> objCollection = (Collection<?>) rootField.get(obj);
+        Object fieldObject = rootField.get(obj);
 
-        for(Object childObj : objCollection){
+        if(fieldObject instanceof Collection<?> objCollection){
 
-            Field[] childFields = actualFieldParameter.getDeclaredFields();
+            for(Object childObj : objCollection){
 
-            if(writeIndexes.containsKey(headerName)){
-
-                drawSelectedChildFields(headerName, headerIndex, childFields, bufferedWriter, childObj);
+                handleObjFields(headerIndex, childObj, actualFieldParameter, bufferedWriter);
             }
-            else{
-
-                drawAllChildFields(childFields, bufferedWriter, childObj);
-            }
-
-            bufferedWriter.newLine();
+        }
+        else{
+            handleObjFields(headerIndex, fieldObject, actualFieldParameter, bufferedWriter);
         }
     }
 
-    private void drawSelectedChildFields(String headerName, int headerIndex, Field[] childFields, BufferedWriter bufferedWriter, Object childObj) throws IOException, IllegalAccessException {
+    private void handleObjFields(int headerIndex, Object obj, Class<?> actualObjParameter, BufferedWriter bufferedWriter) throws IOException, IllegalAccessException {
+
+        String headerName = headersNames.get(headerIndex);
+
+        Field[] childFields = actualObjParameter.getDeclaredFields();
+
+        if(writeIndexes.containsKey(headerName)){
+
+            drawSelectedChildFields(headerIndex, childFields, bufferedWriter, obj);
+        }
+        else{
+
+            drawAllChildFields(childFields, bufferedWriter, obj);
+        }
+
+        bufferedWriter.newLine();
+    }
+
+    private void drawSelectedChildFields(int headerIndex, Field[] childFields, BufferedWriter bufferedWriter, Object childObj) throws IOException, IllegalAccessException {
+
+        String headerName = headersNames.get(headerIndex);
 
         Integer[] writeIndexesForContent = writeIndexes.get(headerName);
 
@@ -212,6 +240,23 @@ public class EppFileWriter<T> implements FileWriter<T>{
 
 
         return null;
+    }
+
+    public void append(EppFileWriter<?> otherFileWriter, int toWriteHeadersIndexesOffset){
+
+        List<Integer> toWriteHeadersIndexes = otherFileWriter.toWriteHeadersIndexes.stream()
+            .map(toWriteIndex -> toWriteIndex + toWriteHeadersIndexesOffset)
+            .toList();
+
+        headersNames.addAll(otherFileWriter.headersNames);
+        toWriteHeadersIndexes.addAll(toWriteHeadersIndexes);
+        rowsLengths.addAll(otherFileWriter.rowsLengths);
+        writeIndexes.putAll(otherFileWriter.writeIndexes);
+    }
+
+    public void append(List<String> headersNames){
+
+        this.headersNames.addAll(headersNames);
     }
 
     public static void main(String[] args) throws URISyntaxException, IOException {

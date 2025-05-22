@@ -6,7 +6,8 @@ import jakarta.xml.bind.annotation.XmlEnumValue;
 @XmlEnum
 public enum DocType {
 
-    @XmlEnumValue("Invoice") INVOICE("Invoice");
+    @XmlEnumValue("Invoice") INVOICE("Invoice"),
+    @XmlEnumValue("PA") RECEIPT("PA");
 
     private String name;
 
