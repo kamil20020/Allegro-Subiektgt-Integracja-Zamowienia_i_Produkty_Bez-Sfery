@@ -27,6 +27,6 @@ class SettlementFactoryTest {
         SettlementTerms gotSettlementTerms = gotSettlement.getSettlementTerms();
 
         assertEquals(dueDate, gotSettlementTerms.getValue());
-        assertEquals(Code.Code00I, gotSettlementTerms.getCode());
+        assertEquals(Code.Code14I, gotSettlementTerms.getCode());
     }
 }

@@ -18,7 +18,7 @@ public enum Code {
     @XmlEnumValue("00I") Code00I("00I"),
     MAG("MAG");
 
-    private String name;
+    private final String name;
 
     Code(String name){
 

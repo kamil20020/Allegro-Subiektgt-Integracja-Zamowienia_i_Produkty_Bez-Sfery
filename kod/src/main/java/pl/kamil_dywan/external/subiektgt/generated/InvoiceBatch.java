@@ -48,6 +48,6 @@ public class InvoiceBatch {
     protected List<Invoice> invoices;
 
     @XmlElement(name = "BatchTrailer", required = true)
-    protected BatchTrailer batchTrailer;
+    protected InvoiceBatchTrailer batchTrailer;
 
 }

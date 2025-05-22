@@ -5,11 +5,11 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import pl.kamil_dywan.external.allegro.generated.order.Order;
 import pl.kamil_dywan.external.subiektgt.generated.InvoiceBatch;
-import pl.kamil_dywan.external.subiektgt.generated.BatchTrailer;
+import pl.kamil_dywan.external.subiektgt.generated.InvoiceBatchTrailer;
 import pl.kamil_dywan.external.subiektgt.generated.Invoice;
 import pl.kamil_dywan.external.subiektgt.own.Code;
 import pl.kamil_dywan.external.subiektgt.own.invoice.DocType;
-import pl.kamil_dywan.factory.BatchTrailerFactory;
+import pl.kamil_dywan.factory.InvoiceBatchTrailerFactory;
 import pl.kamil_dywan.mapper.invoice.InvoiceBatchMapper;
 import pl.kamil_dywan.mapper.invoice.InvoiceMapper;
 
@@ -37,17 +37,17 @@ class InvoiceInvoiceBatchMapperTest {
 
         List<Invoice> expectedInvoices = List.of(expectedInvoice1, expectedInvoice2);
 
-        BatchTrailer expectedBatchTrailer = new BatchTrailer();
+        InvoiceBatchTrailer expectedBatchTrailer = new InvoiceBatchTrailer();
 
         //when
         try(
-            MockedStatic<InvoiceMapper> mockedInvoiceMapper = Mockito.mockStatic(InvoiceMapper.class);
-            MockedStatic<BatchTrailerFactory> mockedBatchTrailerFactory = Mockito.mockStatic(BatchTrailerFactory.class);
+                MockedStatic<InvoiceMapper> mockedInvoiceMapper = Mockito.mockStatic(InvoiceMapper.class);
+                MockedStatic<InvoiceBatchTrailerFactory> mockedBatchTrailerFactory = Mockito.mockStatic(InvoiceBatchTrailerFactory.class);
         ){
             mockedInvoiceMapper.when(() -> InvoiceMapper.map(eq(allegroOrder1))).thenReturn(expectedInvoice1);
             mockedInvoiceMapper.when(() -> InvoiceMapper.map(eq(allegroOrder2))).thenReturn(expectedInvoice2);
 
-            mockedBatchTrailerFactory.when(() -> BatchTrailerFactory.create(any())).thenReturn(expectedBatchTrailer);
+            mockedBatchTrailerFactory.when(() -> InvoiceBatchTrailerFactory.create(any())).thenReturn(expectedBatchTrailer);
 
             InvoiceBatch gotBatch = InvoiceBatchMapper.map(supplierName, allegroOrders);
 
@@ -66,7 +66,7 @@ class InvoiceInvoiceBatchMapperTest {
             mockedInvoiceMapper.verify(() -> InvoiceMapper.map(allegroOrder1), Mockito.times(2));
             mockedInvoiceMapper.verify(() -> InvoiceMapper.map(allegroOrder2), Mockito.times(2));
 
-            mockedBatchTrailerFactory.verify(() -> BatchTrailerFactory.create(Code.PLN));
+            mockedBatchTrailerFactory.verify(() -> InvoiceBatchTrailerFactory.create(Code.PLN));
         }
     }
 }

@@ -13,7 +13,7 @@ public interface SettlementFactory {
         return new Settlement(
             SettlementTerms.builder()
                 .value(dueDate)
-                .code(Code.Code00I)
+                .code(Code.Code14I)
                 .build()
         );
     }

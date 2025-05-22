@@ -1,7 +1,7 @@
 package pl.kamil_dywan.factory;
 
 import org.junit.jupiter.api.Test;
-import pl.kamil_dywan.external.subiektgt.generated.BatchTrailer;
+import pl.kamil_dywan.external.subiektgt.generated.InvoiceBatchTrailer;
 import pl.kamil_dywan.external.subiektgt.generated.Currency;
 import pl.kamil_dywan.external.subiektgt.own.Code;
 
@@ -16,7 +16,7 @@ class InvoiceBatchTrailerFactoryTest {
         Code currencyCode = Code.PLN;
 
         //when
-        BatchTrailer batchTrailer = BatchTrailerFactory.create(currencyCode);
+        InvoiceBatchTrailer batchTrailer = InvoiceBatchTrailerFactory.create(currencyCode);
 
         //then
         assertNotNull(batchTrailer);

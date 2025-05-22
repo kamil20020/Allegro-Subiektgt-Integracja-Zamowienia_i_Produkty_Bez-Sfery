@@ -28,13 +28,14 @@ class AllegroProductOfferFactoryTest {
         TaxSettings taxSettings = deliveryProductOffer.getTaxSettings();
 
         assertNotNull(sellingMode);
-        assertNotNull(taxSettings);
         assertEquals(1L, deliveryProductOffer.getId());
         assertEquals("Dostawa", deliveryProductOffer.getName());
 
+        assertNotNull(sellingMode);
         assertEquals(BigDecimal.ZERO, sellingMode.getPrice().getAmount());
         assertEquals(Currency.PLN, sellingMode.getPrice().getCurrency());
 
+        assertNotNull(taxSettings);
         assertNotNull(taxSettings.getTaxesFoCountries());
         assertEquals(1, taxSettings.getTaxesFoCountries().size());
         assertEquals(BigDecimal.valueOf(23), taxSettings.getTaxesFoCountries().get(0).getTaxRate());

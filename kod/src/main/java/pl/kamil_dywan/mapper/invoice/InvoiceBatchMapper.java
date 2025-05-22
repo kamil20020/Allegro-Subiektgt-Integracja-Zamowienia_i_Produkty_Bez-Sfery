@@ -1,9 +1,9 @@
 package pl.kamil_dywan.mapper.invoice;
 
 import pl.kamil_dywan.external.allegro.generated.order.Order;
-import pl.kamil_dywan.factory.BatchTrailerFactory;
+import pl.kamil_dywan.factory.InvoiceBatchTrailerFactory;
 import pl.kamil_dywan.external.subiektgt.generated.InvoiceBatch;
-import pl.kamil_dywan.external.subiektgt.generated.BatchTrailer;
+import pl.kamil_dywan.external.subiektgt.generated.InvoiceBatchTrailer;
 import pl.kamil_dywan.external.subiektgt.generated.Invoice;
 import pl.kamil_dywan.external.subiektgt.own.Code;
 import pl.kamil_dywan.external.subiektgt.own.invoice.DocType;
@@ -20,7 +20,7 @@ public interface InvoiceBatchMapper {
             .map(InvoiceMapper::map)
             .collect(Collectors.toList());
 
-        BatchTrailer batchTrailer = BatchTrailerFactory.create(Code.PLN);
+        InvoiceBatchTrailer batchTrailer = InvoiceBatchTrailerFactory.create(Code.PLN);
 
         return InvoiceBatch.builder()
             .date(LocalDate.now())

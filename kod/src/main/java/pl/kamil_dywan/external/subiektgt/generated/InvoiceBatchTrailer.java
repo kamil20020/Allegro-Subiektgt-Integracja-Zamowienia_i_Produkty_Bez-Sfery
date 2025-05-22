@@ -20,17 +20,12 @@ import pl.kamil_dywan.external.subiektgt.own.Code;
     }
 )
 @XmlRootElement(name = "BatchTrailer")
-public class BatchTrailer {
+public class InvoiceBatchTrailer {
 
     @XmlElement(name = "ItemCurrency", required = true)
     protected CurrencyHolder itemCurrency;
 
     @XmlElement(name = "Checksum", required = true)
     protected String checksum = null;
-
-    public BatchTrailer(Code currencyCode){
-
-        this.itemCurrency = new CurrencyHolder(new Currency(currencyCode));
-    }
 
 }
