@@ -35,9 +35,9 @@ public class App {
         InvoiceService invoiceService = new InvoiceService();
         ReceiptService receiptService = new ReceiptService();
 
-//        new MainGui(authService, productService, orderService, invoiceService);
+        new MainGui(authService, productService, orderService, invoiceService, receiptService);
 
-        receiptService.writeReceiptsToFile(null);
+//        receiptService.writeReceiptsToFile(null);
     }
 
 }

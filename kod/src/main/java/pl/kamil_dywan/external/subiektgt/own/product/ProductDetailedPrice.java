@@ -3,12 +3,10 @@ package pl.kamil_dywan.external.subiektgt.own.product;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import pl.kamil_dywan.external.subiektgt.own.PriceCategory;
 import pl.kamil_dywan.file.EppSerializable;
 
 import java.math.BigDecimal;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 @Getter
 @Builder
@@ -16,7 +14,7 @@ import java.util.Map;
 public class ProductDetailedPrice extends EppSerializable{
 
     private String productId;
-    private ProductPriceGroup group;
+    private PriceCategory group;
     private BigDecimal unitPriceWithoutTax;
     private BigDecimal unitPriceWithTax;
     private BigDecimal markup;
@@ -28,7 +26,7 @@ public class ProductDetailedPrice extends EppSerializable{
         super(args);
 
         productId = args[0];
-        group = ProductPriceGroup.valueOf(args[1]);
+        group = PriceCategory.valueOf(args[1]);
         unitPriceWithoutTax = new BigDecimal(args[2]);
         unitPriceWithTax = new BigDecimal(args[3]);
         markup = new BigDecimal(args[4]);
@@ -38,7 +36,7 @@ public class ProductDetailedPrice extends EppSerializable{
 
     public ProductDetailedPrice(
         String productId,
-        ProductPriceGroup group,
+        PriceCategory group,
         BigDecimal unitPriceWithoutTax,
         BigDecimal unitPriceWithTax,
         BigDecimal markup,

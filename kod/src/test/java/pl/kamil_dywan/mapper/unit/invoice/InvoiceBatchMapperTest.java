@@ -8,7 +8,7 @@ import pl.kamil_dywan.external.subiektgt.generated.InvoiceBatch;
 import pl.kamil_dywan.external.subiektgt.generated.InvoiceBatchTrailer;
 import pl.kamil_dywan.external.subiektgt.generated.Invoice;
 import pl.kamil_dywan.external.subiektgt.own.Code;
-import pl.kamil_dywan.external.subiektgt.own.invoice.DocType;
+import pl.kamil_dywan.external.subiektgt.own.document.DocType;
 import pl.kamil_dywan.factory.InvoiceBatchTrailerFactory;
 import pl.kamil_dywan.mapper.invoice.InvoiceBatchMapper;
 import pl.kamil_dywan.mapper.invoice.InvoiceMapper;

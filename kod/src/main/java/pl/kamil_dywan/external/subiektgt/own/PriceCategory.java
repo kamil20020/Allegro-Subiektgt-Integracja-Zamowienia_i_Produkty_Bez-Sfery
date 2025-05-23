@@ -1,6 +1,6 @@
-package pl.kamil_dywan.external.subiektgt.own.product;
+package pl.kamil_dywan.external.subiektgt.own;
 
-public enum ProductPriceGroup {
+public enum PriceCategory {
 
     RETAIL("Detaliczna"),
     WHOLESALE("Hurtowa"),
@@ -8,7 +8,7 @@ public enum ProductPriceGroup {
 
     private String name;
 
-    private ProductPriceGroup(String name){
+    private PriceCategory(String name){
 
         this.name = name;
     }

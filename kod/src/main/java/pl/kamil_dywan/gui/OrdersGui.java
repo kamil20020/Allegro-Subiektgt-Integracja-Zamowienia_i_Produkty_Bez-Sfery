@@ -10,6 +10,7 @@ import pl.kamil_dywan.external.allegro.generated.order.OrderResponse;
 import pl.kamil_dywan.external.allegro.generated.order.Summary;
 import pl.kamil_dywan.service.InvoiceService;
 import pl.kamil_dywan.service.OrderService;
+import pl.kamil_dywan.service.ReceiptService;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -37,18 +38,21 @@ public class OrdersGui implements ChangeableGui {
 
     private final OrderService orderService;
     private final InvoiceService invoiceService;
+    private final ReceiptService receiptService;
 
     private final Runnable handleLogout;
 
-    public OrdersGui(OrderService orderService, InvoiceService invoiceService, Runnable handleLogout) {
+    public OrdersGui(OrderService orderService, InvoiceService invoiceService, ReceiptService receiptService, Runnable handleLogout) {
 
         this.orderService = orderService;
         this.invoiceService = invoiceService;
+        this.receiptService = receiptService;
         this.handleLogout = handleLogout;
 
         $$$setupUI$$$();
 
         saveInvoicesButton.addActionListener(e -> saveInvoicesToFile());
+        saveReceiptsButton.addActionListener(e -> saveReceiptsToFile());
     }
 
     private PaginationTableGui.PaginationTableData loadData(int offset, int limit) {
@@ -150,6 +154,42 @@ public class OrdersGui implements ChangeableGui {
                 "Zapisano faktury do pliku " + savedFilePath,
                 "Powiadomienie",
                 JOptionPane.INFORMATION_MESSAGE
+        );
+    }
+
+    private void saveReceiptsToFile() {
+
+        String savedFilePath = FileDialogHandler.getSaveFileDialogSelectedPath(
+                "Zapisywanie paragonów do pliku",
+                "paragony.epp",
+                ".epp"
+        );
+
+        if (savedFilePath.isBlank()) {
+            return;
+        }
+
+        try {
+
+            receiptService.writeReceiptsToFile(ordersWithReceipts, savedFilePath);
+        }
+        catch (IllegalStateException e) {
+
+            JOptionPane.showMessageDialog(
+                mainPanel,
+                "Nie udało się zapisać paragonów do pliku",
+                "Powiadomienie o błędzie",
+                JOptionPane.ERROR_MESSAGE
+            );
+
+            return;
+        }
+
+        JOptionPane.showMessageDialog(
+            mainPanel,
+            "Zapisano paragony do pliku " + savedFilePath,
+            "Powiadomienie",
+            JOptionPane.INFORMATION_MESSAGE
         );
     }
 

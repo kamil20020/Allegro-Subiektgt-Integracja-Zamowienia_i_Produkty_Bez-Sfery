@@ -1,7 +1,7 @@
 package pl.kamil_dywan.factory;
 
 import pl.kamil_dywan.external.subiektgt.own.product.ProductDetailedPrice;
-import pl.kamil_dywan.external.subiektgt.own.product.ProductPriceGroup;
+import pl.kamil_dywan.external.subiektgt.own.PriceCategory;
 
 import java.math.BigDecimal;
 
@@ -11,7 +11,7 @@ public interface ProductDetailedPriceFactory {
 
         return ProductDetailedPrice.builder()
             .productId(productId)
-            .group(ProductPriceGroup.RETAIL)
+            .group(PriceCategory.RETAIL)
             .unitPriceWithoutTax(unitPriceWithoutTax)
             .unitPriceWithTax(unitPriceWithTax)
             .markup(BigDecimal.ZERO)

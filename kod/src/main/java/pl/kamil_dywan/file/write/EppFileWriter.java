@@ -262,9 +262,9 @@ public class EppFileWriter<T> implements FileWriter<T>{
         this.writeIndexes.putAll(otherFileWriter.writeIndexes);
     }
 
-    public void append(List<String> headersNames){
+    public void appendHeaderNames(EppFileWriter<?> otherFileWriter){
 
-        this.headersNames.addAll(headersNames);
+        this.headersNames.addAll(otherFileWriter.headersNames);
     }
 
     public static void main(String[] args) throws URISyntaxException, IOException {

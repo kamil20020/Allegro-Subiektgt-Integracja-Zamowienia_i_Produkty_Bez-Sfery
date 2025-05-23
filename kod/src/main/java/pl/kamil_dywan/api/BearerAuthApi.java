@@ -1,5 +1,7 @@
 package pl.kamil_dywan.api;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.kamil_dywan.exception.UnloggedException;
 import pl.kamil_dywan.external.allegro.generated.auth.AccessTokenResponse;
 import pl.kamil_dywan.service.SecureStorage;
@@ -19,6 +21,8 @@ public class BearerAuthApi extends Api{
 
     private static final String ACCESS_TOKEN_CREDENTIALS_KEY_POSTFIX = "access_token";
     private static final String REFRESH_TOKEN_CREDENTIALS_KEY_POSTFIX = "refresh_token";
+
+    private static final Logger log = LoggerFactory.getLogger(Api.class);
 
     public BearerAuthApi(String subDomain, String laterPrefix){
 
@@ -62,10 +66,20 @@ public class BearerAuthApi extends Api{
 
         if (gotResponse.statusCode() == 401) {
 
+            log.info("401 - Expired access token");
+
+            log.info("Refreshing access token");
+
             if(!handleRefreshAccessToken()){
+
+                log.info("401 - Expired refresh token");
+
                 throw new UnloggedException();
             }
             else{
+
+                log.info("Refreshed access token");
+
                 gotResponse = super.send(httpRequestBuilder);
             }
         }

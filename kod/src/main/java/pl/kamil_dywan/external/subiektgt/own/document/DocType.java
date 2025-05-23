@@ -1,4 +1,4 @@
-package pl.kamil_dywan.external.subiektgt.own.invoice;
+package pl.kamil_dywan.external.subiektgt.own.document;
 
 import jakarta.xml.bind.annotation.XmlEnum;
 import jakarta.xml.bind.annotation.XmlEnumValue;
@@ -7,7 +7,7 @@ import jakarta.xml.bind.annotation.XmlEnumValue;
 public enum DocType {
 
     @XmlEnumValue("Invoice") INVOICE("Invoice"),
-    @XmlEnumValue("PA") RECEIPT("PA");
+    RECEIPT("\"PA\"");
 
     private String name;
 

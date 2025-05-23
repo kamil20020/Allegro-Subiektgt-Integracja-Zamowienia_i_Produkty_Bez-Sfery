@@ -2,7 +2,7 @@ package pl.kamil_dywan.factory;
 
 import org.junit.jupiter.api.Test;
 import pl.kamil_dywan.external.subiektgt.own.product.ProductDetailedPrice;
-import pl.kamil_dywan.external.subiektgt.own.product.ProductPriceGroup;
+import pl.kamil_dywan.external.subiektgt.own.PriceCategory;
 
 import java.math.BigDecimal;
 
@@ -28,7 +28,7 @@ class ProductDetailedPriceFactoryTest {
         //then
         assertNotNull(gotProductDetailedPrice);
         assertEquals(expectedProductId.toString(), gotProductDetailedPrice.getProductId());
-        assertEquals(ProductPriceGroup.RETAIL, gotProductDetailedPrice.getGroup());
+        assertEquals(PriceCategory.RETAIL, gotProductDetailedPrice.getGroup());
         assertEquals(unitPriceWithoutTax, gotProductDetailedPrice.getUnitPriceWithoutTax());
         assertEquals(unitPriceWithTax, gotProductDetailedPrice.getUnitPriceWithTax());
         assertEquals(BigDecimal.ZERO, gotProductDetailedPrice.getMarkup());
