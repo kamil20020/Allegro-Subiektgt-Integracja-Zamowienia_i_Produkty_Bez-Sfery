@@ -22,16 +22,21 @@ import java.util.List;
 
 public class ReceiptService {
 
-    private static final List<String> lastHeaders;
+    private static final List<String> lastHeaders = List.of(
+        "DATYZAKONCZENIA", "NUMERYIDENTYFIKACYJNENABYWCOW", "PRZYCZYNYKOREKT", "DOKUMENTYFISKALNEVAT",
+        "OPLATYDODATKOWE", "WYMAGALNOSCMPP", "OPLATACUKROWA", "DOKUMENTYZNACZNIKIJPKVAT",
+        "INFORMACJEWSTO", "DATYUJECIAKOREKT"
+    );
 
-    static {
+    private static final Integer[] receiptHeaderWriteIndexes = new Integer[]{
+        0, 1, 2, 3, 6, 18, 19, 21, 22, 24,25, 26, 27, 28, 29, 30,
+        32, 34, 35, 36, 37, 38, 39, 40, 44, 45, 46, 47, 52, 53,
+        54, 56, 58, 61
+    };
 
-        lastHeaders = List.of(
-            "DATYZAKONCZENIA", "NUMERYIDENTYFIKACYJNENABYWCOW", "PRZYCZYNYKOREKT", "DOKUMENTYFISKALNEVAT",
-            "OPLATYDODATKOWE", "WYMAGALNOSCMPP", "OPLATACUKROWA", "DOKUMENTYZNACZNIKIJPKVAT",
-            "INFORMACJEWSTO", "DATYUJECIAKOREKT"
-        );
-    }
+    private static final Integer[] receiptContentWriteIndexes = new Integer[]{
+        0, 1, 2, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19
+    };
 
     private static final Integer RECEIPT_HEADER_REAL_LENGTH = 62;
     private static final Integer RECEIPT_CONTENT_REAL_LENGTH = 22;
@@ -43,15 +48,8 @@ public class ReceiptService {
         List<Integer> rowsLengths = new ArrayList<>();
         LinkedHashMap<String, Integer[]> writeIndexes = new LinkedHashMap<>();
 
-        writeIndexes.put(
-            EppGroupSpecialType.EMPTY_CONTENT.toString(),
-            new Integer[]{0, 1, 2, 3, 6, 18, 19, 21, 22, 24, 25, 26, 27, 28, 29, 30, 32, 34, 35, 36, 37, 38, 39, 40, 44, 45, 46, 47, 52, 53, 54, 56, 58, 61}
-        );
-
-        writeIndexes.put(
-            EppGroupSpecialType.EMPTY_HEADER.toString(),
-            new Integer[]{0, 1, 2, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19}
-        );
+        writeIndexes.put(EppGroupSpecialType.EMPTY_CONTENT.toString(), receiptHeaderWriteIndexes);
+        writeIndexes.put(EppGroupSpecialType.EMPTY_HEADER.toString(), receiptContentWriteIndexes);
 
         for(int i = 0; i < numberOfReceipts; i += 2){
 
