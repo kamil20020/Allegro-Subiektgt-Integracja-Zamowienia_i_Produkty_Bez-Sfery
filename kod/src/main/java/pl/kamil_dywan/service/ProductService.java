@@ -27,7 +27,7 @@ public class ProductService {
 
     private final ProductApi productApi;
 
-    private static final FileWriter<ProductRelatedData> subiektProductFileWriter;
+    private static final FileWriter<Object> subiektProductFileWriter;
     private static final ExecutorService productsExecutorService = Executors.newFixedThreadPool(8);
 
     static {
@@ -104,27 +104,35 @@ public class ProductService {
         return Api.extractBody(gotResponse, ProductOffer.class);
     }
 
-    public void writeDeliveryToFile(String filePath) throws IllegalStateException{
+    private List<Object> getEmptyProductRelatedDataForEpp() {
 
-        ProductOffer deliveryProductOffer = AllegroProductOfferFactory.createDeliveryProductOffer();
         List<Product> gotConvertedSubiektProducts = new ArrayList<>();
         List<ProductDetailedPrice> productsDetailedPrices = new ArrayList<>();
 
-        ProductRelatedData productRelatedData = new ProductRelatedData(gotConvertedSubiektProducts, productsDetailedPrices);
+        List<Object> productRelatedData = new ArrayList<>();
+
+        productRelatedData.add(gotConvertedSubiektProducts);
+        productRelatedData.add(productsDetailedPrices);
+
+        return productRelatedData;
+    }
+
+    public void writeDeliveryToFile(String filePath) throws IllegalStateException{
+
+        ProductOffer deliveryProductOffer = AllegroProductOfferFactory.createDeliveryProductOffer();
+
+        List<Object> productRelatedData = getEmptyProductRelatedDataForEpp();
 
         appendProduct(productRelatedData, deliveryProductOffer, ProductType.SERVICES);
 
-        gotConvertedSubiektProducts.get(0).setId("DOSTAWA123");
+        ((List<Product>) productRelatedData.get(0)).get(0).setId("DOSTAWA123");
 
         writeProductsToFile(productRelatedData, filePath);
     }
 
     public void writeProductsToFile(List<ProductOffer> productsOffers, String filePath, ProductType productsTypes) throws IllegalStateException{
 
-        List<Product> gotConvertedSubiektProducts = new ArrayList<>();
-        List<ProductDetailedPrice> productsDetailedPrices = new ArrayList<>();
-
-        ProductRelatedData productRelatedData = new ProductRelatedData(gotConvertedSubiektProducts, productsDetailedPrices);
+        List<Object> productRelatedData = getEmptyProductRelatedDataForEpp();
 
         for(ProductOffer productOffer : productsOffers){
 
@@ -134,7 +142,7 @@ public class ProductService {
         writeProductsToFile(productRelatedData, filePath);
     }
 
-    private void appendProduct(ProductRelatedData productRelatedData, ProductOffer productOffer, ProductType productType){
+    private void appendProduct(List<Object> productRelatedData, ProductOffer productOffer, ProductType productType){
 
         Product gotSubiektProduct = ProductOfferMapper.map(productOffer, productType);
 
@@ -147,11 +155,11 @@ public class ProductService {
             unitPriceWithTax
         );
 
-        productRelatedData.products().add(gotSubiektProduct);
-        productRelatedData.productPriceMappings().add(productDetailedRetailPrice);
+        ((List<Product>) productRelatedData.get(0)).add(gotSubiektProduct);
+        ((List<ProductDetailedPrice>) productRelatedData.get(1)).add(productDetailedRetailPrice);
     }
 
-    private static void writeProductsToFile(ProductRelatedData productRelatedData, String filePath){
+    private static void writeProductsToFile(List<Object> productRelatedData, String filePath){
 
         try {
             subiektProductFileWriter.save(filePath, productRelatedData);

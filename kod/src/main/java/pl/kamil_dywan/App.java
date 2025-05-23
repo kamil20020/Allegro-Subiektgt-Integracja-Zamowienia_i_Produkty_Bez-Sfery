@@ -8,6 +8,8 @@ import pl.kamil_dywan.api.allegro.ProductApi;
 import pl.kamil_dywan.gui.MainGui;
 import pl.kamil_dywan.service.*;
 
+import java.util.ArrayList;
+
 /**
  * Hello world!
  */
@@ -31,8 +33,11 @@ public class App {
         OrderService orderService = new OrderService(orderApi);
         ProductService productService = new ProductService(productApi);
         InvoiceService invoiceService = new InvoiceService();
+        ReceiptService receiptService = new ReceiptService();
 
-        new MainGui(authService, productService, orderService, invoiceService);
+//        new MainGui(authService, productService, orderService, invoiceService);
+
+        receiptService.writeReceiptsToFile(null);
     }
 
 }
