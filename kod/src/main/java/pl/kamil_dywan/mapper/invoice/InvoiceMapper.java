@@ -6,6 +6,7 @@ import pl.kamil_dywan.external.allegro.generated.order.Order;
 import pl.kamil_dywan.external.allegro.own.order.OrderMoneyStats;
 import pl.kamil_dywan.external.allegro.own.order.OrderTaxSummary;
 import pl.kamil_dywan.external.allegro.own.order.OrderTotalMoneyStats;
+import pl.kamil_dywan.external.subiektgt.generated.settlement.Settlement;
 import pl.kamil_dywan.factory.InvoiceHeadFactory;
 import pl.kamil_dywan.external.subiektgt.generated.Invoice;
 import pl.kamil_dywan.external.subiektgt.generated.InvoiceTotal;
@@ -15,6 +16,7 @@ import pl.kamil_dywan.external.subiektgt.generated.invoice_line.InvoiceLine;
 import pl.kamil_dywan.external.subiektgt.own.Code;
 import pl.kamil_dywan.external.allegro.own.order.OrderItemMoneyStats;
 import pl.kamil_dywan.factory.InvoiceReferencesFactory;
+import pl.kamil_dywan.factory.SettlementFactory;
 import pl.kamil_dywan.mapper.TaxSubTotalMapper;
 
 import java.time.LocalDate;
@@ -45,6 +47,8 @@ public interface InvoiceMapper {
             .map(TaxSubTotalMapper::map)
             .collect(Collectors.toList());
 
+        Settlement settlement = SettlementFactory.create(invoiceDate);
+
         InvoiceTotal invoiceTotal = InvoiceTotalMapper.map(orderTotalMoneyStats);
 
         return Invoice.builder()
@@ -52,12 +56,12 @@ public interface InvoiceMapper {
             .invoiceDate(invoiceDate)
             .invoiceReferences(InvoiceReferencesFactory.create())
             .cityOfIssue(invoiceCity)
-            .taxPointDate(allegroInvoice.getDueDate())
+            .taxPointDate(invoiceDate)
             .buyer(buyer)
             .invoiceLines(subiektInvoiceLines)
             .narrative("")
             .specialInstructions("dokument liczony wg cen netto")
-            .settlement(null)
+            .settlement(settlement)
             .taxSubTotals(taxSubTotals)
             .invoiceTotal(invoiceTotal)
             .build();

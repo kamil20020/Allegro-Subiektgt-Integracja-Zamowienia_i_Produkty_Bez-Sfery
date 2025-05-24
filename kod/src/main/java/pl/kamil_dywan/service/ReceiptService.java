@@ -51,7 +51,7 @@ public class ReceiptService {
         writeIndexes.put(EppGroupSpecialType.EMPTY_CONTENT.toString(), receiptHeaderWriteIndexes);
         writeIndexes.put(EppGroupSpecialType.EMPTY_HEADER.toString(), receiptContentWriteIndexes);
 
-        for(int i = 0; i < numberOfReceipts; i += 2){
+        for(int i = 0; i < numberOfReceipts * 2; i += 2){
 
             headersNames.add(EppGroupSpecialType.EMPTY_CONTENT.toString());
             headersNames.add(EppGroupSpecialType.EMPTY_HEADER.toString());

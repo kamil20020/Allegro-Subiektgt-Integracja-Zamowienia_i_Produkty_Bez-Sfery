@@ -54,10 +54,4 @@ public class InvoiceLine {
     @XmlElement(name = "InvoiceLineInformation", required = true)
     protected String invoiceLineInformation;
 
-    public void scale(int scale, RoundingMode roundingMode){
-
-        unitPrice.unitPrice = unitPrice.unitPrice.setScale(scale, roundingMode);
-        lineTax.taxValue = lineTax.taxValue.setScale(scale, roundingMode);
-        lineTotal = lineTotal.setScale(scale, roundingMode);
-    }
 }

@@ -210,7 +210,7 @@ class InvoiceMapperTest {
             assertEquals(allegroPayment.getFinishedAt().toLocalDate(), gotInvoice.getInvoiceDate());
             assertEquals(expectedInvoiceReferences, gotInvoice.getInvoiceReferences());
             assertEquals(allegroInvoiceAddress.getCity(), gotInvoice.getCityOfIssue());
-            assertEquals(allegroInvoice.getDueDate(), gotInvoice.getTaxPointDate());
+            assertEquals(allegroPayment.getFinishedAt().toLocalDate(), gotInvoice.getTaxPointDate());
             assertEquals(expectedBuyer, gotInvoice.getBuyer());
 
             for(InvoiceLine invoiceLine : gotInvoice.getInvoiceLines()){

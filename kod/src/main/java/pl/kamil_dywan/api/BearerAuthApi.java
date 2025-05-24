@@ -80,6 +80,9 @@ public class BearerAuthApi extends Api{
 
                 log.info("Refreshed access token");
 
+                httpRequestBuilder
+                    .header("Authorization", bearerAuthContent);
+
                 gotResponse = super.send(httpRequestBuilder);
             }
         }

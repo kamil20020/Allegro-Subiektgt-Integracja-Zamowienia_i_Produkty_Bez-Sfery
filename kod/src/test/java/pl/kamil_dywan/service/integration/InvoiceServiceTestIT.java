@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InvoiceServiceTestIT {
 
-    FileReader<OrderResponse> allegroOrderReader = new JSONFileReader<>(OrderResponse.class);
+    private static final FileReader<OrderResponse> allegroOrderReader = new JSONFileReader<>(OrderResponse.class);
 
     private static final String validOrdersFilePath = "data/subiekt/order-for-allegro-minimalized.xml";
 

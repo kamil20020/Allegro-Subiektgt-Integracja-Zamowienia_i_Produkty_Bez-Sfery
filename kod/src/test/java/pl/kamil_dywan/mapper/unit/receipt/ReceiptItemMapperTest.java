@@ -1,10 +1,11 @@
-package pl.kamil_dywan.mapper.receipt;
+package pl.kamil_dywan.mapper.unit.receipt;
 
 import org.junit.jupiter.api.Test;
 import pl.kamil_dywan.external.allegro.generated.order_item.Offer;
 import pl.kamil_dywan.external.allegro.generated.order_item.OrderItem;
 import pl.kamil_dywan.external.allegro.own.order.OrderItemMoneyStats;
 import pl.kamil_dywan.external.subiektgt.own.receipt.ReceiptItem;
+import pl.kamil_dywan.mapper.receipt.ReceiptItemMapper;
 
 import java.math.BigDecimal;
 import java.util.UUID;

@@ -1,8 +1,9 @@
-package pl.kamil_dywan.mapper.receipt;
+package pl.kamil_dywan.mapper.unit.receipt;
 
 import org.junit.jupiter.api.Test;
 import pl.kamil_dywan.external.allegro.own.order.OrderTotalMoneyStats;
 import pl.kamil_dywan.external.subiektgt.own.receipt.ReceiptHeader;
+import pl.kamil_dywan.mapper.receipt.ReceiptHeaderMapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
