@@ -74,10 +74,11 @@ public class AuthService {
         }
 
         byte[] base64EncryptedAes = encryptedAllegroLoginDetails.getKey().getBytes();
+        byte[] decodedEncryptedAes = Base64.getDecoder().decode(base64EncryptedAes);
         String expectedAesHash = encryptedAllegroLoginDetails.getKeyHash();
         String base64EncryptedSecret = encryptedAllegroLoginDetails.getSecret();
 
-        byte[] gotDecryptedAes = decryptAesWithUserPassword(gotPassword, base64EncryptedAes);
+        byte[] gotDecryptedAes = decryptAesWithUserPassword(gotPassword, decodedEncryptedAes);
         String gotDecryptedAesHash = hashValue(gotDecryptedAes);
 
         if(!gotDecryptedAesHash.equals(expectedAesHash)){
