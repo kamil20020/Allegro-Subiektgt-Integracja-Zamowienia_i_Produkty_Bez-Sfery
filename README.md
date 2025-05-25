@@ -1,16 +1,16 @@
-# Allegro-Subiektgt-Orders
+# Integracja Allegro i SubiektGT - zamówienia, faktury sprzedaży, paragony i produkty
 
-Repozytorium dotyczy aplikacji desktopowej umożliwiającej prostą integrację Allegro z Subiekt GT. Integracja dotyczy zamówień po stronie Allegro i faktur sprzedaży po stronie Subiekt GT oraz analogicznie ofert użytkownika - towarów. Ze względów bezpieczeństwa aplikacja ta operuje na środowisku testowym `Allegro Sandbox`.
+Repozytorium dotyczy aplikacji desktopowej umożliwiającej prostą integrację Allegro z Subiekt GT. Integracja dotyczy zamówień po stronie Allegro oraz paragonów i faktur sprzedaży po stronie Subiekt GT oraz analogicznie ofert użytkownika - towarów. Ze względów bezpieczeństwa aplikacja ta operuje na środowisku testowym `Allegro Sandbox`, ale również mam wersję aplikacji przeznaczoną dla standardowego środowiska Allegro (produkcyjnego), jednak jest ona niepubliczna.
 
 ## Krótki opis działania aplikacji
 
 Aplikacja łączy się z Allegro w imieniu konta Allegro posiadanego przez użytkownika aplikacji integrator. Jednak aplikacja będzie połączona z kontem z Allegro jedynie wtedy, gdy użytkownik na to zezwoli. Dodatkowo użytkownik będzie mógł się zapoznać z uprawnieniami, jakie uzyska aplikacja integrator.
 
-Użytkownik może wybrać zakresy danych, które chce załadować do Subiekt GT. Następnie dane te zostaną zapisane w plikach o odpowiednich formatach akceptowanych przez Subiekt GT (.epp dla towarów i usług oraz xml dla zamówień). W Subiekt GT można następnie importować dane poprzez przykładowo skorzystanie z opcji `Operacje -> Dodaj na podstawie` po wcześniejszym przejściu do odpowiedniej sekcji np. z towarami.
+Użytkownik może w aplikacji wybrać zakresy danych, które chce załadować do Subiekt GT. Następnie dane te zostaną zapisane w plikach o odpowiednich formatach akceptowanych przez Subiekt GT (.epp dla paragonów, towarów i usług oraz xml dla faktur sprzedaży). W Subiekt GT można następnie importować dane poprzez przykładowo skorzystanie z opcji `Operacje -> Dodaj na podstawie` po wcześniejszym przejściu do odpowiedniej sekcji np. z towarami.
 
 Dane aplikacji potrzebne do połączenia z Allegro (`secret`) znajdują się w osobnym pliku i są zaszyfrowane dwukrotnie (w tym raz hasłem podawanym w aplikacji za pierwszym logowaniem) i po pierwszym uruchomieniu aplikacji są usuwane. Dane te bedą później przechowywane w menedżerze poświadczeń. Podobnie bedą przechowywane dane otrzymane po połączeniu z Allegro (`access token` i `refresh token`). Zaimplementowano odświeżanie tokenów dostępu po ich wygaśnięciu.
 
-Najważniejsze funkcje aplikacji zostały w pełni przetestowane, głównie mapowanie obiektów z Allegro i Subiekt GT.
+Aplikacja została w znacznej części przetestowana. Jednak najmniej przetestowane zostały sytuacje wyjątkowe np. gdy klientem jest ktoś z innego Państwa.
 
 ## Technologie
 
@@ -40,7 +40,7 @@ Pierwszym krokiem jest logowanie do aplikacji:
     <img src="screenshoty/logowanie-2.png">
 <p>
 
-Dla Allegro Sandbox hasłem jest `integracja12234`.
+Dla Allegro Sandbox hasłem jest `integracja-12234`.
 
 Po zalogowaniu:
 <p align="center">
@@ -80,9 +80,9 @@ Ostatnim krokiem jest potwierdzenie zezwolenia uprawnień:
 
 ## Po zalogowaniu do aplikacji i połączeniu aplikacji z Allegro
 
-Użytkownik może przeglądać swoje zamówienia lub oferty z Allegro oraz zdecydować, którą stronę z danymi chciałby załadować do Subiekt GT.Istotne jest, że aby poprawnie zaimportować faktury sprzedaży w Subiekt GT, konieczne jest wcześniejsze istnienie w Subiekt GT towarów i usług, które zostały podane w fakturach. Dodatkowo konieczne jest utworzenie usługi o nazwie dostawa, którą dostarcza applikacja integrator.
+Użytkownik może przeglądać swoje zamówienia lub oferty z Allegro oraz zdecydować, którą stronę z danymi chciałby załadować do Subiekt GT. Istotne jest, że aby poprawnie zaimportować paragony albo faktury sprzedaży w Subiekt GT, konieczne jest wcześniejsze istnienie w Subiekt GT towarów i usług, które zostały podane w tych dokumentach. Dodatkowo konieczne jest utworzenie usługi o nazwie dostawa, którą dostarcza aplikacja integrator, standardowo w postaci pliku.
 
-Zatem aby dodać faktury sprzedaży do Subiekt GT, pierwszym krokiem jest dodanie towarów:
+Zatem aby dodać faktury sprzedaży albo paragonów do Subiekt GT, pierwszym krokiem jest dodanie towarów:
 <p align="center">
     <img src="screenshoty/produkty.png">
 <p>
