@@ -1,5 +1,7 @@
 # Integracja Allegro i SubiektGT - zamówienia, faktury sprzedaży, paragony i produkty
 
+Aplikacja zrobiona przez programistę juniora, dlatego mogą być w aplikacji spore błędy, ale próbowałem przetestować całość i napisałem do tego celu razem około 120 testów jednostkowych i integracyjnych.
+
 Repozytorium dotyczy aplikacji desktopowej umożliwiającej prostą integrację Allegro z Subiekt GT. Integracja dotyczy zamówień po stronie Allegro oraz paragonów i faktur sprzedaży po stronie Subiekt GT oraz analogicznie ofert użytkownika - towarów. Ze względów bezpieczeństwa aplikacja ta operuje na środowisku testowym `Allegro Sandbox`, ale również mam wersję aplikacji przeznaczoną dla standardowego środowiska Allegro (produkcyjnego), jednak jest ona niepubliczna.
 
 ## Krótki opis działania aplikacji
