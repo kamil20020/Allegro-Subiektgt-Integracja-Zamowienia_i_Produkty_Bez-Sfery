@@ -106,7 +106,7 @@ Przykładowy widok zamówień:
     <img src="screenshoty/zamowienia.png">
 <p>
 
-W tym przypadku również moim zdaniem dobrym pomysłem będzie skorzystanie z opcji `Dodaj na podstawie`, analogicznie dla produktów. Jednak w tym przypadku Subiekt GT umożliwia wcześniejsze sprawdzenie wczytanych danych i dokonanie ewentualnych korekt. Nie udało mi się zaimplementować tworzenia sumy kontrolnej, dlatego prawdopodobnie Subiekt GT będzie wysyłał ostrzeżenie odnośnie niezgodnej sumy kontrolnej.
+W tym przypadku również moim zdaniem dobrym pomysłem będzie skorzystanie z opcji `Dodaj na podstawie`, analogicznie dla produktów. Jednak w tym przypadku Subiekt GT umożliwia wcześniejsze sprawdzenie wczytanych danych i dokonanie ewentualnych korekt. Nie udało mi się zaimplementować tworzenia sumy kontrolnej, dlatego prawdopodobnie Subiekt GT będzie wysyłał ostrzeżenie odnośnie niezgodnej sumy kontrolnej. Dodatkowo przy tworzeniu faktur sprzedaży konieczne jest podanie Daty zakończenia dostawy w Subiekcie ręcznie. Zauważyłem też, że po utworzeniu faktury sprzedaży zaimportowanej przez aplikację, trzeba jeszcze raz wybrać klienta, gdyż w przeciwnym razie zostanie wygenerowana faktura z pustym polem w miejscu klienta.
 
 
 
