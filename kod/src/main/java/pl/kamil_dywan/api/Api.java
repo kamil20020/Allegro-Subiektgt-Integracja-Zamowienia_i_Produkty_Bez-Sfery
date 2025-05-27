@@ -62,13 +62,15 @@ public abstract class Api {
 
         HttpRequest httpRequest = httpRequestBuilder.build();
 
-        log.info(httpRequest.toString());
+        log.info("Request: ");
+        log.info("Url: " + httpRequest.toString());
 
         try {
             HttpResponse<String> gotResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
-            log.info(String.valueOf(gotResponse.statusCode()));
-            log.info(gotResponse.body());
+            log.info("Response: ");
+            log.info("Status code: " + gotResponse.statusCode());
+            log.info("Body: " + gotResponse.body());
 
             return gotResponse;
         }

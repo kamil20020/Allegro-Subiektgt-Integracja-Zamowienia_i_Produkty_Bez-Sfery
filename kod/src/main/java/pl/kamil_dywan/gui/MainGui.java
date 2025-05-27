@@ -37,7 +37,7 @@ public class MainGui {
         frame = new JFrame("Integracja Allegro i Subiekt GT");
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1000, 680);
+        frame.setSize(1200, 780);
         frame.setLocationRelativeTo(null);
 
         handleAuth();

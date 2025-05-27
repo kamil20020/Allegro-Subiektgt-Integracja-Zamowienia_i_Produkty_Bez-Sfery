@@ -4,6 +4,7 @@ import pl.kamil_dywan.external.allegro.generated.offer_product.OfferProduct;
 import pl.kamil_dywan.external.allegro.generated.offer_product.ProductOffer;
 import pl.kamil_dywan.external.allegro.generated.offer_product.SellingMode;
 import pl.kamil_dywan.external.allegro.generated.offer_product.TaxSettings;
+import pl.kamil_dywan.external.allegro.generated.order_item.ExternalId;
 import pl.kamil_dywan.external.subiektgt.own.product.Product;
 import pl.kamil_dywan.external.subiektgt.own.product.ProductType;
 
@@ -17,6 +18,15 @@ public interface ProductOfferMapper {
         if(allegroProductOffer == null){
 
             return null;
+        }
+
+        String productId = allegroProductOffer.getId().toString();
+
+        ExternalId externalId = allegroProductOffer.getExternalId();
+
+        if(externalId != null && externalId.getId() != null){
+
+            productId = externalId.getId();
         }
 
         TaxSettings taxSettings = allegroProductOffer.getTaxSettings();
@@ -33,7 +43,7 @@ public interface ProductOfferMapper {
         );
 
         return Product.builder()
-            .id(allegroProductOffer.getId().toString())
+            .id(productId)
             .name(allegroProductOffer.getName())
             .type(productType)
             .unitPriceWithoutTax(unitPriceWithoutTax)

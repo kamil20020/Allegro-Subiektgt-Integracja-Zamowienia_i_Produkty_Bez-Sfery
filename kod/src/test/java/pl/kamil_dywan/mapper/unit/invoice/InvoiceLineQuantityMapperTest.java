@@ -3,8 +3,8 @@ package pl.kamil_dywan.mapper.unit.invoice;
 import org.junit.jupiter.api.Test;
 import pl.kamil_dywan.external.allegro.generated.order_item.OrderItem;
 import pl.kamil_dywan.external.allegro.generated.order_item.Offer;
-import pl.kamil_dywan.external.allegro.generated.order_item.Product;
-import pl.kamil_dywan.external.allegro.generated.order_item.ProductSet;
+import pl.kamil_dywan.external.allegro.generated.order_item.OrderProduct;
+import pl.kamil_dywan.external.allegro.generated.order_item.OrderProductSet;
 import pl.kamil_dywan.external.subiektgt.generated.invoice_line.InvoiceLineQuantity;
 import pl.kamil_dywan.external.subiektgt.own.product.UOMCode;
 import pl.kamil_dywan.mapper.invoice.InvoiceLineQuantityMapper;
@@ -19,8 +19,8 @@ class InvoiceLineQuantityMapperTest {
     void shouldMapWhenProductIsIsNotNUll() {
 
         //given
-        ProductSet productsSet = new ProductSet();
-        productsSet.setProducts(List.of(new Product(), new Product()));
+        OrderProductSet productsSet = new OrderProductSet();
+        productsSet.setProducts(List.of(new OrderProduct(), new OrderProduct()));
 
         Offer allegroOffer = Offer.builder()
             .productSet(productsSet)

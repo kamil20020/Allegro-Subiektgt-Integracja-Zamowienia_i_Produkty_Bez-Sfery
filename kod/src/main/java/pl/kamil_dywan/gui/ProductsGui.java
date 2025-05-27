@@ -25,6 +25,7 @@ public class ProductsGui implements ChangeableGui {
 
     private JButton exportButton;
     private JButton deliveryButton;
+    private JButton setExternalButton;
 
     private List<ProductOffer> products;
 
@@ -41,6 +42,8 @@ public class ProductsGui implements ChangeableGui {
         exportButton.addActionListener(e -> saveProductsToFile());
 
         deliveryButton.addActionListener(e -> saveDeliveryToFile());
+
+        setExternalButton.addActionListener(e -> setExternal());
     }
 
     private PaginationTableGui.PaginationTableData loadProductsPage(int offset, int limit) {
@@ -59,16 +62,16 @@ public class ProductsGui implements ChangeableGui {
         List<OfferProduct> gotGeneralProducts = generalProductsPage.getOffersProducts();
 
         List<Long> productsIds = gotGeneralProducts.stream()
-            .map(offerProduct -> offerProduct.getId())
-            .collect(Collectors.toList());
+                .map(offerProduct -> offerProduct.getId())
+                .collect(Collectors.toList());
 
         products = productService.getDetailedProductsByIds(productsIds);
 
         int totalNumberOfRows = generalProductsPage.getTotalCount();
 
         PaginationTableGui.PaginationTableData tableData = new PaginationTableGui.PaginationTableData(
-            products,
-            totalNumberOfRows
+                products,
+                totalNumberOfRows
         );
 
         return tableData;
@@ -79,12 +82,13 @@ public class ProductsGui implements ChangeableGui {
         ProductOffer productOffer = (ProductOffer) rawProductOffer;
 
         return new Object[]{
-            productOffer.getId(),
-            productOffer.getName(),
-            productOffer.getPriceWithoutTax().toString() + " zł",
-            productOffer.getPriceWithTax() + " zł",
-            productOffer.getTaxRate().toString() + '%',
-            productOffer.getCreatedAt().toLocalDate().toString()
+                productOffer.getId(),
+                productOffer.getExternalIdValue() != null ? productOffer.getExternalIdValue() : "Brak",
+                productOffer.getName(),
+                productOffer.getPriceWithoutTax().toString() + " zł",
+                productOffer.getPriceWithTax() + " zł",
+                productOffer.getTaxRate().toString() + '%',
+                productOffer.getCreatedAt().toLocalDate().toString()
         };
     }
 
@@ -135,9 +139,9 @@ public class ProductsGui implements ChangeableGui {
         }
 
         String savedFilePath = FileDialogHandler.getSaveFileDialogSelectedPath(
-            "Zapisywanie produktów do pliku",
-            "produkty.epp",
-            ".epp"
+                "Zapisywanie produktów do pliku",
+                "produkty.epp",
+                ".epp"
         );
 
         if (savedFilePath.isBlank()) {
@@ -167,6 +171,43 @@ public class ProductsGui implements ChangeableGui {
         );
     }
 
+    private void setExternal() {
+
+        if (products == null) {
+
+            JOptionPane.showMessageDialog(mainPanel, "Brak produktów do zaktualizowania w Allegro", "Błąd", JOptionPane.ERROR_MESSAGE);
+
+            return;
+        }
+
+        mainPanel.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+        try {
+
+            productService.setExternalIdForAllOffers(products);
+
+            JOptionPane.showMessageDialog(
+                mainPanel,
+                "Zaktualizowano produkty w Allegro",
+                "Powiadomienie",
+                JOptionPane.INFORMATION_MESSAGE
+            );
+        }
+        catch (Exception e) {
+
+            e.printStackTrace();
+
+            JOptionPane.showMessageDialog(
+                    mainPanel,
+                    "Nie udało się zaktualizować produktów w Allegro",
+                    "Powiadomienie o błędzie",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+
+        mainPanel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+    }
+
     @Override
     public void load() {
 
@@ -181,7 +222,7 @@ public class ProductsGui implements ChangeableGui {
     private void createUIComponents() {
         // TODO: place custom component creation code here
 
-        String[] columnsHeaders = {"Identyfikator", "Nazwa", "Cena netto", "Cena brutto", "Podatek", "Data dodania"};
+        String[] columnsHeaders = {"Identyfikator", "Zewnętrzny identyfikator", "Nazwa", "Cena netto", "Cena brutto", "Podatek", "Data dodania"};
 
         paginationTableGui = new PaginationTableGui(columnsHeaders, this::loadProductsPage, this::convertProductToRow);
 
@@ -255,6 +296,14 @@ public class ProductsGui implements ChangeableGui {
         deliveryButton.setPreferredSize(new Dimension(180, 30));
         deliveryButton.setText("Zapisz dostawę do pliku");
         toolBar1.add(deliveryButton);
+        final JToolBar.Separator toolBar$Separator2 = new JToolBar.Separator();
+        toolBar1.add(toolBar$Separator2);
+        setExternalButton = new JButton();
+        setExternalButton.setMaximumSize(new Dimension(180, 30));
+        setExternalButton.setMinimumSize(new Dimension(180, 30));
+        setExternalButton.setPreferredSize(new Dimension(180, 30));
+        setExternalButton.setText("Zaktualizuj zewnętrzne id");
+        toolBar1.add(setExternalButton);
     }
 
     /**

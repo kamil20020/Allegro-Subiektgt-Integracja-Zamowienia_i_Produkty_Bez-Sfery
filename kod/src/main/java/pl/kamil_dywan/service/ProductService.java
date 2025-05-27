@@ -3,6 +3,7 @@ package pl.kamil_dywan.service;
 import pl.kamil_dywan.api.Api;
 import pl.kamil_dywan.api.allegro.ProductApi;
 import pl.kamil_dywan.exception.UnloggedException;
+import pl.kamil_dywan.external.allegro.generated.offer_product.OfferProduct;
 import pl.kamil_dywan.external.allegro.generated.offer_product.OfferProductResponse;
 import pl.kamil_dywan.external.allegro.generated.offer_product.ProductOffer;
 import pl.kamil_dywan.external.allegro.generated.offer_product.SellingMode;
@@ -21,6 +22,7 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.*;
 
 public class ProductService {
@@ -102,6 +104,53 @@ public class ProductService {
         HttpResponse<String> gotResponse = productApi.getProductOfferById(id);
 
         return Api.extractBody(gotResponse, ProductOffer.class);
+    }
+
+    public void setExternalIdForAllOffers(List<ProductOffer> productOffers) throws Exception{
+
+        if(productOffers == null || productOffers.isEmpty()){
+
+            return;
+        }
+
+        List<Callable<HttpResponse<String>>> productsOffersTasks = new ArrayList<>(productOffers.size());
+
+        productOffers
+            .forEach(productOffer -> {
+
+                Optional<String> gotProducerCode = productOffer.getProducerCode();
+
+                if(gotProducerCode.isEmpty()){
+                    return;
+                }
+
+                Callable<HttpResponse<String>> productOfferCallable = () -> {
+
+                   return productApi.patchOfferExternalById(productOffer.getId(), gotProducerCode.get());
+                };
+
+                productsOffersTasks.add(productOfferCallable);
+            });
+
+        try{
+            List<Future<HttpResponse<String>>> gotProductsOffersFutures = productsExecutorService.invokeAll(productsOffersTasks);
+
+            for(Future<HttpResponse<String>> gotProductOfferFuture : gotProductsOffersFutures){
+
+                if(gotProductOfferFuture.isCancelled()){
+
+                    throw new IllegalStateException("Product external id fetch was canceled");
+                }
+
+                gotProductOfferFuture.get();
+            }
+        }
+        catch (InterruptedException | ExecutionException e) {
+
+            e.printStackTrace();
+
+            throw new IllegalStateException("Could not patch products externals ids");
+        }
     }
 
     private List<Object> getEmptyProductRelatedDataForEpp() {

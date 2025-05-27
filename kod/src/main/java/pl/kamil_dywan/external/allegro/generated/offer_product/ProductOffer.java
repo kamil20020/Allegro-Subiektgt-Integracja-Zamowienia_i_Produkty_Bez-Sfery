@@ -5,11 +5,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.kamil_dywan.external.allegro.generated.order_item.ExternalId;
+import pl.kamil_dywan.external.allegro.generated.order_item.OrderProduct;
+import pl.kamil_dywan.external.allegro.generated.order_item.OrderProductSet;
 
 import javax.annotation.processing.Generated;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Data
 @Builder
@@ -22,7 +28,9 @@ import java.time.OffsetDateTime;
     "name",
     "sellingMode",
     "taxSettings",
-    "createdAt"
+    "createdAt",
+    "productSet",
+    "external"
 })
 @Generated("jsonschema2pojo")
 public class ProductOffer {
@@ -42,12 +50,38 @@ public class ProductOffer {
     @JsonProperty("createdAt")
     private OffsetDateTime createdAt;
 
+    @JsonProperty("productSet")
+    private List<ProductOfferProductRelatedData> productSet;
+
+    @JsonProperty("external")
+    private ExternalId externalId;
+
+    @JsonIgnore
+    private static final String PRODUCER_CODE_KEY = "Kod producenta";
+
+    @JsonIgnore
+    public String getExternalIdValue(){
+
+        if(externalId == null || externalId.getId() == null){
+            return null;
+        }
+
+        return externalId.getId();
+    }
+
     @JsonIgnore
     public BigDecimal getTaxRate(){
 
-        if(getTaxSettings() != null){
+        TaxSettings taxSettings = getTaxSettings();
 
-            return getTaxSettings().getTaxesFoCountries().get(0).getTaxRate();
+        if(taxSettings != null){
+
+            List<TaxForCountry> taxesForCountries = taxSettings.getTaxesFoCountries();
+
+            if(taxesForCountries != null && taxesForCountries.size() > 0){
+
+                return taxesForCountries.get(0).getTaxRate();
+            }
         }
 
         return BigDecimal.valueOf(23);
@@ -72,4 +106,61 @@ public class ProductOffer {
             RoundingMode.HALF_UP
         );
     }
+
+    @JsonIgnore
+    public Optional<String> getProducerCode(){
+
+        Optional<String> emptyResult = Optional.empty();
+
+        Optional<ProductOfferProduct> firstProductOfferProduct = getFirstProductOfferProduct();
+
+        if(firstProductOfferProduct.isEmpty()){
+            return emptyResult;
+        }
+
+        List<OfferProductParameter> parameters = firstProductOfferProduct.get().getParameters();
+
+        if(parameters == null || parameters.isEmpty()) {
+            return emptyResult;
+        }
+
+        Optional<OfferProductParameter> producerCodeParameter = parameters.stream()
+            .filter(parameter -> Objects.equals(parameter.getName(), PRODUCER_CODE_KEY))
+            .findFirst();
+
+        if(producerCodeParameter.isEmpty()) {
+            return emptyResult;
+        }
+
+        List<String> parameterValues = producerCodeParameter.get().getValues();
+
+        if(parameterValues == null || parameterValues.isEmpty()) {
+            return emptyResult;
+        }
+
+        String gotExternalIdValue = parameterValues.get(0);
+
+        return Optional.ofNullable(gotExternalIdValue);
+    }
+
+    @JsonIgnore
+    private Optional<ProductOfferProduct> getFirstProductOfferProduct(){
+
+        Optional<ProductOfferProduct> emptyResult = Optional.empty();
+
+        if(productSet == null || productSet.isEmpty() || productSet.size() > 1) {
+            return emptyResult;
+        }
+
+        ProductOfferProductRelatedData productOfferProductRelatedData = productSet.get(0);
+
+        ProductOfferProduct product = productSet.get(0).getProduct();
+
+        if(product == null){
+            return emptyResult;
+        }
+
+        return Optional.ofNullable(product);
+    }
+
 }

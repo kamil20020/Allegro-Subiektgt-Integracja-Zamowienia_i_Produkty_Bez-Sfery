@@ -2,7 +2,7 @@ package pl.kamil_dywan.mapper.invoice;
 
 import pl.kamil_dywan.external.allegro.generated.order_item.OrderItem;
 import pl.kamil_dywan.external.allegro.generated.order_item.Offer;
-import pl.kamil_dywan.external.allegro.generated.order_item.ProductSet;
+import pl.kamil_dywan.external.allegro.generated.order_item.OrderProductSet;
 import pl.kamil_dywan.external.subiektgt.generated.invoice_line.InvoiceLineQuantity;
 import pl.kamil_dywan.external.subiektgt.own.product.UOMCode;
 
@@ -17,7 +17,7 @@ public interface InvoiceLineQuantityMapper {
         int packSize = 1;
 
         Offer allegroOffer = allegroOrderItem.getOffer();
-        ProductSet allegroProductSet = allegroOffer.getProductSet();
+        OrderProductSet allegroProductSet = allegroOffer.getProductSet();
 
         if(allegroProductSet != null){
 

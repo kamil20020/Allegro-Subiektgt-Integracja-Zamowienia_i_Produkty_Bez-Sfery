@@ -32,7 +32,7 @@ public class Offer {
     private ExternalId external;
 
     @JsonProperty("productSet")
-    private ProductSet productSet;
+    private OrderProductSet productSet;
 
     public Offer(String name){
 
