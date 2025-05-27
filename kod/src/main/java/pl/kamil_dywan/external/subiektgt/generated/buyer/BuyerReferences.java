@@ -29,4 +29,18 @@ public class BuyerReferences {
     @XmlElement(name = "TaxNumber")
     protected String taxNumber;
 
+    public void setSuppliersCodeForBuyer(String suppliersCodeForBuyer) {
+
+        if(suppliersCodeForBuyer != null){
+
+            if(suppliersCodeForBuyer.length() > 20){
+
+                suppliersCodeForBuyer = suppliersCodeForBuyer.substring(0, 20);
+            }
+
+            suppliersCodeForBuyer = suppliersCodeForBuyer.replaceAll("\\s", "");
+        }
+
+        this.suppliersCodeForBuyer = suppliersCodeForBuyer;
+    }
 }

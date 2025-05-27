@@ -198,28 +198,24 @@ class ProductOfferTest {
         assertEquals(expectedPriceWithoutTax, gotPriceWithoutTax);
     }
 
-    @Test
-    public void shouldGetExistingProducerCode(){
+    @ParameterizedTest
+    @CsvSource(value = {
+        "12345, 12345",
+        "123 456, 123456",
+    })
+    public void shouldGetExistingProducerCode(String inputProducerCode, String expectedProducerCode){
 
         //given
-        String expectedProducerCode = "12345";
-
         OfferProductParameter producerCodeParameter = OfferProductParameter.builder()
             .id(123L)
             .name("Kod producenta")
-            .values(List.of(expectedProducerCode))
+            .values(List.of(inputProducerCode))
             .build();
 
         OfferProductParameter otherParameter = OfferProductParameter.builder()
             .id(456L)
             .name("Inny parametr")
             .values(List.of("6789"))
-            .build();
-
-        OfferProductParameter otherProducerCodeParameter = OfferProductParameter.builder()
-            .id(789L)
-            .name("Kod producenta")
-            .values(List.of("221321"))
             .build();
 
         ProductOfferProduct product = new ProductOfferProduct(UUID.randomUUID(), List.of(otherParameter, producerCodeParameter));

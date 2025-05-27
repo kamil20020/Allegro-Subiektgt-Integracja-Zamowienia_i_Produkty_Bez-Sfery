@@ -140,6 +140,11 @@ public class ProductOffer {
 
         String gotExternalIdValue = parameterValues.get(0);
 
+        if(gotExternalIdValue != null){
+
+            gotExternalIdValue = gotExternalIdValue.replaceAll("\\s", "");
+        }
+
         return Optional.ofNullable(gotExternalIdValue);
     }
 
