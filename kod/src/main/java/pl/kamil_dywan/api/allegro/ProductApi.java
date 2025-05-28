@@ -1,24 +1,18 @@
 package pl.kamil_dywan.api.allegro;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import pl.kamil_dywan.api.Api;
 import pl.kamil_dywan.api.BearerAuthApi;
 import pl.kamil_dywan.exception.UnloggedException;
-import pl.kamil_dywan.external.allegro.generated.offer_product.PatchProductOffer;
-import pl.kamil_dywan.external.allegro.generated.offer_product.ProductOffer;
+import pl.kamil_dywan.api.allegro.request.PatchProductOfferRequest;
 import pl.kamil_dywan.external.allegro.generated.order_item.ExternalId;
 import pl.kamil_dywan.external.allegro.own.OfferProductStatus;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.LinkedHashMap;
 
 public class ProductApi extends BearerAuthApi {
-
-    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public ProductApi(){
 
@@ -57,19 +51,17 @@ public class ProductApi extends BearerAuthApi {
 
         ExternalId externalId = new ExternalId(externalValue);
 
-        PatchProductOffer patchProductOffer = new PatchProductOffer(externalId);
+        PatchProductOfferRequest patchProductOfferRequest = new PatchProductOfferRequest(externalId);
 
         String content = "";
 
         try {
-            content = objectMapper.writeValueAsString(patchProductOffer);
+            content = objectMapper.writeValueAsString(patchProductOfferRequest);
         }
         catch (JsonProcessingException e) {
 
             e.printStackTrace();
         }
-
-        System.out.println(content);
 
         HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.ofString(content);
 

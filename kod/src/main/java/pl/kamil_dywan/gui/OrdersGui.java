@@ -6,7 +6,7 @@ import pl.kamil_dywan.external.allegro.generated.buyer.Buyer;
 import pl.kamil_dywan.external.allegro.generated.invoice.Invoice;
 import pl.kamil_dywan.external.allegro.generated.order_item.OrderItem;
 import pl.kamil_dywan.external.allegro.generated.order.Order;
-import pl.kamil_dywan.external.allegro.generated.order.OrderResponse;
+import pl.kamil_dywan.api.allegro.response.OrderResponse;
 import pl.kamil_dywan.external.allegro.generated.order.Summary;
 import pl.kamil_dywan.service.InvoiceService;
 import pl.kamil_dywan.service.OrderService;
@@ -17,11 +17,14 @@ import javax.swing.border.TitledBorder;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.text.StyleContext;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Optional;
 
 public class OrdersGui implements ChangeableGui {
 
@@ -95,7 +98,7 @@ public class OrdersGui implements ChangeableGui {
         return data;
     }
 
-    private String[] convertToRow(Object rawOrder) {
+    private Object[] convertToRow(Object rawOrder) {
 
         Order order = (Order) rawOrder;
         Buyer orderBuyer = order.getBuyer();
@@ -113,13 +116,17 @@ public class OrdersGui implements ChangeableGui {
             clientName = orderBuyer.getFirstName() + " " + orderBuyer.getLastName();
         }
 
-        return new String[]{
-                order.getId().toString(),
-                clientName,
-                String.valueOf(orderOrderItems.size()),
-                orderSummary.getTotalToPay().getAmount().toString() + " zł",
-                orderPayment.getFinishedAt().toLocalDate().toString(),
-                invoice.isRequired() ? "Tak" : "Nie"
+        return new Object[]{
+            order.getId().toString(),
+            clientName,
+            String.valueOf(orderOrderItems.size()),
+            orderSummary.getTotalToPay().getAmount().toString() + " zł",
+            orderPayment.getFinishedAt().toLocalDate().toString(),
+            order.hasInvoice() ? "Tak" : "Nie",
+            new ComplexJButtonCellData(
+                "Wyślij " + (order.hasInvoice() ? "fakturę" : "paragon"),
+                order.getId().toString()
+            )
         };
     }
 
@@ -127,7 +134,7 @@ public class OrdersGui implements ChangeableGui {
 
         String savedFilePath = FileDialogHandler.getSaveFileDialogSelectedPath(
                 "Zapisywanie faktur do pliku",
-                "faktury.xml",
+                "faktury",
                 ".xml"
         );
 
@@ -161,7 +168,7 @@ public class OrdersGui implements ChangeableGui {
 
         String savedFilePath = FileDialogHandler.getSaveFileDialogSelectedPath(
                 "Zapisywanie paragonów do pliku",
-                "paragony.epp",
+                "paragony",
                 ".epp"
         );
 
@@ -172,25 +179,77 @@ public class OrdersGui implements ChangeableGui {
         try {
 
             receiptService.writeReceiptsToFile(ordersWithReceipts, savedFilePath);
-        }
-        catch (IllegalStateException e) {
+        } catch (IllegalStateException e) {
 
             JOptionPane.showMessageDialog(
-                mainPanel,
-                "Nie udało się zapisać paragonów do pliku",
-                "Powiadomienie o błędzie",
-                JOptionPane.ERROR_MESSAGE
+                    mainPanel,
+                    "Nie udało się zapisać paragonów do pliku",
+                    "Powiadomienie o błędzie",
+                    JOptionPane.ERROR_MESSAGE
             );
 
             return;
         }
 
         JOptionPane.showMessageDialog(
-            mainPanel,
-            "Zapisano paragony do pliku " + savedFilePath,
-            "Powiadomienie",
-            JOptionPane.INFORMATION_MESSAGE
+                mainPanel,
+                "Zapisano paragony do pliku " + savedFilePath,
+                "Powiadomienie",
+                JOptionPane.INFORMATION_MESSAGE
         );
+    }
+
+    private boolean handleSaveDocumentInAllegro(String orderId) {
+
+        Optional<File> gotFileOpt = FileDialogHandler.getLoadFileDialogSelectedPath(
+                "Wczytywanie pliku z dokumentem dla Allegro",
+                "*.pdf"
+        );
+
+        if (gotFileOpt.isEmpty()) {
+
+            return false;
+        }
+
+        try {
+
+            orderService.uploadDocument(orderId, gotFileOpt.get());
+        }
+        catch (IOException e) {
+
+            JOptionPane.showMessageDialog(
+                    mainPanel,
+                    "Nie udało się wczytać dokumentu",
+                    "Powiadomienie o błędzie",
+                    JOptionPane.ERROR_MESSAGE
+            );
+
+            return false;
+        } catch (IllegalStateException e) {
+
+            JOptionPane.showMessageDialog(
+                    mainPanel,
+                    "Nie udało się dodać dokumentu do zamówienia w Allegro",
+                    "Powiadomienie o błędzie",
+                    JOptionPane.ERROR_MESSAGE
+            );
+
+            return false;
+        } catch (UnloggedException e) {
+
+            handleLogout.run();
+
+            return false;
+        }
+
+        JOptionPane.showMessageDialog(
+                mainPanel,
+                "Dodano dokument do zamówienia w Allegro",
+                "Powiadomienie",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+
+        return true;
     }
 
     @Override
@@ -207,9 +266,9 @@ public class OrdersGui implements ChangeableGui {
     private void createUIComponents() {
         // TODO: place custom component creation code here
 
-        String[] tableHeaders = {"Identyfikator", "Kupujący", "Liczba ofert", "Kwota brutto", "Data", "Czy wybrano fakturę"};
+        String[] tableHeaders = {"Identyfikator", "Kupujący", "Liczba ofert", "Kwota brutto", "Data", "Czy wybrano fakturę", "Allegro"};
 
-        paginationTableGui = new PaginationTableGui(tableHeaders, this::loadData, this::convertToRow);
+        paginationTableGui = new PaginationTableGui(tableHeaders, this::loadData, this::convertToRow, this::handleSaveDocumentInAllegro);
 
         ordersPanelPlaceholder = paginationTableGui.getMainPanel();
     }

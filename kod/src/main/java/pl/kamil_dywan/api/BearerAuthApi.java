@@ -6,7 +6,6 @@ import pl.kamil_dywan.exception.UnloggedException;
 import pl.kamil_dywan.external.allegro.generated.auth.AccessTokenResponse;
 import pl.kamil_dywan.service.SecureStorage;
 
-import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.function.Function;
@@ -103,9 +102,7 @@ public class BearerAuthApi extends Api{
 
         AccessTokenResponse accessTokenResponse = Api.extractBody(gotResponse, AccessTokenResponse.class);
 
-        accessToken = accessTokenResponse.getAccessToken();
-        refreshToken = accessTokenResponse.getRefreshToken();
-        bearerAuthContent = getBearerAuthContent(accessToken);
+        saveAuthData(accessTokenResponse.getAccessToken(), accessTokenResponse.getRefreshToken());
 
         return true;
     }

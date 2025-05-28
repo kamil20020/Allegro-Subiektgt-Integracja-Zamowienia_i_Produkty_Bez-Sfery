@@ -2,8 +2,8 @@ package pl.kamil_dywan.gui;
 
 import pl.kamil_dywan.exception.UnloggedException;
 import pl.kamil_dywan.external.allegro.generated.offer_product.OfferProduct;
-import pl.kamil_dywan.external.allegro.generated.offer_product.OfferProductResponse;
-import pl.kamil_dywan.external.allegro.generated.offer_product.ProductOffer;
+import pl.kamil_dywan.api.allegro.response.OfferProductResponse;
+import pl.kamil_dywan.api.allegro.response.ProductOfferResponse;
 import pl.kamil_dywan.external.subiektgt.own.product.ProductType;
 import pl.kamil_dywan.service.ProductService;
 
@@ -27,7 +27,7 @@ public class ProductsGui implements ChangeableGui {
     private JButton deliveryButton;
     private JButton setExternalButton;
 
-    private List<ProductOffer> products;
+    private List<ProductOfferResponse> products;
 
     private final ProductService productService;
     private final Runnable handleLogout;
@@ -79,16 +79,16 @@ public class ProductsGui implements ChangeableGui {
 
     private Object[] convertProductToRow(Object rawProductOffer) {
 
-        ProductOffer productOffer = (ProductOffer) rawProductOffer;
+        ProductOfferResponse productOfferResponse = (ProductOfferResponse) rawProductOffer;
 
         return new Object[]{
-                productOffer.getId(),
-                productOffer.getExternalIdValue() != null ? productOffer.getExternalIdValue() : "Brak",
-                productOffer.getName(),
-                productOffer.getPriceWithoutTax().toString() + " zł",
-                productOffer.getPriceWithTax() + " zł",
-                productOffer.getTaxRate().toString() + '%',
-                productOffer.getCreatedAt().toLocalDate().toString()
+                productOfferResponse.getId(),
+                productOfferResponse.getExternalIdValue() != null ? productOfferResponse.getExternalIdValue() : "Brak",
+                productOfferResponse.getName(),
+                productOfferResponse.getPriceWithoutTax().toString() + " zł",
+                productOfferResponse.getPriceWithTax() + " zł",
+                productOfferResponse.getTaxRate().toString() + '%',
+                productOfferResponse.getCreatedAt().toLocalDate().toString()
         };
     }
 
@@ -96,7 +96,7 @@ public class ProductsGui implements ChangeableGui {
 
         String savedFilePath = FileDialogHandler.getSaveFileDialogSelectedPath(
                 "Zapisywanie dostawy do pliku",
-                "dostawa.epp",
+                "dostawa",
                 ".epp"
         );
 
@@ -140,7 +140,7 @@ public class ProductsGui implements ChangeableGui {
 
         String savedFilePath = FileDialogHandler.getSaveFileDialogSelectedPath(
                 "Zapisywanie produktów do pliku",
-                "produkty.epp",
+                "produkty",
                 ".epp"
         );
 

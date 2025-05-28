@@ -1,8 +1,10 @@
 package pl.kamil_dywan.gui;
 
 import javax.swing.filechooser.FileSystemView;
+import javax.swing.text.html.Option;
 import java.awt.*;
 import java.io.File;
+import java.util.Optional;
 
 public interface FileDialogHandler {
 
@@ -13,8 +15,8 @@ public interface FileDialogHandler {
         File homeDirectory = FileSystemView.getFileSystemView().getHomeDirectory();
 
         fileDialog.setDirectory(homeDirectory.getAbsolutePath());
-        fileDialog.setFile(fileName);
-        fileDialog.setFilenameFilter((directory, name) -> name.endsWith(fileExtension));
+        fileDialog.setFile(fileName + fileExtension);
+//        fileDialog.setFilenameFilter((directory, name) -> name.endsWith(fileExtension));
 
         fileDialog.setVisible(true);
 
@@ -25,5 +27,29 @@ public interface FileDialogHandler {
         }
 
         return fileDialog.getDirectory() + savedFileName;
+    }
+
+    static Optional<File> getLoadFileDialogSelectedPath(String dialogTitle, String fileExtension){
+
+        FileDialog fileDialog = new FileDialog((Frame) null, dialogTitle, FileDialog.LOAD);
+
+        File homeDirectory = FileSystemView.getFileSystemView().getHomeDirectory();
+
+        fileDialog.setDirectory(homeDirectory.getAbsolutePath());
+        fileDialog.setFile(fileExtension);
+//        fileDialog.setFilenameFilter((directory, name) -> name.endsWith(fileExtension));
+
+        fileDialog.setVisible(true);
+
+        File[] gotFiles = fileDialog.getFiles();
+
+        if(gotFiles.length == 0){
+
+            return Optional.empty();
+        }
+
+        File gotFile = gotFiles[0];
+
+        return Optional.of(gotFile);
     }
 }

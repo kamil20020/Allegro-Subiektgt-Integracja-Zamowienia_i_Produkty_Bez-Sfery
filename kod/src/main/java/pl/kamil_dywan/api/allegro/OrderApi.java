@@ -1,6 +1,8 @@
 package pl.kamil_dywan.api.allegro;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import pl.kamil_dywan.api.BearerAuthApi;
+import pl.kamil_dywan.api.allegro.request.CreateOrderInvoiceRequest;
 import pl.kamil_dywan.exception.UnloggedException;
 import pl.kamil_dywan.external.allegro.own.order.OrderStatus;
 
@@ -30,6 +32,46 @@ public class OrderApi extends BearerAuthApi {
                 )
             )
             .header("Accept", "application/vnd.allegro.public.v1+json");
+
+        return send(httpRequestBuilder);
+    }
+
+    public HttpResponse<String> createDocument(String orderId,  CreateOrderInvoiceRequest createOrderInvoiceRequest){
+
+        String content = "";
+
+        try {
+            content = objectMapper.writeValueAsString(createOrderInvoiceRequest);
+        }
+        catch (JsonProcessingException e) {
+
+            e.printStackTrace();
+        }
+
+        HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.ofString(content);
+
+        HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
+            .POST(bodyPublisher)
+            .uri(
+                URI.create(API_PREFIX + "/" + orderId + "/invoices")
+            )
+            .header("Accept", "application/vnd.allegro.public.v1+json")
+            .header("Content-Type", "application/vnd.allegro.public.v1+json");
+
+        return send(httpRequestBuilder);
+    }
+
+    public HttpResponse<String> saveDocument(String orderId, String documentId, byte[] data){
+
+        HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.ofByteArray(data);
+
+        HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
+            .PUT(bodyPublisher)
+            .uri(
+                URI.create(API_PREFIX + "/" + orderId + "/invoices/" + documentId + "/file")
+            )
+            .header("Accept", "application/vnd.allegro.public.v1+json")
+            .header("Content-Type", "application/pdf");
 
         return send(httpRequestBuilder);
     }

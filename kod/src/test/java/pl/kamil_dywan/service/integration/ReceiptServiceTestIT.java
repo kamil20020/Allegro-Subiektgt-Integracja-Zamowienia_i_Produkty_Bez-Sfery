@@ -3,12 +3,11 @@ package pl.kamil_dywan.service.integration;
 import org.junit.jupiter.api.Test;
 import pl.kamil_dywan.TestUtils;
 import pl.kamil_dywan.external.allegro.generated.order.Order;
-import pl.kamil_dywan.external.allegro.generated.order.OrderResponse;
+import pl.kamil_dywan.api.allegro.response.OrderResponse;
 import pl.kamil_dywan.file.read.FileReader;
 import pl.kamil_dywan.file.read.JSONFileReader;
 import pl.kamil_dywan.service.ReceiptService;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.List;

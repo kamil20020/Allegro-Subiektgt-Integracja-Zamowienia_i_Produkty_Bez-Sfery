@@ -36,8 +36,6 @@ public class App {
         ReceiptService receiptService = new ReceiptService();
 
         new MainGui(authService, productService, orderService, invoiceService, receiptService);
-
-//        receiptService.writeReceiptsToFile(null);
     }
 
 }

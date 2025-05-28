@@ -1,7 +1,6 @@
 package pl.kamil_dywan.api;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -203,6 +202,7 @@ class BearerAuthApiTest {
 
         try(
             MockedStatic<Api> apiMock = Mockito.mockStatic(Api.class);
+            MockedStatic<SecureStorage> secureStorageMock = Mockito.mockStatic(SecureStorage.class);
         ){
 
             apiMock.when(() -> Api.extractBody(any(), any())).thenReturn(expectedAccessTokenResponse);
@@ -215,6 +215,8 @@ class BearerAuthApiTest {
 
             //then
             apiMock.verify(() -> Api.extractBody(eq(expectedRefreshTokenHttpResponse), any()));
+            secureStorageMock.verify(() -> SecureStorage.saveCredentials("access_token", expectedAccessToken));
+            secureStorageMock.verify(() -> SecureStorage.saveCredentials("refresh_token", expectedRefreshToken));
 
             assertEquals(expectedAccessToken, gotAccessToken);
             assertEquals(expectedRefreshToken, gotRefreshToken);

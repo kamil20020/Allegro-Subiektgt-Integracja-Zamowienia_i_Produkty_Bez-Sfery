@@ -2,7 +2,7 @@ package pl.kamil_dywan.file.read;
 
 import org.junit.jupiter.api.Test;
 import pl.kamil_dywan.TestUtils;
-import pl.kamil_dywan.external.allegro.generated.order.OrderResponse;
+import pl.kamil_dywan.api.allegro.response.OrderResponse;
 import pl.kamil_dywan.file.write.FileWriter;
 import pl.kamil_dywan.file.write.JSONFileWriter;
 

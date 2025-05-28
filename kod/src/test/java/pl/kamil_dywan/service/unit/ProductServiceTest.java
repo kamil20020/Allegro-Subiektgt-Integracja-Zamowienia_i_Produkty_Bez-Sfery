@@ -1,17 +1,15 @@
 package pl.kamil_dywan.service.unit;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import pl.kamil_dywan.App;
 import pl.kamil_dywan.TestHttpResponse;
 import pl.kamil_dywan.api.Api;
 import pl.kamil_dywan.api.allegro.ProductApi;
-import pl.kamil_dywan.external.allegro.generated.offer_product.ProductOffer;
+import pl.kamil_dywan.api.allegro.response.ProductOfferResponse;
 import pl.kamil_dywan.service.ProductService;
 
 import java.net.URI;
@@ -48,9 +46,9 @@ class ProductServiceTest {
             getTestHttpResponse(201),
             getTestHttpResponse(202)
         );
-        List<ProductOffer> productsOffers = List.of(
-            new ProductOffer(),
-            new ProductOffer()
+        List<ProductOfferResponse> productsOffers = List.of(
+            new ProductOfferResponse(),
+            new ProductOfferResponse()
         );
 
         //when
@@ -62,16 +60,16 @@ class ProductServiceTest {
 
                 Long productId = productsIds.get(i);
                 HttpResponse<String> httpResponse = productsOffersResponses.get(i);
-                ProductOffer productOffer = productsOffers.get(i);
+                ProductOfferResponse productOfferResponse = productsOffers.get(i);
 
                 Mockito.when(productApi.getProductOfferById(productId)).thenReturn(httpResponse);
                 apiMock.when(() -> Api.extractBody(
                     argThat(response -> response.statusCode() == httpResponse.statusCode()),
                     any()
-                )).thenReturn(productOffer);
+                )).thenReturn(productOfferResponse);
             }
 
-            List<ProductOffer> gotProductsOffers = productService.getDetailedProductsByIds(productsIds);
+            List<ProductOfferResponse> gotProductsOffers = productService.getDetailedProductsByIds(productsIds);
 
             //then
             for(int i = 0; i < productsIds.size(); i++){
@@ -80,7 +78,7 @@ class ProductServiceTest {
                 HttpResponse httpResponse = productsOffersResponses.get(i);
 
                 Mockito.verify(productApi).getProductOfferById(productId);
-                apiMock.verify(() -> Api.extractBody(httpResponse, ProductOffer.class));
+                apiMock.verify(() -> Api.extractBody(httpResponse, ProductOfferResponse.class));
 
                 assertEquals(productsOffers.get(i), gotProductsOffers.get(i));
             }

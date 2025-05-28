@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.kamil_dywan.TestUtils;
 import pl.kamil_dywan.external.allegro.generated.order.Order;
-import pl.kamil_dywan.external.allegro.generated.order.OrderResponse;
+import pl.kamil_dywan.api.allegro.response.OrderResponse;
 import pl.kamil_dywan.file.read.FileReader;
 import pl.kamil_dywan.file.read.JSONFileReader;
 import pl.kamil_dywan.service.InvoiceService;

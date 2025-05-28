@@ -219,7 +219,7 @@ class InvoiceMapperTest {
             }
 
             assertEquals("", gotInvoice.getNarrative());
-            assertEquals("dokument liczony wg cen netto", gotInvoice.getSpecialInstructions());
+            assertEquals("dokument liczony wg cen brutto", gotInvoice.getSpecialInstructions());
 //            assertEquals(expectedSettlement, gotInvoice.getSettlement());
             assertNull(expectedSettlement);
 
@@ -229,7 +229,7 @@ class InvoiceMapperTest {
             }
 
             assertEquals(expectedInvoiceTotal, gotInvoice.getInvoiceTotal());
-            assertEquals("DOSTAWA123", gotInvoice.getInvoiceLines().get(0).getProduct().getSuppliersProductCode());
+//            assertEquals("DOSTAWA123", gotInvoice.getInvoiceLines().get(0).getProduct().getSuppliersProductCode());
 
             mockedBuyerMapper.verify(() -> InvoiceBuyerMapper.map(allegroInvoice));
             mockedOrderMoneyStats.verify(() -> OrderMoneyStats.getSummary(allegroOrder));

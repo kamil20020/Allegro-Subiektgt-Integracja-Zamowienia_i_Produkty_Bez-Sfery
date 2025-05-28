@@ -1,7 +1,7 @@
 package pl.kamil_dywan.factory;
 
 import pl.kamil_dywan.external.allegro.generated.Cost;
-import pl.kamil_dywan.external.allegro.generated.offer_product.ProductOffer;
+import pl.kamil_dywan.api.allegro.response.ProductOfferResponse;
 import pl.kamil_dywan.external.allegro.generated.offer_product.SellingMode;
 import pl.kamil_dywan.external.allegro.generated.offer_product.TaxForCountry;
 import pl.kamil_dywan.external.allegro.generated.offer_product.TaxSettings;
@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface AllegroProductOfferFactory {
 
-    public static ProductOffer createDeliveryProductOffer(){
+    public static ProductOfferResponse createDeliveryProductOffer(){
 
         SellingMode sellingMode = new SellingMode(
             new Cost(
@@ -30,7 +30,7 @@ public interface AllegroProductOfferFactory {
             ""
         );
 
-        return ProductOffer.builder()
+        return ProductOfferResponse.builder()
             .id(1L)
             .name("Dostawa")
             .sellingMode(sellingMode)

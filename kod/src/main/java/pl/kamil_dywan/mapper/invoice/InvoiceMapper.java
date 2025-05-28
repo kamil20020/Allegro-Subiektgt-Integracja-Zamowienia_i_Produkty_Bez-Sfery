@@ -60,7 +60,7 @@ public interface InvoiceMapper {
             .buyer(buyer)
             .invoiceLines(subiektInvoiceLines)
             .narrative("")
-            .specialInstructions("dokument liczony wg cen netto")
+            .specialInstructions("dokument liczony wg cen brutto")
             .settlement(settlement)
             .taxSubTotals(taxSubTotals)
             .invoiceTotal(invoiceTotal)

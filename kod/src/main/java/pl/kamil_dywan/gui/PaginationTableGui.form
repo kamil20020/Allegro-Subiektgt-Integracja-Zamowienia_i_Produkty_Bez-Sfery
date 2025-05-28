@@ -28,9 +28,14 @@
           <component id="1a520" class="javax.swing.JTable" binding="table" custom-create="true">
             <constraints/>
             <properties>
-              <enabled value="false"/>
+              <cellSelectionEnabled value="false"/>
+              <editingColumn value="-1"/>
+              <editingRow value="-1"/>
+              <enabled value="true"/>
+              <fillsViewportHeight value="false"/>
               <focusable value="false"/>
               <rowHeight value="33"/>
+              <rowSelectionAllowed value="false"/>
             </properties>
           </component>
         </children>

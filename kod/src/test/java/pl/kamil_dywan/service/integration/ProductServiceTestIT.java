@@ -2,11 +2,8 @@ package pl.kamil_dywan.service.integration;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pl.kamil_dywan.external.allegro.generated.offer_product.ProductOffer;
-import pl.kamil_dywan.external.allegro.generated.order.OrderResponse;
-import pl.kamil_dywan.external.subiektgt.own.product.Product;
+import pl.kamil_dywan.api.allegro.response.ProductOfferResponse;
 import pl.kamil_dywan.external.subiektgt.own.product.ProductType;
-import pl.kamil_dywan.file.read.EppFileReader;
 import pl.kamil_dywan.file.read.FileReader;
 import pl.kamil_dywan.file.read.JSONFileReader;
 import pl.kamil_dywan.service.ProductService;
@@ -37,7 +34,7 @@ class ProductServiceTestIT {
         }
     }
 
-    private final FileReader<ProductOffer> allegroProductOfferReader = new JSONFileReader<>(ProductOffer.class);
+    private final FileReader<ProductOfferResponse> allegroProductOfferReader = new JSONFileReader<>(ProductOfferResponse.class);
 
     private ProductService productService;
 
@@ -68,9 +65,9 @@ class ProductServiceTestIT {
         //given
         String toSaveFilePath = "test-products.epp";
 
-        ProductOffer allegroProductOffer = allegroProductOfferReader.load(allegroProductOfferFilePath);
+        ProductOfferResponse allegroProductOfferResponse = allegroProductOfferReader.load(allegroProductOfferFilePath);
 
-        List<ProductOffer> allegroProductsOffers = List.of(allegroProductOffer);
+        List<ProductOfferResponse> allegroProductsOffers = List.of(allegroProductOfferResponse);
 
         //when
         productService.writeProductsToFile(allegroProductsOffers, toSaveFilePath, ProductType.GOODS);

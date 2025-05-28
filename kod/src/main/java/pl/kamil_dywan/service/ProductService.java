@@ -3,14 +3,12 @@ package pl.kamil_dywan.service;
 import pl.kamil_dywan.api.Api;
 import pl.kamil_dywan.api.allegro.ProductApi;
 import pl.kamil_dywan.exception.UnloggedException;
-import pl.kamil_dywan.external.allegro.generated.offer_product.OfferProduct;
-import pl.kamil_dywan.external.allegro.generated.offer_product.OfferProductResponse;
-import pl.kamil_dywan.external.allegro.generated.offer_product.ProductOffer;
+import pl.kamil_dywan.api.allegro.response.OfferProductResponse;
+import pl.kamil_dywan.api.allegro.response.ProductOfferResponse;
 import pl.kamil_dywan.external.allegro.generated.offer_product.SellingMode;
 import pl.kamil_dywan.external.subiektgt.own.product.*;
 import pl.kamil_dywan.factory.ProductDetailedPriceFactory;
 import pl.kamil_dywan.factory.AllegroProductOfferFactory;
-import pl.kamil_dywan.file.EppSerializable;
 import pl.kamil_dywan.file.write.EppFileWriter;
 import pl.kamil_dywan.file.write.FileWriter;
 import pl.kamil_dywan.mapper.ProductOfferMapper;
@@ -60,13 +58,13 @@ public class ProductService {
         return Api.extractBody(gotResponse, OfferProductResponse.class);
     }
 
-    public List<ProductOffer> getDetailedProductsByIds(List<Long> productsIds) throws UnloggedException, IllegalStateException{
+    public List<ProductOfferResponse> getDetailedProductsByIds(List<Long> productsIds) throws UnloggedException, IllegalStateException{
 
-        List<Callable<ProductOffer>> productsOffersTasks = new ArrayList<>(productsIds.size());
+        List<Callable<ProductOfferResponse>> productsOffersTasks = new ArrayList<>(productsIds.size());
 
         for(Long productId : productsIds){
 
-            Callable<ProductOffer> productOfferCallable = () -> {
+            Callable<ProductOfferResponse> productOfferCallable = () -> {
 
                 return getDetailedProductById(productId);
             };
@@ -74,12 +72,12 @@ public class ProductService {
             productsOffersTasks.add(productOfferCallable);
         }
 
-        List<ProductOffer> gotProductsOffers = new ArrayList<>();
+        List<ProductOfferResponse> gotProductsOffers = new ArrayList<>();
 
         try{
-            List<Future<ProductOffer>> gotProductsOffersFutures = productsExecutorService.invokeAll(productsOffersTasks);
+            List<Future<ProductOfferResponse>> gotProductsOffersFutures = productsExecutorService.invokeAll(productsOffersTasks);
 
-            for(Future<ProductOffer> gotProductOfferFuture : gotProductsOffersFutures){
+            for(Future<ProductOfferResponse> gotProductOfferFuture : gotProductsOffersFutures){
 
                 if(gotProductOfferFuture.isCancelled()){
 
@@ -99,23 +97,23 @@ public class ProductService {
         return gotProductsOffers;
     }
 
-    public ProductOffer getDetailedProductById(Long id) throws UnloggedException{
+    public ProductOfferResponse getDetailedProductById(Long id) throws UnloggedException{
 
         HttpResponse<String> gotResponse = productApi.getProductOfferById(id);
 
-        return Api.extractBody(gotResponse, ProductOffer.class);
+        return Api.extractBody(gotResponse, ProductOfferResponse.class);
     }
 
-    public void setExternalIdForAllOffers(List<ProductOffer> productOffers) throws Exception{
+    public void setExternalIdForAllOffers(List<ProductOfferResponse> productOfferResponses) throws Exception{
 
-        if(productOffers == null || productOffers.isEmpty()){
+        if(productOfferResponses == null || productOfferResponses.isEmpty()){
 
             return;
         }
 
-        List<Callable<HttpResponse<String>>> productsOffersTasks = new ArrayList<>(productOffers.size());
+        List<Callable<HttpResponse<String>>> productsOffersTasks = new ArrayList<>(productOfferResponses.size());
 
-        productOffers
+        productOfferResponses
             .forEach(productOffer -> {
 
                 Optional<String> gotProducerCode = productOffer.getProducerCode();
@@ -168,34 +166,34 @@ public class ProductService {
 
     public void writeDeliveryToFile(String filePath) throws IllegalStateException{
 
-        ProductOffer deliveryProductOffer = AllegroProductOfferFactory.createDeliveryProductOffer();
+        ProductOfferResponse deliveryProductOfferResponse = AllegroProductOfferFactory.createDeliveryProductOffer();
 
         List<Object> productRelatedData = getEmptyProductRelatedDataForEpp();
 
-        appendProduct(productRelatedData, deliveryProductOffer, ProductType.SERVICES);
+        appendProduct(productRelatedData, deliveryProductOfferResponse, ProductType.SERVICES);
 
         ((List<Product>) productRelatedData.get(0)).get(0).setId("DOSTAWA123");
 
         writeProductsToFile(productRelatedData, filePath);
     }
 
-    public void writeProductsToFile(List<ProductOffer> productsOffers, String filePath, ProductType productsTypes) throws IllegalStateException{
+    public void writeProductsToFile(List<ProductOfferResponse> productsOffers, String filePath, ProductType productsTypes) throws IllegalStateException{
 
         List<Object> productRelatedData = getEmptyProductRelatedDataForEpp();
 
-        for(ProductOffer productOffer : productsOffers){
+        for(ProductOfferResponse productOfferResponse : productsOffers){
 
-            appendProduct(productRelatedData, productOffer, productsTypes);
+            appendProduct(productRelatedData, productOfferResponse, productsTypes);
         }
 
         writeProductsToFile(productRelatedData, filePath);
     }
 
-    private void appendProduct(List<Object> productRelatedData, ProductOffer productOffer, ProductType productType){
+    private void appendProduct(List<Object> productRelatedData, ProductOfferResponse productOfferResponse, ProductType productType){
 
-        Product gotSubiektProduct = ProductOfferMapper.map(productOffer, productType);
+        Product gotSubiektProduct = ProductOfferMapper.map(productOfferResponse, productType);
 
-        SellingMode sellingMode = productOffer.getSellingMode();
+        SellingMode sellingMode = productOfferResponse.getSellingMode();
         BigDecimal unitPriceWithTax = sellingMode.getPrice().getAmount();
 
         ProductDetailedPrice productDetailedRetailPrice = ProductDetailedPriceFactory.create(

@@ -8,7 +8,9 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class PaginationTableGui extends JPanel {
 
@@ -32,18 +34,29 @@ public class PaginationTableGui extends JPanel {
     private final BiFunction<Integer, Integer, PaginationTableData> loadData;
     private final Function<Object, Object[]> convertToRow;
 
+    private boolean isActionColumnEnabled = false;
+    private Predicate<String> onClickActionButton;
+
     private int offset = 0;
     private int pageSize = 10;
     private int totalNumberOfRows = 0;
 
     public PaginationTableGui(
-        String[] tableHeaders,
-        BiFunction<Integer, Integer, PaginationTableData> loadData,
-        Function<Object, Object[]> convertToRow
+            String[] tableHeaders,
+            BiFunction<Integer, Integer, PaginationTableData> loadData,
+            Function<Object, Object[]> convertToRow,
+            Predicate<String> onClickActionButton
     ) {
+
         this.tableHeaders = tableHeaders;
         this.loadData = loadData;
         this.convertToRow = convertToRow;
+
+        if (onClickActionButton != null) {
+
+            this.onClickActionButton = onClickActionButton;
+            isActionColumnEnabled = true;
+        }
 
         $$$setupUI$$$();
 
@@ -52,6 +65,15 @@ public class PaginationTableGui extends JPanel {
         nextButton.addActionListener(e -> handleNextButton());
 
         paginationSizeSelector.addActionListener(e -> handlePageSizeSelectorChange());
+    }
+
+    public PaginationTableGui(
+            String[] tableHeaders,
+            BiFunction<Integer, Integer, PaginationTableData> loadData,
+            Function<Object, Object[]> convertToRow
+    ) {
+
+        this(tableHeaders, loadData, convertToRow, null);
     }
 
     /**
@@ -85,9 +107,14 @@ public class PaginationTableGui extends JPanel {
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(10, 0, 10, 0);
         mainPanel.add(tableScroll, gbc);
-        table.setEnabled(false);
+        table.setCellSelectionEnabled(false);
+        table.setEditingColumn(-1);
+        table.setEditingRow(-1);
+        table.setEnabled(true);
+        table.setFillsViewportHeight(false);
         table.setFocusable(false);
         table.setRowHeight(33);
+        table.setRowSelectionAllowed(false);
         tableScroll.setViewportView(table);
         pagination = new JToolBar();
         pagination.setBackground(new Color(-1114625));
@@ -332,11 +359,25 @@ public class PaginationTableGui extends JPanel {
     private void createUIComponents() {
         // TODO: place custom component creation code here
 
+        int lastColumnIndex = tableHeaders.length - 1;
+
         DefaultTableCellRenderer cellsCenterRenderer = new DefaultTableCellRenderer();
 
         cellsCenterRenderer.setHorizontalAlignment(JLabel.CENTER);
 
-        tableModel = new DefaultTableModel(tableHeaders, 0);
+        if (isActionColumnEnabled) {
+
+            tableModel = new DefaultTableModel(tableHeaders, 0) {
+
+                @Override
+                public boolean isCellEditable(int row, int column) {
+
+                    return column == lastColumnIndex;
+                }
+            };
+        } else {
+            tableModel = new DefaultTableModel(tableHeaders, 0);
+        }
 
         table = new JTable(tableModel);
 
@@ -345,6 +386,14 @@ public class PaginationTableGui extends JPanel {
             TableColumn column = table.getColumnModel().getColumn(i);
 
             column.setCellRenderer(cellsCenterRenderer);
+        }
+
+        if (isActionColumnEnabled) {
+
+            TableColumn column = table.getColumnModel().getColumn(lastColumnIndex);
+
+            column.setCellRenderer(new JButtonTableCellRender());
+            column.setCellEditor(new JButtonTableCellEditor(new JCheckBox(), onClickActionButton, "Wysłano"));
         }
     }
 }

@@ -276,12 +276,17 @@ class OrderTest {
     void shouldGetHasDeliveryWhenHas() {
 
         //given
+        Cost cost = new Cost(new BigDecimal("12.28"), Currency.PLN);
+
+        DeliveryTime deliveryTime = new DeliveryTime(OffsetDateTime.now(), null, null, null);
+
+        Delivery delivery = Delivery.builder()
+            .cost(cost)
+            .time(deliveryTime)
+            .build();
+
         Order order = Order.builder()
-            .delivery(Delivery.builder()
-                .cost(new Cost(new BigDecimal("0"), Currency.PLN))
-                .time(new DeliveryTime(OffsetDateTime.now(), null, null, null))
-                .build()
-            )
+            .delivery(delivery)
             .orderItems(new ArrayList<>())
             .build();
 
@@ -293,10 +298,69 @@ class OrderTest {
     }
 
     @Test
-    void shouldGetHasDeliveryWhenHasNot() {
+    void shouldGetHasDeliveryWhenDeliveryCostIs0() {
+
+        //given
+        Cost cost = new Cost(new BigDecimal("0.00"), Currency.PLN);
+
+        Delivery delivery = Delivery.builder()
+            .cost(cost)
+            .build();
+
+        Order order = Order.builder()
+                .delivery(delivery)
+                .build();
+
+        //when
+        boolean gotResult = order.hasDelivery();
+
+        //then
+        assertFalse(gotResult);
+    }
+
+    @Test
+    void shouldGetHasDeliveryWhenDeliveryIsNull() {
 
         //given
         Order order = new Order();
+
+        //when
+        boolean gotResult = order.hasDelivery();
+
+        //then
+        assertFalse(gotResult);
+    }
+
+    @Test
+    void shouldGetHasDeliveryWhenDeliveryCostIsNull() {
+
+        //given
+        Delivery delivery = new Delivery();
+
+        Order order = Order.builder()
+            .delivery(delivery)
+            .build();
+
+        //when
+        boolean gotResult = order.hasDelivery();
+
+        //then
+        assertFalse(gotResult);
+    }
+
+    @Test
+    void shouldGetHasDeliveryWhenDeliveryCostAmountIsNull() {
+
+        //given
+        Cost cost = new Cost();
+
+        Delivery delivery = Delivery.builder()
+            .cost(cost)
+            .build();
+
+        Order order = Order.builder()
+            .delivery(delivery)
+            .build();
 
         //when
         boolean gotResult = order.hasDelivery();

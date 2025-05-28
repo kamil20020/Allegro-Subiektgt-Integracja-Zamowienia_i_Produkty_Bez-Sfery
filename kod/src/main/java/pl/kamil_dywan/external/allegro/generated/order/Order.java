@@ -2,6 +2,7 @@ package pl.kamil_dywan.external.allegro.generated.order;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
+import pl.kamil_dywan.external.allegro.generated.Cost;
 import pl.kamil_dywan.external.allegro.generated.Payment;
 import pl.kamil_dywan.external.allegro.generated.buyer.Buyer;
 import pl.kamil_dywan.external.allegro.generated.delivery.Delivery;
@@ -11,6 +12,7 @@ import pl.kamil_dywan.external.allegro.own.order.*;
 import pl.kamil_dywan.mapper.AllegroOrderItemMapper;
 
 import javax.annotation.processing.Generated;
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.*;
 
@@ -112,7 +114,7 @@ public class Order {
     @JsonIgnore
     public void addDeliveryToOrderItems(){
 
-        if(delivery == null){
+        if(!hasDelivery()){
             return;
         }
 
@@ -165,7 +167,17 @@ public class Order {
     @JsonIgnore
     public boolean hasDelivery(){
 
-        return delivery != null;
+        if(delivery == null){
+            return false;
+        }
+
+        Cost deliveryCost = delivery.getCost();
+
+        if(deliveryCost == null || deliveryCost.getAmount() == null){
+            return false;
+        }
+
+        return deliveryCost.getAmount().intValue() > 0;
     }
 
 }

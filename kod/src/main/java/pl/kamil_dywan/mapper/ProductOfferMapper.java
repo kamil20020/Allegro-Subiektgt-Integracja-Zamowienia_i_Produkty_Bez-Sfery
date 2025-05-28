@@ -1,7 +1,6 @@
 package pl.kamil_dywan.mapper;
 
-import pl.kamil_dywan.external.allegro.generated.offer_product.OfferProduct;
-import pl.kamil_dywan.external.allegro.generated.offer_product.ProductOffer;
+import pl.kamil_dywan.api.allegro.response.ProductOfferResponse;
 import pl.kamil_dywan.external.allegro.generated.offer_product.SellingMode;
 import pl.kamil_dywan.external.allegro.generated.offer_product.TaxSettings;
 import pl.kamil_dywan.external.allegro.generated.order_item.ExternalId;
@@ -13,24 +12,24 @@ import java.math.RoundingMode;
 
 public interface ProductOfferMapper {
 
-    public static Product map(ProductOffer allegroProductOffer, ProductType productType){
+    public static Product map(ProductOfferResponse allegroProductOfferResponse, ProductType productType){
 
-        if(allegroProductOffer == null){
+        if(allegroProductOfferResponse == null){
 
             return null;
         }
 
-        String productId = allegroProductOffer.getId().toString();
+        String productId = allegroProductOfferResponse.getId().toString();
 
-        ExternalId externalId = allegroProductOffer.getExternalId();
+        ExternalId externalId = allegroProductOfferResponse.getExternalId();
 
         if(externalId != null && externalId.getId() != null){
 
             productId = externalId.getId();
         }
 
-        TaxSettings taxSettings = allegroProductOffer.getTaxSettings();
-        SellingMode sellingMode = allegroProductOffer.getSellingMode();
+        TaxSettings taxSettings = allegroProductOfferResponse.getTaxSettings();
+        SellingMode sellingMode = allegroProductOfferResponse.getSellingMode();
 
         BigDecimal taxRatePercentage = getTaxRatePercentage(taxSettings);
         BigDecimal taxRateValue = taxRatePercentage.multiply(BigDecimal.valueOf(0.01));
@@ -44,7 +43,7 @@ public interface ProductOfferMapper {
 
         return Product.builder()
             .id(productId)
-            .name(allegroProductOffer.getName())
+            .name(allegroProductOfferResponse.getName())
             .type(productType)
             .unitPriceWithoutTax(unitPriceWithoutTax)
             .taxRatePercentage(taxRatePercentage)
