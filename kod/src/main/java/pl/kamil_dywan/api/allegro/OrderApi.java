@@ -75,4 +75,16 @@ public class OrderApi extends BearerAuthApi {
 
         return send(httpRequestBuilder);
     }
+    
+    public HttpResponse<String> getDocuments(String orderId){
+
+        HttpRequest.Builder httpRequestBuilder = HttpRequest.newBuilder()
+            .GET()
+            .uri(
+                URI.create(API_PREFIX + "/" + orderId + "/invoices")
+            )
+            .header("Accept", "application/vnd.allegro.public.v1+json");
+
+        return send(httpRequestBuilder);
+    }
 }

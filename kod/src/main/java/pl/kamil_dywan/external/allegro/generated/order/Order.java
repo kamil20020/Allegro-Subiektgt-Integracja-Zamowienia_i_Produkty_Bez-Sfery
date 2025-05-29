@@ -12,6 +12,7 @@ import pl.kamil_dywan.external.allegro.own.order.*;
 import pl.kamil_dywan.mapper.AllegroOrderItemMapper;
 
 import javax.annotation.processing.Generated;
+import java.beans.Transient;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.*;
@@ -89,7 +90,10 @@ public class Order {
     @JsonProperty("revision")
     private String revision;
 
-    public Order(UUID id, String messageToSeller, Buyer buyer, Payment payment, OrderStatus status, Fulfillment fulfillment, Delivery delivery, Invoice invoice, List<OrderItem> orderItems, List<Surcharge> surcharges, List<Discount> discounts, Note note, Marketplace marketplace, Summary summary, OffsetDateTime updatedAt, String revision) {
+    @JsonIgnore
+    private boolean hasDocument = false;
+
+    public Order(UUID id, String messageToSeller, Buyer buyer, Payment payment, OrderStatus status, Fulfillment fulfillment, Delivery delivery, Invoice invoice, List<OrderItem> orderItems, List<Surcharge> surcharges, List<Discount> discounts, Note note, Marketplace marketplace, Summary summary, OffsetDateTime updatedAt, String revision, boolean hasDocument) {
 
         this.id = id;
         this.messageToSeller = messageToSeller;
@@ -107,8 +111,19 @@ public class Order {
         this.summary = summary;
         this.updatedAt = updatedAt;
         this.revision = revision;
+        this.hasDocument = hasDocument;
 
         addDeliveryToOrderItems();
+    }
+
+    public boolean hasDocument() {
+
+        return hasDocument;
+    }
+
+    public void setHasDocument(boolean hasDocument) {
+
+        this.hasDocument = hasDocument;
     }
 
     @JsonIgnore

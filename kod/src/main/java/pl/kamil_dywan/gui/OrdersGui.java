@@ -64,7 +64,8 @@ public class OrdersGui implements ChangeableGui {
 
         try {
             orderResponse = orderService.getPage(offset, limit);
-        } catch (UnloggedException e) {
+        }
+        catch (UnloggedException e) {
 
             handleLogout.run();
 
@@ -77,22 +78,22 @@ public class OrdersGui implements ChangeableGui {
         List<Order> allegroOrders = orderResponse.getOrders();
 
         allegroOrders
-                .forEach(allegroOrder -> {
+            .forEach(allegroOrder -> {
 
-                    Invoice allegroInvoice = allegroOrder.getInvoice();
+                Invoice allegroInvoice = allegroOrder.getInvoice();
 
-                    if (allegroInvoice.isRequired()) {
-                        ordersWithInvoices.add(allegroOrder);
-                    } else {
-                        ordersWithReceipts.add(allegroOrder);
-                    }
-                });
+                if (allegroInvoice.isRequired()) {
+                    ordersWithInvoices.add(allegroOrder);
+                } else {
+                    ordersWithReceipts.add(allegroOrder);
+                }
+            });
 
         int totalNumberOfRows = orderResponse.getTotalCount();
 
         PaginationTableGui.PaginationTableData data = new PaginationTableGui.PaginationTableData(
-                allegroOrders,
-                totalNumberOfRows
+            allegroOrders,
+            totalNumberOfRows
         );
 
         return data;
@@ -124,7 +125,7 @@ public class OrdersGui implements ChangeableGui {
             orderPayment.getFinishedAt().toLocalDate().toString(),
             order.hasInvoice() ? "Tak" : "Nie",
             new ComplexJButtonCellData(
-                "Wyślij " + (order.hasInvoice() ? "fakturę" : "paragon"),
+                order.hasDocument() ? "Wysłano" : ("Wyślij " + (order.hasInvoice() ? "fakturę" : "paragon")),
                 order.getId().toString()
             )
         };

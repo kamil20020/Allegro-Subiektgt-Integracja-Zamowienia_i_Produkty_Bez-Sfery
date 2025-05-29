@@ -26,7 +26,7 @@ public interface InvoiceBuyerMapper {
 
         BuyerReferences buyerReferences = new BuyerReferences();
 
-        buyerReferences.setSuppliersCodeForBuyer(supplierCodeForBuyer);
+        buyerReferences.setSuppliersCodeForBuyer("********************");
 
         if(allegroInvoice.hasCompany()){
 
