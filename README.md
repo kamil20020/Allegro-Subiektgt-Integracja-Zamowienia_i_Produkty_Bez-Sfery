@@ -1,4 +1,4 @@
-# Integracja Allegro i SubiektGT - zamówienia, faktury sprzedaży, paragony i produkty
+# Integracja Allegro i SubiektGT bez Sfery - zamówienia, faktury sprzedaży, paragony i produkty
 
 Aplikacja zrobiona przez programistę juniora, dlatego mogą być w aplikacji spore błędy, ale próbowałem przetestować całość i napisałem do tego celu razem około 120 testów jednostkowych i integracyjnych.
 
