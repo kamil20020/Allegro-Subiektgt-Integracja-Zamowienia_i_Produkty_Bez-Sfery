@@ -7,6 +7,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class JSONFileWriter<T> implements pl.kamil_dywan.file.write.FileWriter<T> {
 
@@ -22,7 +23,7 @@ public class JSONFileWriter<T> implements pl.kamil_dywan.file.write.FileWriter<T
 
         String toSaveStr = objectMapper.writeValueAsString(toSave);
 
-        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))){
+        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))){
 
             bufferedWriter.write(toSaveStr);
         }

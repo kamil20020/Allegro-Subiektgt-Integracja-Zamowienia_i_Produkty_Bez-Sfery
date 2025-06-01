@@ -54,8 +54,10 @@ class InvoiceMapperTest {
     @Test
     void shouldMap() {
 
+        String expectedCity = "City 123";
+
         InvoiceAddress allegroInvoiceAddress = InvoiceAddress.builder()
-            .city("City 123")
+            .city(expectedCity)
             .build();
 
         Payment allegroPayment = Payment.builder()
@@ -199,7 +201,7 @@ class InvoiceMapperTest {
             mockedInvoiceReferencesFactory.when(() -> InvoiceReferencesFactory.create()).thenReturn(expectedInvoiceReferences);
 //            mockedSettlementFactory.when(() -> SettlementFactory.create(any())).thenReturn(expectedSettlement);
 
-            pl.kamil_dywan.external.subiektgt.generated.Invoice gotInvoice = InvoiceMapper.map(allegroOrder);
+            pl.kamil_dywan.external.subiektgt.generated.Invoice gotInvoice = InvoiceMapper.map(allegroOrder, expectedCity);
 
             //then
             assertNotNull(gotInvoice);
@@ -209,7 +211,7 @@ class InvoiceMapperTest {
             assertEquals(expectedInvoiceHead, gotInvoice.getInvoiceHead());
             assertEquals(allegroPayment.getFinishedAt().toLocalDate(), gotInvoice.getInvoiceDate());
             assertEquals(expectedInvoiceReferences, gotInvoice.getInvoiceReferences());
-            assertEquals(allegroInvoiceAddress.getCity(), gotInvoice.getCityOfIssue());
+            assertEquals(expectedCity, gotInvoice.getCityOfIssue());
             assertEquals(allegroPayment.getFinishedAt().toLocalDate(), gotInvoice.getTaxPointDate());
             assertEquals(expectedBuyer, gotInvoice.getBuyer());
 

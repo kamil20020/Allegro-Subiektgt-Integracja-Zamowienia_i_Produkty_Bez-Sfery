@@ -29,23 +29,25 @@ class ReceiptHeaderMapperTest {
         int actualYear = LocalDate.now().getYear();
         String expectedId = "1/" + actualYear;
 
-        OffsetDateTime paymentDateTime = OffsetDateTime.of(2025, 5, 13, 0, 0, 0, 0, ZoneOffset.UTC);
-        String expectedTimestamp = "20250513000000";
+        String expectedTimestamp = "20250601";
+
+        String expectedSellerCity = "Miasto 123";
 
         //when
-        ReceiptHeader gotHeader = ReceiptHeaderMapper.map(orderTotalMoneyStats, paymentDateTime);
+        ReceiptHeader gotHeader = ReceiptHeaderMapper.map(orderTotalMoneyStats, expectedSellerCity);
 
         //then
         assertNotNull(gotHeader);
         assertEquals(expectedId, gotHeader.getId());
-        assertEquals(expectedTimestamp, gotHeader.getCreationTimestamp());
-        assertEquals(expectedTimestamp, gotHeader.getSellTimestamp());
+        assertEquals(expectedTimestamp, gotHeader.getCreationTimestamp().substring(0, 8));
+        assertEquals(expectedTimestamp, gotHeader.getSellTimestamp().substring(0, 8));
         assertEquals(orderTotalMoneyStats.getNumberOfOrderItems(), gotHeader.getNumberOfProducts());
         assertEquals(orderTotalMoneyStats.getTotalWithoutTax(), gotHeader.getTotalPriceWithoutTax());
         assertEquals(orderTotalMoneyStats.getTaxValue(), gotHeader.getTotalTaxValue());
         assertEquals(orderTotalMoneyStats.getTotalWithTax(), gotHeader.getTotalPriceWithTax());
-        assertEquals(expectedTimestamp, gotHeader.getPaymentTimestamp());
+        assertEquals(expectedTimestamp, gotHeader.getPaymentTimestamp().substring(0, 8));
         assertEquals(orderTotalMoneyStats.getTotalWithTax(), gotHeader.getTotalPaidPayment());
         assertEquals(orderTotalMoneyStats.getTotalWithTax(), gotHeader.getTotalPrice());
+        assertEquals(expectedSellerCity, gotHeader.getCity());
     }
 }

@@ -12,11 +12,20 @@ import java.util.List;
 
 public class InvoiceService {
 
+    private BasicInfoService basicInfoService;
+
     private static final FileWriter<InvoiceBatch> subiektOrderFileWriter = new XMLFileWriter<>(InvoiceBatch.class);
+
+    public InvoiceService(BasicInfoService basicInfoService){
+
+        this.basicInfoService = basicInfoService;
+    }
 
     public void writeInvoicesToFile(List<Order> allegroOrders, String filePath) throws IllegalStateException {
 
-        InvoiceBatch invoicesBatch = InvoiceBatchMapper.map("Subiekt", allegroOrders);
+        String supplierCity = basicInfoService.getLocation().orElse("");
+
+        InvoiceBatch invoicesBatch = InvoiceBatchMapper.map("Subiekt", supplierCity, allegroOrders);
 
         try {
             subiektOrderFileWriter.save(filePath, invoicesBatch);

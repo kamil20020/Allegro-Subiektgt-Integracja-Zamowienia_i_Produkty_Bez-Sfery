@@ -35,7 +35,7 @@ class InvoiceBatchMapperTestIT {
         allegroOrders.forEach(order -> order.addDeliveryToOrderItems());
 
         //when
-        InvoiceBatch convertedInvoiceBatch = InvoiceBatchMapper.map("Subiekt", allegroOrders);
+        InvoiceBatch convertedInvoiceBatch = InvoiceBatchMapper.map("Subiekt", "Miasto", allegroOrders);
         String convertedBatchStr = subiektOrderWriter.writeToStr(convertedInvoiceBatch);
         convertedBatchStr = TestUtils.removeWhiteSpace(convertedBatchStr);
 

@@ -163,8 +163,10 @@ class AuthServiceTest {
 
         String gotPassword = "1234568901234567";
 
+        String encryptedAesKey = "encrypted key";
+
         EncryptedAllegroLoginDetails expectedEncryptedAllegroLoginDetails = new EncryptedAllegroLoginDetails(
-            "encrypted key",
+            "ZW5jcnlwdGVkIGtleQ==",
             "key hash",
             "ZW5jcnlwdGVkIHNlY3JldA=="
         );
@@ -185,14 +187,14 @@ class AuthServiceTest {
         ){
 
             secureStorageMock.when(() -> SecureStorage.doesExist(any())).thenReturn(false);
-            securityServiceMock.when(() -> SecurityService.decryptAes(any(), aryEq(encryptedKey))).thenReturn(expectedGotDecryptedAes);
+            securityServiceMock.when(() -> SecurityService.decryptAes(any(), aryEq(encryptedAesKey.getBytes()))).thenReturn(expectedGotDecryptedAes);
             securityServiceMock.when(() -> SecurityService.hashSha(any())).thenReturn(expectedGotDecryptedAesHashArr);
             securityServiceMock.when(() -> SecurityService.decryptAes(aryEq(expectedGotDecryptedAes), any())).thenReturn(expectedGotAllegroSecret.getBytes());
 
             authService.initAllegroSecret(gotPassword);
 
             secureStorageMock.verify(() -> SecureStorage.doesExist(BasicAuthApi.ALLEGRO_SECRET_POSTFIX));
-            securityServiceMock.verify(() -> SecurityService.decryptAes(gotPassword.getBytes(), encryptedKey));
+            securityServiceMock.verify(() -> SecurityService.decryptAes(gotPassword.getBytes(), encryptedAesKey.getBytes()));
             securityServiceMock.verify(() -> SecurityService.hashSha(expectedGotDecryptedAes));
             securityServiceMock.verify(() -> SecurityService.decryptAes(expectedGotDecryptedAes, encryptedSecret));
             secureStorageMock.verify(() -> SecureStorage.saveCredentials(BasicAuthApi.ALLEGRO_SECRET_POSTFIX, expectedGotAllegroSecret));
@@ -234,8 +236,10 @@ class AuthServiceTest {
 
         String gotPassword = "1234568901234567";
 
+        String encryptedAesKey = "encrypted key";
+
         EncryptedAllegroLoginDetails expectedEncryptedAllegroLoginDetails = new EncryptedAllegroLoginDetails(
-            "encrypted key",
+            "ZW5jcnlwdGVkIGtleQ==",
             "key hash",
             "encrypted secret"
         );
@@ -256,7 +260,7 @@ class AuthServiceTest {
             );
 
             secureStorageMock.verify(() -> SecureStorage.doesExist(BasicAuthApi.ALLEGRO_SECRET_POSTFIX));
-            securityServiceMock.verify(() -> SecurityService.decryptAes(gotPassword.getBytes(), expectedEncryptedAllegroLoginDetails.getKey().getBytes()));
+            securityServiceMock.verify(() -> SecurityService.decryptAes(gotPassword.getBytes(), encryptedAesKey.getBytes()));
         }
     }
 

@@ -43,6 +43,7 @@ class OrderItemMoneyStatsTest {
 
         //when
         OrderItemMoneyStats stats = OrderItemMoneyStats.getSummary(orderItem);
+        stats.scale(2, RoundingMode.HALF_UP);
 
         //then
         assertEquals(taxRatePercentage, stats.getTaxRatePercentage());

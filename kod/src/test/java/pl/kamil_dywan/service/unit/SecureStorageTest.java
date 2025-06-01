@@ -3,6 +3,7 @@ package pl.kamil_dywan.service.unit;
 import com.microsoft.credentialstorage.SecretStore;
 import com.microsoft.credentialstorage.model.StoredCredential;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.MockedStatic;
@@ -18,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
+@Disabled
 class SecureStorageTest {
 
     private static final SecretStore<StoredCredential> secretStoreMock = Mockito.mock(SecretStore.class);

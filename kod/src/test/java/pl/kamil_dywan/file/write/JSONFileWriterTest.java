@@ -7,6 +7,7 @@ import pl.kamil_dywan.file.read.FileReader;
 import pl.kamil_dywan.file.read.JSONFileReader;
 
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -42,7 +43,7 @@ public class JSONFileWriterTest {
         //when
         fileWriter.save(toCreateNormalFilePath, validOrderResponse);
         
-        String savedOrder = FileReader.loadStrFromFile(createdMavenFilePath);
+        String savedOrder = FileReader.loadStrFromFile(createdMavenFilePath, StandardCharsets.UTF_8);
         savedOrder = TestUtils.removeWhiteSpace(savedOrder);
 
         //then

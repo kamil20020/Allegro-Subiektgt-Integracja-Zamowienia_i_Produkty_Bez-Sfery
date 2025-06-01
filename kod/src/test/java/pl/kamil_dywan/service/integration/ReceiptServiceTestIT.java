@@ -6,6 +6,7 @@ import pl.kamil_dywan.external.allegro.generated.order.Order;
 import pl.kamil_dywan.api.allegro.response.OrderResponse;
 import pl.kamil_dywan.file.read.FileReader;
 import pl.kamil_dywan.file.read.JSONFileReader;
+import pl.kamil_dywan.service.BasicInfoService;
 import pl.kamil_dywan.service.ReceiptService;
 
 import java.net.URISyntaxException;
@@ -49,7 +50,9 @@ class ReceiptServiceTestIT {
         allegroReceipts
             .forEach(receipt -> receipt.addDeliveryToOrderItems());
 
-        ReceiptService receiptService = new ReceiptService();
+        BasicInfoService basicInfoService = new BasicInfoService();
+
+        ReceiptService receiptService = new ReceiptService(basicInfoService);
 
         //when
         receiptService.writeReceiptsToFile(allegroReceipts, toSaveFilePath);

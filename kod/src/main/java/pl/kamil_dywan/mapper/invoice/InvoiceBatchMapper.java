@@ -14,10 +14,10 @@ import java.util.stream.Collectors;
 
 public interface InvoiceBatchMapper {
 
-    static InvoiceBatch map(String supplierName, List<Order> allegroOrders){
+    static InvoiceBatch map(String supplierName, String supplierCity, List<Order> allegroOrders){
 
         List<Invoice> invoices = allegroOrders.stream()
-            .map(InvoiceMapper::map)
+            .map(allegroOrder -> InvoiceMapper.map(allegroOrder, supplierCity))
             .collect(Collectors.toList());
 
         InvoiceBatchTrailer batchTrailer = InvoiceBatchTrailerFactory.create(Code.PLN);

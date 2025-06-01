@@ -5,6 +5,7 @@ import pl.kamil_dywan.service.*;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.util.Optional;
 
 public class MainGui {
 
@@ -18,12 +19,14 @@ public class MainGui {
     private GridBagConstraints mainPanelLayoutConstrains;
 
     private final AuthService authService;
+    private final BasicInfoService basicInfoService;
 
     private final JFrame frame;
 
-    public MainGui(AuthService authService, ProductService productService, OrderService orderService, InvoiceService invoiceService, ReceiptService receiptService) {
+    public MainGui(AuthService authService, ProductService productService, OrderService orderService, InvoiceService invoiceService, ReceiptService receiptService, BasicInfoService basicInfoService) {
 
         this.authService = authService;
+        this.basicInfoService = basicInfoService;
 
         loginGui = new LoginGui(authService, this::handleSuccessAuth);
         productsGui = new ProductsGui(productService, this::handleLogout);
@@ -83,13 +86,16 @@ public class MainGui {
 
         JMenuBar menuBar = new JMenuBar();
 
-            JMenu accountMenu = new JMenu("Konto");
+        JMenu accountMenu = new JMenu("Konto");
 
-                JMenuItem accountMenuItem = new JMenuItem("Wyloguj");
+        JMenuItem basicInfoMenuItem = new JMenuItem("Podstawowe informacje");
+        basicInfoMenuItem.addActionListener(e -> handleBasicInfo());
 
-                accountMenuItem.addActionListener(e -> handleLogout());
+        JMenuItem accountMenuItem = new JMenuItem("Wyloguj");
+        accountMenuItem.addActionListener(e -> handleLogout());
 
-            accountMenu.add(accountMenuItem);
+        accountMenu.add(basicInfoMenuItem);
+        accountMenu.add(accountMenuItem);
 
         menuBar.add(accountMenu);
 
@@ -103,6 +109,21 @@ public class MainGui {
 
         mainPanel.revalidate();
         mainPanel.repaint();
+    }
+
+    private void handleBasicInfo() {
+
+        Optional<String> existingLocation = basicInfoService.getLocation();
+
+        String gotLocation = JOptionPane.showInputDialog("Wprowadź nazwę miejcowości sprzedawcy", existingLocation.orElse(""));
+
+        if (gotLocation == null) {
+            return;
+        }
+
+        basicInfoService.setLocation(gotLocation);
+
+        JOptionPane.showMessageDialog(null, "Zapisano dane", "Powiadomienie", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void handleLogout() {

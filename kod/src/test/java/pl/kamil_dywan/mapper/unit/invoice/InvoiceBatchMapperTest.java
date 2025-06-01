@@ -44,12 +44,12 @@ class InvoiceBatchMapperTest {
             MockedStatic<InvoiceMapper> mockedInvoiceMapper = Mockito.mockStatic(InvoiceMapper.class);
             MockedStatic<InvoiceBatchTrailerFactory> mockedBatchTrailerFactory = Mockito.mockStatic(InvoiceBatchTrailerFactory.class);
         ){
-            mockedInvoiceMapper.when(() -> InvoiceMapper.map(eq(allegroOrder1))).thenReturn(expectedInvoice1);
-            mockedInvoiceMapper.when(() -> InvoiceMapper.map(eq(allegroOrder2))).thenReturn(expectedInvoice2);
+            mockedInvoiceMapper.when(() -> InvoiceMapper.map(eq(allegroOrder1), any())).thenReturn(expectedInvoice1);
+            mockedInvoiceMapper.when(() -> InvoiceMapper.map(eq(allegroOrder2), any())).thenReturn(expectedInvoice2);
 
             mockedBatchTrailerFactory.when(() -> InvoiceBatchTrailerFactory.create(any())).thenReturn(expectedBatchTrailer);
 
-            InvoiceBatch gotBatch = InvoiceBatchMapper.map(supplierName, allegroOrders);
+            InvoiceBatch gotBatch = InvoiceBatchMapper.map(supplierName, "Miasto", allegroOrders);
 
             //then
             assertNotNull(gotBatch);
@@ -63,8 +63,8 @@ class InvoiceBatchMapperTest {
             assertTrue(gotBatch.getInvoices().containsAll(expectedInvoices));
             assertEquals(expectedBatchTrailer, gotBatch.getBatchTrailer());
 
-            mockedInvoiceMapper.verify(() -> InvoiceMapper.map(allegroOrder1), Mockito.times(2));
-            mockedInvoiceMapper.verify(() -> InvoiceMapper.map(allegroOrder2), Mockito.times(2));
+            mockedInvoiceMapper.verify(() -> InvoiceMapper.map(allegroOrder1, "Miasto"), Mockito.times(2));
+            mockedInvoiceMapper.verify(() -> InvoiceMapper.map(allegroOrder2, "Miasto"), Mockito.times(2));
 
             mockedBatchTrailerFactory.verify(() -> InvoiceBatchTrailerFactory.create(Code.PLN));
         }

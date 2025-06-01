@@ -21,6 +21,7 @@ public class ReceiptHeader extends EppSerializable {
     private String id;
     private String docCategory = DocCategory.RETAIL.toString();
     private String docSubCategory = DocCategory.RETAIL.getLongValue();
+    private String city;
     private String creationTimestamp;
     private String sellTimestamp;
     private Integer numberOfProducts;
@@ -89,7 +90,7 @@ public class ReceiptHeader extends EppSerializable {
 //        this.isClientInUE = isClientInUE;
     }
 
-    public ReceiptHeader(String id, String creationTimestamp, String sellTimestamp, Integer numberOfProducts, BigDecimal totalPriceWithoutTax, BigDecimal totalTaxValue, BigDecimal totalPriceWithTax, String paymentTimestamp, BigDecimal totalPaidPayment, BigDecimal totalPrice){
+    public ReceiptHeader(String id, String creationTimestamp, String sellTimestamp, Integer numberOfProducts, BigDecimal totalPriceWithoutTax, BigDecimal totalTaxValue, BigDecimal totalPriceWithTax, String paymentTimestamp, BigDecimal totalPaidPayment, BigDecimal totalPrice, String city){
 
         super(null);
 
@@ -103,9 +104,10 @@ public class ReceiptHeader extends EppSerializable {
         this.paymentTimestamp = paymentTimestamp;
         this.totalPaidPayment = totalPaidPayment;
         this.totalPrice = totalPrice;
+        this.city = city;
     }
 
-    public ReceiptHeader(String id, DocType docType, DocStatus docStatus, DocRegistrationStatus docRegistrationStatus, Integer receiptIndex, String docCategory, String docSubCategory, String creationTimestamp, String sellTimestamp, Integer numberOfProducts, BooleanInteger docCreatedByNetto, PriceCategory priceCategory, BigDecimal totalPriceWithoutTax, BigDecimal totalTaxValue, BigDecimal totalPriceWithTax, BigDecimal cost, BigDecimal discountPercentage, String paymentTimestamp, BigDecimal totalPaidPayment, BigDecimal totalPrice, DocMoneyRoundMethod totalPriceRoundingMethod, DocMoneyRoundMethod totalTaxValueRoundingMethod, BooleanInteger docShouldCountAutomatically, DocSpecialStatus docSpecialStatus, BigDecimal costOfGivenPackages, BigDecimal costOfReturnedPackages, Code currencyCode, BigDecimal currencyRate, BooleanInteger docWasImported, BooleanInteger docIsExport, TypeOfTransaction typeOfTransaction, BigDecimal debitCardPayment, BigDecimal creditCardPayment, BooleanInteger isClientInUE) {
+    public ReceiptHeader(String id, DocType docType, DocStatus docStatus, DocRegistrationStatus docRegistrationStatus, Integer receiptIndex, String docCategory, String docSubCategory, String city, String creationTimestamp, String sellTimestamp, Integer numberOfProducts, BooleanInteger docCreatedByNetto, PriceCategory priceCategory, BigDecimal totalPriceWithoutTax, BigDecimal totalTaxValue, BigDecimal totalPriceWithTax, BigDecimal cost, BigDecimal discountPercentage, String paymentTimestamp, BigDecimal totalPaidPayment, BigDecimal totalPrice, DocMoneyRoundMethod totalPriceRoundingMethod, DocMoneyRoundMethod totalTaxValueRoundingMethod, BooleanInteger docShouldCountAutomatically, DocSpecialStatus docSpecialStatus, BigDecimal costOfGivenPackages, BigDecimal costOfReturnedPackages, Code currencyCode, BigDecimal currencyRate, BooleanInteger docWasImported, BooleanInteger docIsExport, TypeOfTransaction typeOfTransaction, BigDecimal debitCardPayment, BigDecimal creditCardPayment, BooleanInteger isClientInUE) {
 
         super(null);
 
@@ -116,6 +118,7 @@ public class ReceiptHeader extends EppSerializable {
         this.receiptIndex = receiptIndex;
         this.docCategory = docCategory;
         this.docSubCategory = docSubCategory;
+        this.city = city;
         this.creationTimestamp = creationTimestamp;
         this.sellTimestamp = sellTimestamp;
         this.numberOfProducts = numberOfProducts;

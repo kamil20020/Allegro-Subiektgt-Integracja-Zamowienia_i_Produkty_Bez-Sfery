@@ -6,6 +6,7 @@ import pl.kamil_dywan.external.allegro.generated.order_item.OrderItem;
 import pl.kamil_dywan.external.allegro.generated.order_item.Tax;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,6 +31,7 @@ class OrderItemTest {
 
         //when
         BigDecimal gotUnitPriceWithoutTax = orderItem.getUnitPriceWithoutTax();
+        gotUnitPriceWithoutTax = gotUnitPriceWithoutTax.setScale(2, RoundingMode.HALF_UP);
 
         //then
         assertEquals(expectedUnitPriceWithoutTax, gotUnitPriceWithoutTax);

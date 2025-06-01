@@ -7,6 +7,7 @@ import pl.kamil_dywan.external.allegro.generated.order.Order;
 import pl.kamil_dywan.api.allegro.response.OrderResponse;
 import pl.kamil_dywan.file.read.FileReader;
 import pl.kamil_dywan.file.read.JSONFileReader;
+import pl.kamil_dywan.service.BasicInfoService;
 import pl.kamil_dywan.service.InvoiceService;
 
 import java.net.URISyntaxException;
@@ -37,11 +38,14 @@ class InvoiceServiceTestIT {
     }
 
     private InvoiceService invoiceService;
+    private BasicInfoService basicInfoService;
 
     @BeforeEach
     public void setUp(){
 
-        invoiceService = new InvoiceService();
+        basicInfoService = new BasicInfoService();
+
+        invoiceService = new InvoiceService(basicInfoService);
     }
 
     @Test
@@ -54,6 +58,10 @@ class InvoiceServiceTestIT {
 
         List<Order> expectedAllegroOrders = allegroOrderResponse.getOrders();
         expectedAllegroOrders.forEach(order -> order.addDeliveryToOrderItems());
+
+        String expectedCity = "Miasto";
+
+        basicInfoService.setLocation(expectedCity);
 
         //when
         invoiceService.writeInvoicesToFile(expectedAllegroOrders, toCreateFilePath);

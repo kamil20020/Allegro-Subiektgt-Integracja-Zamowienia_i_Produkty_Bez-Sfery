@@ -74,7 +74,7 @@ public class OrderItem {
         BigDecimal taxRateValue = taxRatePercentage.divide(BigDecimal.valueOf(100));
         BigDecimal taxRateValuePlusOne = taxRateValue.add(BigDecimal.ONE);
 
-        return unitPriceWithTax.divide(taxRateValuePlusOne, ROUNDING_MODE);
+        return unitPriceWithTax.divide(taxRateValuePlusOne, 10, ROUNDING_MODE);
     }
 
     @JsonIgnore

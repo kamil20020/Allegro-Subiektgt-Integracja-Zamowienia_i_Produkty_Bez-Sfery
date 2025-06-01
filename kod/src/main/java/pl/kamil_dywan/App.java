@@ -8,8 +8,6 @@ import pl.kamil_dywan.api.allegro.ProductApi;
 import pl.kamil_dywan.gui.MainGui;
 import pl.kamil_dywan.service.*;
 
-import java.util.ArrayList;
-
 /**
  * Hello world!
  */
@@ -24,6 +22,9 @@ public class App {
         OrderApi orderApi = new OrderApi();
         ProductApi productApi = new ProductApi();
 
+        BasicInfoService basicInfoService = new BasicInfoService();
+        BasicInfoService.init();
+
         BearerAuthApi.init(loginApi::refreshAccessToken);
         BasicAuthApi.init();
 
@@ -32,10 +33,10 @@ public class App {
 
         OrderService orderService = new OrderService(orderApi);
         ProductService productService = new ProductService(productApi);
-        InvoiceService invoiceService = new InvoiceService();
-        ReceiptService receiptService = new ReceiptService();
+        InvoiceService invoiceService = new InvoiceService(basicInfoService);
+        ReceiptService receiptService = new ReceiptService(basicInfoService);
 
-        new MainGui(authService, productService, orderService, invoiceService, receiptService);
+        new MainGui(authService, productService, orderService, invoiceService, receiptService, basicInfoService);
     }
 
 }

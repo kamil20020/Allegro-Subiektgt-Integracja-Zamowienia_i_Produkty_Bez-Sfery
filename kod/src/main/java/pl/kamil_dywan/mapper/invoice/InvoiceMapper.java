@@ -26,12 +26,10 @@ import java.util.stream.Collectors;
 
 public interface InvoiceMapper {
 
-    static Invoice map(Order allegroOrder){
+    static Invoice map(Order allegroOrder, String sellerCity){
 
         pl.kamil_dywan.external.allegro.generated.invoice.Invoice allegroInvoice = allegroOrder.getInvoice();
 
-        LocalDate invoiceDate = allegroOrder.getPayment().getFinishedAt().toLocalDate();
-        String invoiceCity = allegroInvoice.getAddress().getCity();
         Buyer buyer = InvoiceBuyerMapper.map(allegroInvoice);
         List<OrderItem> allegroOrderItems = allegroOrder.getOrderItems();
 
@@ -47,16 +45,18 @@ public interface InvoiceMapper {
             .map(TaxSubTotalMapper::map)
             .collect(Collectors.toList());
 
-        Settlement settlement = SettlementFactory.create(invoiceDate);
+        LocalDate actualDate = LocalDate.now();
+
+        Settlement settlement = SettlementFactory.create(actualDate);
 
         InvoiceTotal invoiceTotal = InvoiceTotalMapper.map(orderTotalMoneyStats);
 
         return Invoice.builder()
             .invoiceHead(InvoiceHeadFactory.create(Code.PLN))
-            .invoiceDate(invoiceDate)
+            .invoiceDate(actualDate)
             .invoiceReferences(InvoiceReferencesFactory.create())
-            .cityOfIssue(invoiceCity)
-            .taxPointDate(invoiceDate)
+            .cityOfIssue(sellerCity)
+            .taxPointDate(actualDate)
             .buyer(buyer)
             .invoiceLines(subiektInvoiceLines)
             .narrative("")
