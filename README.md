@@ -124,7 +124,7 @@ Należy tak jak na powyższym screenie wybrać plik, nacisnąć `Wczytaj`, nast�
 
 W podobny sposób można dodać dostawę.
 
-Faktury sprzedaży i paragony będą mogły być poprawnie zaimportowane do Subiekta tylko wtedy, gdy ich identyfikatory z Allegro albo zewnętrzne identyfikatory będą takie same jak symbole produktów w Subiekcie. Oba parametry są podane w aplikacji Integracja dla wszystkich wczytanych ofert z Allegro.
+Faktury sprzedaży i paragony będą mogły być poprawnie zaimportowane do Subiekta tylko wtedy, gdy identyfikatory z Allegro albo zewnętrzne identyfikatory ofert będą takie same jak symbole produktów w Subiekcie. Oba parametry są podane w aplikacji Integracja dla wszystkich wczytanych ofert z Allegro.
 
 Zewnętrzne identyfikatory ofert w Allegro mogą być ustawione poprzez wybranie opcji `Zaktualizuj zewnętrzne id`. Aplikacja ustawia jako zewnętrzne id kody producenta obecne w parametrach ofert. Zdecydowałem się na taki krok, gdyż gdy pobiera się zamówienia z Allegro, to przy produktach z ofert dotyczących tych zamówień podane są bodajże tylko identyfikatory i nie ma np. kodów producenta. Trzeba by było osobno dla każdego produktu z zamówienia pobierać dodatkowe informacje z Allegro, co pewnie spowolniłoby działanie aplikacji.
 
